@@ -1,0 +1,5 @@
+    1 Begin
+    2 DEFSTATE a,b,c; DEFIN i,j,k; DEFOUT c,d;
+    3 [i,j]		=(0,1)(a) 		> [c]:(0)(a)
+    4 [i,j,k]		=(0,x,1)(a) 	> [c,d]:(0,1)(b)
+    5 End
