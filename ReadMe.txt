@@ -1,7 +1,7 @@
 ========================================================================
        KONSOLENANWENDUNG : k7scan1
 ========================================================================
-
+MP
 
 Diese k7scan1-Anwendung hat der Anwendungs-Assistent für Sie erstellt.  
 
