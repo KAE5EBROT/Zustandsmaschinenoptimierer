@@ -110,26 +110,37 @@ int	CParser::yyparse()
 	{
 		while (tok == '[')			
 		{
-			tok = yylex();
+			tok = yylex();										//nächstes Token
 			
 			for (k = 0,j=1; tok == IDENTIFIER; k++,j++)	//j = Anzahl der DEFSTATES
 			{
 				printf("%c ", yylval.s[0]);					
-				tok = yylex();							//Komma überspringen
+				tok = yylex();									
 				if (tok == ',') {
-					tok = yylex();							//nächstes Token
+					tok = yylex();							
+				}
+				else if(tok == ']'){
+					tok = yylex();
+					if (tok != '=') {
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
 				}
 				else {
 					fprintf(stderr,"Eingabedaten sind fehlerhaft");
 				}
-				if (tok == ']')
-					break;
 			}
+			tok = yylex();
 			
-			j_old = j;									//maximale defstates abspeichern
-			while ((tok = yylex()) != INTEGER1);			
+			if (tok == '(') {
+				tok = yylex();
+			}
+			else {
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
+			}
 
-			for (k = 0, j = 0; tok == INTEGER1 || tok == IDENTIFIER; k++, j++)
+			j_old = j;									//maximale defstates abspeichern			
+
+			for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
 			{
 				if (j>=j_old)
 					break;		//Error-Meldung, wenn mehr Bits als DEFSTATES
@@ -139,32 +150,76 @@ int	CParser::yyparse()
 				else {
 					printf("%d ", yylval.i);
 				}
+				tok = yylex();
+				if (tok == ',') {
+					tok = yylex();
+				}
+				else if (tok == ')') {
+					tok = yylex();
+					if (tok != '(') {
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
+				}
+				else {
+					fprintf(stderr, "Eingabedaten sind fehlerhaft");
+				}
+			}
 
-				tok = yylex();							//Komma überspringen
-				tok = yylex();							//nächstes Token
+			tok = yylex();
+
+			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+			{
+				printf("%c ", yylval.s[0]);
+
+				tok = yylex();
+
+				if (tok == ')') {
+					tok = yylex();
+					if (tok != '>') {
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
+				}
+				else{
+					fprintf(stderr, "Eingabedaten sind fehlerhaft");
+				}
+			}
+			tok = yylex();
+
+			if (tok == '[') {
+				tok = yylex();
+			}
+			else {
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
 			
-			while ((tok = yylex()) != IDENTIFIER);
-
 			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
 			{
 				printf("%c ", yylval.s[0]);
-				tok = yylex();							//Komma überspringen
-				tok = yylex();							//nächstes Token
+				tok = yylex();
+				if (tok == ',') {
+					tok = yylex();
+				}
+				else if (tok == ']') {
+					tok = yylex();
+					if (tok != ':') {
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
+				}
+				else {
+					fprintf(stderr, "Eingabedaten sind fehlerhaft");
+				}
 			}
-			tok = yylex();
+
 			tok = yylex();
 
-			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
-			{
-				printf("%c ", yylval.s[0]);
-				tok = yylex();							//Komma überspringen
-				tok = yylex();							//nächstes Token
+			if (tok == '(') {
+				tok = yylex();
+			}
+			else {
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
 
-			while ((tok = yylex()) != INTEGER1);
-
-			for (k = 0, j = 0; tok == INTEGER1 || tok == IDENTIFIER; k++, j++)
+			for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
 			{
 				//if (j >= j_old)
 					//break;								//Error-Meldung, wenn mehr Bits als DEFSTATES
@@ -174,20 +229,44 @@ int	CParser::yyparse()
 				else {
 					printf("%d ", yylval.i);
 				}
-
-				tok = yylex();							//Komma überspringen
-				tok = yylex();							//nächstes Token
+				tok = yylex();
+				if (tok == ',') {
+					tok = yylex();
+				}
+				else if (tok == ')') {
+					tok = yylex();
+					if (tok != '(') {
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
+				}
+				else {
+					fprintf(stderr, "Eingabedaten sind fehlerhaft");
+				}
 			}
 
-			while ((tok = yylex()) != IDENTIFIER);
+			tok = yylex();
 
 			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
 			{
 				printf("%c ", yylval.s[0]);
-				tok = yylex();							//Komma überspringen
-				tok = yylex();							//nächstes Token
+				tok = yylex();
+				if (tok == ')') {
+					tok = yylex();
+					if (tok == 303) {
+						break;
+					}
+					else if (tok == '[') {
+						printf("\n"); 
+					}
+					else
+					{
+						fprintf(stderr, "Eingabedaten sind fehlerhaft");
+					}
+				}
+				else {
+					fprintf(stderr, "Eingabedaten sind fehlerhaft");
+				}
 			}
-			printf("\n");
 		}
 		
 			
