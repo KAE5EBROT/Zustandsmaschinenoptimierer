@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <stdio.h>
 #include <iostream>
 #pragma warning(disable:4786)
 #include <string>
@@ -77,9 +78,6 @@ void CParser::IP_init_token_table()
 	Load_tokenentry("OR",ii++);
 	Load_tokenentry("Begin",ii++);
 	Load_tokenentry("End",ii++);
-	Load_tokenentry("DEFSTATE",ii++);
-	Load_tokenentry("DEFIN",ii++);
-	Load_tokenentry("DEFOUT",ii++);
 }
 //------------------------------------------------------------------------
 
@@ -102,27 +100,130 @@ void CParser::pr_tokentable()
 int	CParser::yyparse()
 {
 	int tok;
-	if(prflag)fprintf(IP_List,"%5d ",(int)IP_LineNumber);
+	int k, j, j_old;
+	if (prflag)fprintf(IP_List, "%5d ", (int)IP_LineNumber);
 	/*
 	*	Go parse things!
 	*/
-	while ((tok=yylex())!=0){
-		printf("%d ",tok);
-		if(tok==STRING1)
-			printf("%s %s ",IP_revToken_table[tok].c_str(),yylval.s.c_str());
-		else
-			if(tok==INTEGER1)
-				printf("%s %d ",IP_revToken_table[tok].c_str(),yylval.i);
-			else
-				if(tok==IDENTIFIER)
-					printf("%s %s ",IP_revToken_table[tok].c_str(),yylval.s.c_str());
-				else
-					if(tok>=TOKENSTART)
-						printf("%s ",IP_revToken_table[tok].c_str());
-					else
-						printf("%c ",tok);
-		if(!prflag)printf("\n");
+	//Einlesen
+	while ((tok = yylex()) != 0)
+	{
+		while (tok == '[')			
+		{
+			tok = yylex();
+			
+			for (k = 0,j=1; tok == IDENTIFIER; k++,j++)	//j = Anzahl der DEFSTATES
+			{
+				printf("%c ", yylval.s[0]);					
+				tok = yylex();							//Komma überspringen
+				if (tok == ',') {
+					tok = yylex();							//nächstes Token
+				}
+				else {
+					fprintf(stderr,"Eingabedaten sind fehlerhaft");
+				}
+				if (tok == ']')
+					break;
+			}
+			
+			j_old = j;									//maximale defstates abspeichern
+			while ((tok = yylex()) != INTEGER1);			
+
+			for (k = 0, j = 0; tok == INTEGER1 || tok == IDENTIFIER; k++, j++)
+			{
+				if (j>=j_old)
+					break;		//Error-Meldung, wenn mehr Bits als DEFSTATES
+				if (tok == IDENTIFIER) {
+					printf("x ");
+				}
+				else {
+					printf("%d ", yylval.i);
+				}
+
+				tok = yylex();							//Komma überspringen
+				tok = yylex();							//nächstes Token
+			}
+			
+			while ((tok = yylex()) != IDENTIFIER);
+
+			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+			{
+				printf("%c ", yylval.s[0]);
+				tok = yylex();							//Komma überspringen
+				tok = yylex();							//nächstes Token
+			}
+			tok = yylex();
+			tok = yylex();
+
+			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+			{
+				printf("%c ", yylval.s[0]);
+				tok = yylex();							//Komma überspringen
+				tok = yylex();							//nächstes Token
+			}
+
+			while ((tok = yylex()) != INTEGER1);
+
+			for (k = 0, j = 0; tok == INTEGER1 || tok == IDENTIFIER; k++, j++)
+			{
+				//if (j >= j_old)
+					//break;								//Error-Meldung, wenn mehr Bits als DEFSTATES
+				if (tok == IDENTIFIER) {
+					printf("x ");
+				}
+				else {
+					printf("%d ", yylval.i);
+				}
+
+				tok = yylex();							//Komma überspringen
+				tok = yylex();							//nächstes Token
+			}
+
+			while ((tok = yylex()) != IDENTIFIER);
+
+			for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+			{
+				printf("%c ", yylval.s[0]);
+				tok = yylex();							//Komma überspringen
+				tok = yylex();							//nächstes Token
+			}
+			printf("\n");
+		}
+		
+			
+
 	}
+
+	//while ((tok = yylex()) != 0) {
+	//	printf("%d ", tok);
+	//	if (tok == STRING1)
+	//		printf("%s %s ", IP_revToken_table[tok].c_str(), yylval.s.c_str());
+	//	else
+	//		if (tok == INTEGER1)
+	//			printf("%s %d ", IP_revToken_table[tok].c_str(), yylval.i);
+	//		else
+	//			if (tok == IDENTIFIER)
+	//				printf("%s %s ", IP_revToken_table[tok].c_str(), yylval.s.c_str());
+	//			else
+	//				if (tok >= TOKENSTART)
+	//					printf("%s ", IP_revToken_table[tok].c_str());
+	//				else
+	//					printf("%c ", tok);
+	//	if (!prflag)printf("\n");
+	//}
+
+	////Ausgabe
+	//FILE *fpout; /* file pointer output file*/
+	//char zeichen; /* file pointer output file*/
+
+	//if ((fpout = fopen("myfileout.tbt", "w")) == NULL) {
+	//	printf("Cannot open file : myfileout.txt \n");
+	//	return 0;
+	//}
+	//zeichen = 'a';
+	//fputc(zeichen, fpout);
+	//fclose(fpout);
+
 	return 0;
 
 }
@@ -331,24 +432,23 @@ int CParser::yylex()
 int main(int argc, char* argv[])
 {
 	FILE *inf;
-	FILE *outf;
 	char fistr[100];
 	printf("Enter .txt filename:\n");
-	scanf("%s",fistr);//gets(fistr);
-	inf = fopen(strcat(fistr,".txt"),"r");
+	//scanf("%s",fistr);//gets(fistr);
+	//inf = fopen(strcat(fistr,".txt"),"r");
+	inf = fopen("in2.txt", "r");
 	if(inf==NULL){
 		printf("Cannot open input file %s\n",fistr);
 		return 0;
 	}
-	fistr[strlen(fistr) - 4] = 0;
-	outf = fopen(strcat(fistr,"_out.txt"),"w");
 	CParser obj;
-	obj.InitParse(inf,stderr,outf);
+	obj.InitParse(inf,stderr,stdout);
 //	obj.pr_tokentable();
 	obj.yyparse();
-	fclose(outf);
 	char c; cin>>c;
 
 	return 0;
 }
+
+
 
