@@ -210,7 +210,7 @@ int	CParser::yyparse()
 	{
 		tok = yylex();										//nächstes Token
 			
-		for (k = 0,j=1; tok == IDENTIFIER; k++,j++)	//j = Anzahl der DEFSTATES
+		for (k = 0,j=0; tok == IDENTIFIER; k++,j++)	//j = Anzahl der DEFSTATES
 		{
 			printf("%c ", yylval.s[0]);					
 			tok = yylex();									
@@ -236,12 +236,10 @@ int	CParser::yyparse()
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
 
-		j_old = j;									//maximale defstates abspeichern			
+		j_old = j;											
 
 		for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
 		{
-			if (j>=j_old)
-				break;		//Error-Meldung, wenn mehr Bits als DEFSTATES
 			if (tok == IDENTIFIER) {
 				printf("x ");
 			}
@@ -263,9 +261,14 @@ int	CParser::yyparse()
 			}
 		}
 
+		if (j > j_old)
+			fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");		
+		else if (j<j_old)
+			fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");		
+
 		tok = yylex();
 
-		for (k = 0; tok == IDENTIFIER; k++)	
+		for (k = 0,j=0; tok == IDENTIFIER; k++,j++)	
 		{
 			printf("%c ", yylval.s[0]);
 
@@ -290,7 +293,7 @@ int	CParser::yyparse()
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
 			
-		for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+		for (k = 0,j=0; tok == IDENTIFIER; k++,j++)	
 		{
 			printf("%c ", yylval.s[0]);
 			tok = yylex();
@@ -317,10 +320,10 @@ int	CParser::yyparse()
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
 
+		j_old = j;
+
 		for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
 		{
-			//if (j >= j_old)
-				//break;								//Error-Meldung, wenn mehr Bits als DEFSTATES
 			if (tok == IDENTIFIER) {
 				printf("x ");
 			}
@@ -342,9 +345,14 @@ int	CParser::yyparse()
 			}
 		}
 
+		if (j > j_old)
+			fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");
+		else if (j<j_old)
+			fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");
+
 		tok = yylex();
 
-		for (k = 0, j = 1; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
+		for (k = 0; tok == IDENTIFIER; k++)
 		{
 			printf("%c ", yylval.s[0]);
 			tok = yylex();
