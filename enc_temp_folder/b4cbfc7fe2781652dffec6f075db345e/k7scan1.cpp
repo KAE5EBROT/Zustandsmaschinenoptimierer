@@ -366,8 +366,6 @@ int	CParser::yyparse()
 			}
 		}
 	}
-
-	//Überprüfen der Daten 
 	
 
 	//while ((tok = yylex()) != 0) {
