@@ -238,7 +238,7 @@ int	CParser::yyparse()
 
 		j_old = j;											
 
-		for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
+		for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
 		{
 			if (tok == IDENTIFIER) {
 				printf("x ");
@@ -322,7 +322,7 @@ int	CParser::yyparse()
 
 		j_old = j;
 
-		for (k = 0, j = 0; tok == INTEGER1 || *yylval.s.c_str() == 'x' || *yylval.s.c_str() == 'X'; k++, j++)
+		for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
 		{
 			if (tok == IDENTIFIER) {
 				printf("x ");
@@ -334,7 +334,7 @@ int	CParser::yyparse()
 			if (tok == ',') {
 				tok = yylex();
 			}
-			else if (tok == ')') {
+			else if(tok == ')') {
 				tok = yylex();
 				if (tok != '(') {
 					fprintf(stderr, "Eingabedaten sind fehlerhaft");
@@ -344,6 +344,8 @@ int	CParser::yyparse()
 				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
 		}
+
+	
 
 		if (j > j_old)
 			fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");
@@ -620,7 +622,7 @@ int main(int argc, char* argv[])
 	printf("Enter .txt filename:\n");
 	//scanf("%s",fistr);//gets(fistr);
 	//inf = fopen(strcat(fistr,".txt"),"r");
-	inf = fopen("in2.txt", "r");
+	inf = fopen("mittlere_automatentabelle.txt", "r");
 	if(inf==NULL){
 		printf("Cannot open input file %s\n",fistr);
 		return 0;
