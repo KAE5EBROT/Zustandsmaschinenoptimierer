@@ -16,12 +16,15 @@ typedef enum {
 class Ctable {
 public:
 	typedef struct {
-		string state; /* Erste Spalte: Aktueller State, Sonst Nächster State*/
+		string next_state;
 		string out_list;
 	} entry;
 	list<vector<entry>> table;
 	int iheight;
 	int iwidth;
+	string *istates;
+	string *iinputs;
+	string *ioutputs;
 	//list<vector<entry>>::iterator it_list;
 
 	fstate size(int height, int width, int numberOfOutputs) {
@@ -31,7 +34,7 @@ public:
 		}*/
 		vector<entry> temp;
 		temp.resize(width);
-		for (int i = 0; i < width; i++) {
+		for (int i = 1; i < width; i++) {
 			for (int j = 0; j < numberOfOutputs; j++)
 				temp.at(i).out_list.append("x");
 		}
@@ -51,16 +54,21 @@ public:
 		return eOK;
 	}
 
-	fstate setInputs(string inputs) {
-
+	fstate setInputs(string inputs[]) {
+		iinputs = inputs;
 	}
 
-	fstate setOutputs(string inputs) {
-
+	fstate setOutputs(string outputs[]) {
+		ioutputs = outputs;
 	}
 
 	fstate link(string inputs, string inputval, string srcstate, string outputs, string outputval, string dststate) {
-
+		list<vector<entry>>::iterator it = table.begin();
+		int itcount = 0;
+		while ((srcstate != (*it).at(0).state) && (itcount++ < iheight)) it++;
+		
+		//(*it).at()
+		return eOK;
 	}
 
 };
@@ -95,6 +103,9 @@ int main(void)
 	t.size(table_height, table_width, output_count);
 	string teststrings[3] = { "State1","state_B","State_3" };
 	t.setStates(teststrings);
+	t.setInputs();
+	t.setOutputs();
+	t.link({ "A","Be" }, "10", "State1", { "x","y" }, "10", "State_3");
 	char temp[3];
 	cin >> temp;
 }
