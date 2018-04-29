@@ -1,21 +1,34 @@
 #pragma once
-#include "StdAfx.h"
+//#include "StdAfx.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <map>
+using namespace std;
 
 #define	Getc(s)			getc(s)
 #define	Ungetc(c)		{ungetc(c,IP_Input); ugetflag=1;}
+#define STRING1DEF 3
+#define IDENTIFIERDEF 4
+#define INTEGER1DEF 5
+#define TOKENSTARTDEF 300
 
 class CParser
 {
 public:
 
-	const int STRING1 = 3;
-	const int IDENTIFIER = 4;
-	const int INTEGER1 = 5;
-	const int TOKENSTART = 300;
+	const int STRING1 = STRING1DEF;
+	const int IDENTIFIER = IDENTIFIERDEF;
+	const int INTEGER1 = INTEGER1DEF;
+	const int TOKENSTART = TOKENSTARTDEF;
+	int state_count = 0;
+	int input_count = 0;
+	int output_count = 0;
+	struct {
+		bool states = false;
+		bool inputs = false;
+		bool outputs = false;
+	} defScanned;
 	string yytext;								//input buffer
 
 	/*
@@ -30,7 +43,7 @@ public:
 	*	Parser states
 	*/
 	enum parstates {
-		P_HEADER, P_DEFSTATE, P_DEFIN, P_DEFOUT, P_ERROR
+		P_HEADER, P_DEF, P_DEFSTATE, P_DEFIN, P_DEFOUT, P_READLINE, P_ERROR
 	};
 	struct tyylval {								//value return
 		string s;								//structure
@@ -54,7 +67,12 @@ public:
 	void CParser::IP_init_token_table();		//loads the tokens
 	void CParser::Load_tokenentry(string str, int index);//load one token
 	void CParser::PushString(char c);			//Used for dtring assembly
-	parstates CParser::pfSkipHeader(int &tok);
+	CParser::parstates CParser::pfSkipHeader(int &tok);
+	CParser::parstates CParser::pfGetDef(int & tok);
+	CParser::parstates CParser::pfScanState(int & tok);
+	CParser::parstates CParser::pfScanInputs(int & tok);
+	CParser::parstates CParser::pfScanOutputs(int & tok);
+	CParser::parstates CParser::pfReadLine(int & tok);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
 //------------------------------------------------------------------------

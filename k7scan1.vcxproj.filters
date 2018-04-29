@@ -41,6 +41,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="k7scan1.out" />
+    <None Include="Zustandsmaschinencodierungsoptimierer.out" />
   </ItemGroup>
 </Project>
