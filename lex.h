@@ -43,7 +43,7 @@ public:
 	*	Parser states
 	*/
 	enum parstates {
-		P_HEADER, P_DEF, P_DEFSTATE, P_DEFIN, P_DEFOUT, P_READLINE, P_ERROR
+		P_HEADER, P_DEFSELECT, P_DEFSTATE, P_DEFIN, P_DEFOUT, P_READLINE, P_ERROR
 	};
 	struct tyylval {								//value return
 		string s;								//structure

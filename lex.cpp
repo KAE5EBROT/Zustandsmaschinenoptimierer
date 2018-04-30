@@ -50,29 +50,32 @@ void CParser::pr_tokentable()
 
 int	CParser::yyparse()
 {
-	int tok;
-	int k, j, j_old;
+	int tok = 0;
 	parstates state = P_HEADER;
 	if (prflag)fprintf(IP_List, "%5d ", (int)IP_LineNumber);
 	/*
 	*	Go parse things!
 	*/
 	//Einlesen
-	while ((tok = yylex()) != IP_Token_table["End"]) {
+	while (tok != IP_Token_table["End"]) {
 		switch (state) {
 		case P_HEADER:
+			tok = yylex();
 			state = pfSkipHeader(tok);		//Alles vor BEGIN nicht beachten
 			break;
-		case P_DEF:
+		case P_DEFSELECT:
 			state = pfGetDef(tok);
 			break;
 		case P_DEFSTATE:
+			tok = yylex();
 			state = pfScanState(tok);
 			break;
 		case P_DEFIN:
+			tok = yylex();
 			state = pfScanInputs(tok);
 			break;
 		case P_DEFOUT:
+			tok = yylex();
 			state = pfScanOutputs(tok);
 			break;
 		case P_READLINE:
@@ -350,15 +353,15 @@ CParser::parstates CParser::pfSkipHeader(int &tok)
 	parstates retval;
 	static int i = 0;
 	i++;
-	if (i > 100000) {													//maximal 100000 Zeichen
+	if (i > 100000) {										//maximal 100000 Zeichen
 		fprintf(stderr, "Ihr Header ist zu lang");
 		retval = P_ERROR;
 	}
-	else if ((tok = yylex()) != IP_Token_table["Begin"]) {
+	else if (tok != IP_Token_table["Begin"]) {
 		retval = P_HEADER;
 	}
 	else {
-		retval = P_DEF;
+		retval = P_DEFSELECT;
 	}
 	return retval;
 }
@@ -366,7 +369,17 @@ CParser::parstates CParser::pfSkipHeader(int &tok)
 CParser::parstates CParser::pfGetDef(int &tok)
 {
 	parstates retval;
-	if ((tok == IP_Token_table["DEFSTATE"]) && !defScanned.states) {
+	static int i = 0;
+
+	if (defScanned.states && defScanned.inputs && defScanned.outputs) {
+		retval = P_READLINE;
+		printf("\n"); //todo vielleicht entfernen, nur zur Ausgabe in Konsole
+	}
+	else if ((((tok = yylex()) < IP_Token_table["DEFSTATE"]) || (tok > IP_Token_table["DEFOUT"])) && (i<1000)) {
+		i++;
+		retval = P_DEFSELECT;
+	}
+	else if ((tok == IP_Token_table["DEFSTATE"]) && !defScanned.states) {
 		retval = P_DEFSTATE;
 	}
 	else if ((tok == IP_Token_table["DEFIN"]) && !defScanned.inputs) {
@@ -374,9 +387,6 @@ CParser::parstates CParser::pfGetDef(int &tok)
 	}
 	else if ((tok == IP_Token_table["DEFOUT"]) && !defScanned.outputs) {
 		retval = P_DEFOUT;
-	}
-	else if (defScanned.states && defScanned.inputs && defScanned.outputs) {
-		retval = P_READLINE;
 	}
 	else {
 		retval = P_ERROR;
@@ -387,10 +397,10 @@ CParser::parstates CParser::pfGetDef(int &tok)
 CParser::parstates CParser::pfScanState(int &tok)
 {
 	parstates retval;
-	tok = yylex();
 	switch (tok) {
 	case IDENTIFIERDEF:
 		printf("%c ", yylval.s[0]);//todo abspeichern
+		state_count++;
 		retval = P_DEFSTATE;
 		break;
 	case ',':
@@ -398,7 +408,7 @@ CParser::parstates CParser::pfScanState(int &tok)
 		break;
 	case ';':
 		defScanned.states = true;
-		retval = P_DEF;
+		retval = P_DEFSELECT;
 		break;
 	default:
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
@@ -410,10 +420,10 @@ CParser::parstates CParser::pfScanState(int &tok)
 CParser::parstates CParser::pfScanInputs(int &tok)
 {
 	parstates retval;
-	tok = yylex();
 	switch (tok) {
 	case IDENTIFIERDEF:
 		printf("%c ", yylval.s[0]);//todo abspeichern
+		input_count++;
 		retval = P_DEFIN;
 		break;
 	case ',':
@@ -421,7 +431,7 @@ CParser::parstates CParser::pfScanInputs(int &tok)
 		break;
 	case ';':
 		defScanned.inputs = true;
-		retval = P_DEF;
+		retval = P_DEFSELECT;
 		break;
 	default:
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
@@ -433,10 +443,10 @@ CParser::parstates CParser::pfScanInputs(int &tok)
 CParser::parstates CParser::pfScanOutputs(int &tok)
 {
 	parstates retval;
-	tok = yylex();
 	switch (tok) {
 	case IDENTIFIERDEF:
 		printf("%c ", yylval.s[0]);//todo abspeichern
+		output_count++;
 		retval = P_DEFOUT;
 		break;
 	case ',':
@@ -444,7 +454,7 @@ CParser::parstates CParser::pfScanOutputs(int &tok)
 		break;
 	case ';':
 		defScanned.outputs = true;
-		retval = P_DEF;
+		retval = P_DEFSELECT;
 		break;
 	default:
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
@@ -455,175 +465,174 @@ CParser::parstates CParser::pfScanOutputs(int &tok)
 
 CParser::parstates CParser::pfReadLine(int &tok)
 {
-	parstates retval;
-	tok = yylex(); while (tok == '[')
+	parstates retval = P_READLINE;
+	int k, j, j_old;
+	while (tok != '[')tok = yylex();
+	tok = yylex();									//erste Eingangsvariable
+
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
 	{
-		tok = yylex();										//nächstes Token
-
-		for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
-		{
-			printf("%c ", yylval.s[0]);
+		printf("%c ", yylval.s[0]);					//todo abspeichern
+		tok = yylex();
+		if (tok == ',') {
 			tok = yylex();
-			if (tok == ',') {
-				tok = yylex();
-			}
-			else if (tok == ']') {
-				tok = yylex();
-				if (tok != '=') {
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
+		}
+		else if (tok == ']') {
+			tok = yylex();
+			if (tok != '=') {
 				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
-		}
-		tok = yylex();
-
-		if (tok == '(') {
-			tok = yylex();
 		}
 		else {
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
+	}
+	tok = yylex();
 
-		j_old = j;
-
-		for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-		{
-			if (tok == IDENTIFIER) {
-				printf("x ");
-			}
-			else {
-				printf("%d ", yylval.i);
-			}
-			tok = yylex();
-			if (tok == ',') {
-				tok = yylex();
-			}
-			else if (tok == ')') {
-				tok = yylex();
-				if (tok != '(') {
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-
-		if (j > j_old)
-			fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");
-		else if (j < j_old)
-			fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");
-
+	if (tok == '(') {
 		tok = yylex();
+	}
+	else {
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");
+	}
 
-		for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
-		{
-			printf("%c ", yylval.s[0]);
+	j_old = j;
 
-			tok = yylex();
-
-			if (tok == ')') {
-				tok = yylex();
-				if (tok != '>') {
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
+	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
+	{
+		if (tok == IDENTIFIER) {
+			printf("x ");
+		}
+		else {
+			printf("%d ", yylval.i);
 		}
 		tok = yylex();
-
-		if (tok == '[') {
+		if (tok == ',') {
 			tok = yylex();
+		}
+		else if (tok == ')') {
+			tok = yylex();
+			if (tok != '(') {
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
+			}
 		}
 		else {
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
+	}
 
-		for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
-		{
-			printf("%c ", yylval.s[0]);
-			tok = yylex();
-			if (tok == ',') {
-				tok = yylex();
-			}
-			else if (tok == ']') {
-				tok = yylex();
-				if (tok != ':') {
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
+	if (j > j_old)
+		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");
+	else if (j < j_old)
+		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");
+
+	tok = yylex();
+
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
+	{
+		printf("%c ", yylval.s[0]);
 
 		tok = yylex();
 
-		if (tok == '(') {
+		if (tok == ')') {
 			tok = yylex();
+			if (tok != '>') {
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
+			}
 		}
 		else {
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
+	}
+	tok = yylex();
 
-		j_old = j;
+	if (tok == '[') {
+		tok = yylex();
+	}
+	else {
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");
+	}
 
-		for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-		{
-			if (tok == IDENTIFIER) {
-				printf("x ");
-			}
-			else {
-				printf("%d ", yylval.i);
-			}
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
+	{
+		printf("%c ", yylval.s[0]);
+		tok = yylex();
+		if (tok == ',') {
 			tok = yylex();
-			if (tok == ',') {
-				tok = yylex();
-			}
-			else if (tok == ')') {
-				tok = yylex();
-				if (tok != '(') {
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
+		}
+		else if (tok == ']') {
+			tok = yylex();
+			if (tok != ':') {
 				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
 		}
+		else {
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");
+		}
+	}
 
+	tok = yylex();
 
-
-		if (j > j_old)
-			fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");
-		else if (j < j_old)
-			fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");
-
+	if (tok == '(') {
 		tok = yylex();
+	}
+	else {
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");
+	}
 
-		for (k = 0; tok == IDENTIFIER; k++)
-		{
-			printf("%c ", yylval.s[0]);
+	j_old = j;
+
+	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
+	{
+		if (tok == IDENTIFIER) {
+			printf("x ");
+		}
+		else {
+			printf("%d ", yylval.i);
+		}
+		tok = yylex();
+		if (tok == ',') {
 			tok = yylex();
-			if (tok == ')') {
-				tok = yylex();
-				if (tok == 303) {
-					break;
-				}
-				else if (tok == '[') {
-					printf("\n");
-				}
-				else
-				{
-					fprintf(stderr, "Eingabedaten sind fehlerhaft");
-				}
-			}
-			else {
+		}
+		else if (tok == ')') {
+			tok = yylex();
+			if (tok != '(') {
 				fprintf(stderr, "Eingabedaten sind fehlerhaft");
 			}
+		}
+		else {
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");
+		}
+	}
+
+
+
+	if (j > j_old)
+		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");
+	else if (j < j_old)
+		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");
+
+	tok = yylex();
+
+	for (k = 0; tok == IDENTIFIER; k++)
+	{
+		printf("%c ", yylval.s[0]);
+		tok = yylex();
+		if (tok == ')') {
+			tok = yylex();
+			if (tok == 303) {
+				break;
+			}
+			else if (tok == '[') {
+				printf("\n");
+			}
+			else
+			{
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");
+			}
+		}
+		else {
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
 	}
 	return retval;
