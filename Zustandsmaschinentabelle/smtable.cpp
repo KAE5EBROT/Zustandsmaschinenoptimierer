@@ -52,19 +52,19 @@ smtable::fstate smtable::print() {
 	for (int i = 0; i < iinputs.capacity(); i++) cout << iinputs.at(i).c_str() << " ";
 	cout << "\n\t";
 	for (int i = 0; i < iwidth; i++) {
-		string bits = int2bit(i, iinputs.capacity());
-		cout << bits.c_str() << "\t";
-		//delete &bits; //todo Scheißdreck geht nicht :(
+		string *bits = int2bit(i, iinputs.capacity());
+		cout << bits->c_str() << "\t";
+		delete bits;
 	}
 	return eOK;
 }
 
-string smtable::int2bit(int val, int width) {
+string *smtable::int2bit(int val, int width) {
 	string *retval = new string;
 	string::iterator strbegin = retval->begin();
 	for (int i = 0; i < width; i++) {
 		retval->insert(strbegin,val % 2 + '0');
 		val /= 2;
 	}
-	return *retval;
+	return retval;
 }

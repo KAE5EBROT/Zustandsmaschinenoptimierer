@@ -37,6 +37,6 @@ public:
 
 	fstate print();
 
-	string int2bit(int val, int width);
+	string *int2bit(int val, int width);
 
 };
