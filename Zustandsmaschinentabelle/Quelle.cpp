@@ -6,75 +6,12 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include "smtable.h"
 using namespace std;
 
 
-class Ctable {
-public:
-	typedef struct {
-		string next_state;
-		string out_list;
-	} entry;
-	typedef enum {
-		eOK,
-		eFAIL
-	}fstate;
-	typedef map<string,vector<entry>> tabletype;
-	tabletype table; /* map<state,row> */
-	int iheight;
-	int iwidth;
-	string *istates;
-	string *iinputs;
-	string *ioutputs;
-	//list<vector<entry>>::iterator it_list;
 
-	fstate size(int height, int width, int numberOfOutputs) {
-		//table.resize(height); /* allocate table columns */
-		/*for (it_list = table.begin; it_list = table.end; it_list++) {
-			it_list->resize(width);
-		}*/
-		vector<entry> temp;
-		temp.resize(width);
-		for (int i = 1; i < width; i++) {
-			for (int j = 0; j < numberOfOutputs; j++)
-				temp.at(i).out_list.append("x");
-		}
-		for (int i = 0; i<height; i++) {
-			table.insert.insert(temp);
-		}
-		iheight = height;
-		iwidth = width;
-		return eOK;
-	}
-
-	fstate setStates(string inputs[]) {
-		tabletype::iterator it = table.begin();
-		for (int i = 0; i < iheight; i++, it++) {
-			it->first.at(i) = inputs[i]; // vielleicht beim initialisiern eintragen
-		}
-		return eOK;
-	}
-
-	fstate setInputs(string inputs[]) {
-		iinputs = inputs;
-	}
-
-	fstate setOutputs(string outputs[]) {
-		ioutputs = outputs;
-	}
-
-	fstate link(string inputs, string inputval, string srcstate, string outputs, string outputval, string dststate) {
-		map<string,vector<entry>>::iterator it = table.begin();
-		int itcount = 0;
-		table[srcstate].at(1).next_state = dststate;
-		table[srcstate].at(1).out_list = "0";//testvalue todo
-		//it->at()
-		return eOK;
-	}
-
-};
-
-Ctable t;
+smtable t;
 
 int main(void)
 {
@@ -101,12 +38,23 @@ int main(void)
 	table_height = state_count;
 	for (int i = 1; i < input_count; i++) table_width *= 2;
 #endif // USESQUARETABLE
-	t.size(table_height, table_width, output_count);
-	string teststrings[3] = { "State1","state_B","State_3" };
-	t.setStates(teststrings);
-	//t.setInputs();
-	//t.setOutputs();
-	t.link({ "A","Be" }, "10", "State1", { "x","y" }, "10", "State_3");
+	smtable::elementlist teststates;
+	teststates.push_back("State1");
+	teststates.push_back("state_B");
+	teststates.push_back("State_3");
+	smtable::elementlist testinputs;
+	testinputs.push_back("In1");
+	testinputs.push_back("in_B");
+	testinputs.push_back("In_3");
+	smtable::elementlist testoutputs;
+	testoutputs.push_back("Out1");
+	testoutputs.push_back("out_B");
+	testoutputs.push_back("Out_3");
+	t.setStates(teststates);
+	t.setInputs(testinputs);
+	t.setOutputs(testoutputs);
+	t.init();
+	t.link({ "In1","in_B" }, "10", "State1", { "Out_3","Out1" }, "10", "State_3");
 	char temp[3];
 	cin >> temp;
 }
