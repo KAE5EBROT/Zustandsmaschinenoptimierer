@@ -8,10 +8,6 @@
 #include <map>
 using namespace std;
 
-typedef enum {
-	eOK,
-	eFAIL
-}fstate;
 
 class Ctable {
 public:
@@ -19,7 +15,12 @@ public:
 		string next_state;
 		string out_list;
 	} entry;
-	map<string,vector<entry>> table; /* map<state,row> */
+	typedef enum {
+		eOK,
+		eFAIL
+	}fstate;
+	typedef map<string,vector<entry>> tabletype;
+	tabletype table; /* map<state,row> */
 	int iheight;
 	int iwidth;
 	string *istates;
@@ -39,7 +40,7 @@ public:
 				temp.at(i).out_list.append("x");
 		}
 		for (int i = 0; i<height; i++) {
-			table.insert(temp);
+			table.insert.insert(temp);
 		}
 		iheight = height;
 		iwidth = width;
@@ -47,9 +48,9 @@ public:
 	}
 
 	fstate setStates(string inputs[]) {
-		map<string,vector<entry>>::iterator it = table.begin();
+		tabletype::iterator it = table.begin();
 		for (int i = 0; i < iheight; i++, it++) {
-			it->first.at(0).state = inputs[i];
+			it->first.at(i) = inputs[i]; // vielleicht beim initialisiern eintragen
 		}
 		return eOK;
 	}
