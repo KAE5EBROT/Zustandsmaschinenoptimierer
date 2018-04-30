@@ -19,7 +19,7 @@ public:
 	typedef map<string, vector<entry>> tabletype;
 	tabletype table; /* map<state,row> */
 	int iheight;
-	int iwidth;
+	int iwidth = 1;
 	typedef vector<string> elementlist;
 	elementlist istates;
 	elementlist iinputs;
@@ -34,5 +34,9 @@ public:
 	fstate setOutputs(elementlist outputs);
 
 	fstate link(elementlist inputs, string inputval, string srcstate, elementlist outputs, string outputval, string dststate);
+
+	fstate print();
+
+	string int2bit(int val, int width);
 
 };

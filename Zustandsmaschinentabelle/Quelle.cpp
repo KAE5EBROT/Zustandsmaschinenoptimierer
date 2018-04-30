@@ -55,6 +55,7 @@ int main(void)
 	t.setOutputs(testoutputs);
 	t.init();
 	t.link({ "In1","in_B" }, "10", "State1", { "Out_3","Out1" }, "10", "State_3");
+	t.print();
 	char temp[3];
 	cin >> temp;
 }
