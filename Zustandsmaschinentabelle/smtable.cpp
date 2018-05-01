@@ -8,7 +8,7 @@
 using namespace std;
 
 
-smtable::fstate smtable::init(/*int state_count, int input_count, int output_count*/) {
+smtable::fstate smtable::init() {
 	vector<entry> temp;
 	for (int i = 0; i < iinputs.size(); i++) iwidth *= 2;
 	iheight = istates.size();
@@ -18,7 +18,26 @@ smtable::fstate smtable::init(/*int state_count, int input_count, int output_cou
 			temp.at(i).out_list.append("x");
 	}
 	for (int i = 0; i < istates.size(); i++) {
-		table.insert(pair<string,vector<entry>>(istates.at(i),temp));
+		table.insert(pair<string, vector<entry>>(istates.at(i), temp));
+	}
+	return eOK;
+}
+
+
+smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlist outputs) {
+	vector<entry> temp;
+	istates = states;
+	iinputs = inputs;
+	ioutputs = outputs;
+	for (int i = 0; i < iinputs.size(); i++) iwidth *= 2;
+	iheight = istates.size();
+	temp.resize(iwidth);
+	for (int i = 0; i < iwidth; i++) {
+		for (int j = 0; j < ioutputs.size(); j++)
+			temp.at(i).out_list.append("x");
+	}
+	for (int i = 0; i < istates.size(); i++) {
+		table.insert(pair<string, vector<entry>>(istates.at(i), temp));
 	}
 	return eOK;
 }
@@ -41,9 +60,47 @@ smtable::fstate smtable::setOutputs(elementlist outputs) {
 smtable::fstate smtable::link(elementlist inputs, string inputval, string srcstate, elementlist outputs, string outputval, string dststate) {
 	map<string, vector<entry>>::iterator it = table.begin();
 	int itcount = 0;
-	table[srcstate].at(1).next_state = dststate;
-	table[srcstate].at(1).out_list = outputval;//todo teilweisedefinierte Ausgänge
-											//it->at()
+	int numberOfMatchingInput = 1;
+	int numberOfInput = (1 << iinputs.size());
+	bool foundMatch = false;
+	entry tempentry;
+	tempentry.next_state = dststate;
+	for (int i = 0; i < ioutputs.size(); i++) { /* run through known outputs */
+		for (int j = 0; (j < outputs.size()) && !foundMatch; j++) { /* run through outputs */
+			if (outputs.at(j) == ioutputs.at(i)) { /* output specified? */
+				char tempOutVal[2] = { 0, 0 };
+				tempOutVal[0] = outputval.at(j);   /* YES! copy value */
+				tempentry.out_list.append(tempOutVal);
+				foundMatch = true;
+			}
+		}
+		if (!foundMatch) tempentry.out_list.append("x");
+		foundMatch = false;
+	}	/* tempentry set up correctly, now has to be copied to matching input values */
+
+
+	foundMatch = false;
+	char* tempInVal = new char[iinputs.size()+1];
+	//for (int i = 0; i < iinputs.size(); i++) tempInVal[i] = 'x';
+	tempInVal[iinputs.size()] = '\0';
+	for (int i = 0; i < iinputs.size(); i++) { /* run through known inputs */
+		for (int j = 0; (j < inputs.size()) && !foundMatch; j++) { /* run through inputs */
+			if (inputs.at(j) == iinputs.at(i)) { /* input specified? */
+				tempInVal[i] = inputval.at(j);   /* YES! copy value */
+				foundMatch = true;
+			}
+		}
+		if (!foundMatch) tempInVal[i] = 'x';
+		foundMatch = false;
+	}	/* input values extracted */
+	for (int i = 0; i < numberOfInput; i++) {
+		if (bitsMatch(i, tempInVal)) table[srcstate].at(i) = tempentry;
+	}
+
+	//table[srcstate].at(1).next_state = dststate;
+	//table[srcstate].at(1).out_list = outputval;//todo teilweisedefinierte Ausgänge; it->at()
+
+	delete tempInVal;
 	return eOK;
 }
 
@@ -81,4 +138,14 @@ string *smtable::int2bit(int val, int width) {
 		val /= 2;
 	}
 	return retval;
+}
+
+bool smtable::bitsMatch(int a, char* b) {
+	int length = 0;
+	bool ret = true;
+	for (length = 0; b[length] != '\0'; length++);
+	for (int i = 0; i < length; i++) {
+		if ((((a >> (length - i - 1)) & 0x1) != (b[i] - '0')) && b[i] != 'x') ret = false;
+	}
+	return ret;
 }

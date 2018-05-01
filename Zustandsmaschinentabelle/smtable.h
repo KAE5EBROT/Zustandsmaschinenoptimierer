@@ -27,6 +27,8 @@ public:
 
 	fstate init(/*int state_count, int input_count, int output_count*/);
 
+	fstate init(elementlist states, elementlist inputs, elementlist outputs);
+
 	fstate setStates(elementlist inputs);
 
 	fstate setInputs(elementlist inputs);
@@ -38,5 +40,7 @@ public:
 	fstate print();
 
 	string *int2bit(int val, int width); /*delete pointer when finished*/
+
+	bool bitsMatch(int a, char * b);
 
 };
