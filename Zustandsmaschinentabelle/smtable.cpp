@@ -56,6 +56,20 @@ smtable::fstate smtable::print() {
 		cout << bits->c_str() << "\t";
 		delete bits;
 	}
+	cout << "\n-------|-------|-------|-------|-------|-------|-------|-------|-------";
+	for (int i = 0; i < iheight; i++) {
+		cout << "\n" << istates.at(i).c_str() << "\t";
+		for (int j = 0; j < iwidth; j++) {
+			cout << table[istates.at(i)].at(j).next_state.c_str() << "\t";
+		}
+	}
+	cout << "\n-------|-------|-------|-------|-------|-------|-------|-------|-------";
+	for (int i = 0; i < iheight; i++) {
+		cout << "\n" << istates.at(i).c_str() << "\t";
+		for (int j = 0; j < iwidth; j++) {
+			cout << table[istates.at(i)].at(j).out_list.c_str() << "\t";
+		}
+	}
 	return eOK;
 }
 
