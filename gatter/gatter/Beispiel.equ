@@ -1,0 +1,44 @@
+MINILOG  LOGIC MINIMIZER           Saturday, October 3, 2009; 12:22
+INPUT FILE: patternmatch_2.tbl           MULTIPLE OUTPUT SUM OF PRODUCTS MODE
+
+
+FUNCTION TABLE
+
+==========
+ABCD   XYZ
+==========
+0000 | 001
+0001 | 011
+0010 | 000
+0011 | 010
+0100 | ---
+0101 | 011
+0110 | 000
+0111 | 010
+1000 | 000
+1001 | ---
+1010 | 010
+1011 | ---
+1100 | ---
+1101 | 101
+1110 | 110
+1111 | 111
+
+MINIMIZATION RESULT STATISTICS
+==============================
+FOUND 5 ESSENTIAL PRODUCT TERMS
+MAXIMUM FANIN:                5
+TOTAL LITERAL COUNT:          15
+MAXIMUM PRODUCT TERM SIZE:    2
+MAXIMUM OUTPUT FUNCTION SIZE: 2
+
+INPUT SIGNAL  |  OUTPUT SIGNAL  REPRESENTATION
+
+A : IN        C : IR1           |       X : R2        Z : R0
+B : IR2       D : IR0           |       Y : R1        
+
+MINIMIZED EQUATIONS
+
+X = AB
+Y = A'D + AC
+Z = A'C' + AD
