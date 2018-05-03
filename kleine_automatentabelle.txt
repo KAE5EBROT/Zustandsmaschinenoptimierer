@@ -1,18 +1,33 @@
-kleine Automatentabelle (Klausur WS15/16)
+kleine Automatentabelle Skript S44
+
+Nichtoptimiert:
+
+Zündung	| 0 | 0 | 1 | 1 | Anlasser Einschalten
+Anlasser| 0 | 1 | 0 | 1 |
+--------|---|---|---|---|------------------------
+A		| A | A | B | C | 0
+B	    | A | A | B | C | 0 
+C	    | A | A | D | C | 1 
+D	    | A | A | D | D | 0 
+
+
+Optimiert:
+
+Zündung	| 0 | 0 | 1 | 1 | Anlasser Einschalten
+Anlasser| 0 | 1 | 0 | 1 |
+--------|---|---|---|---|------------------------
+AB	    | A | A | B | C | 0 
+C	    | A | A | D | C | 1 
+D	    | A | A | D | D | 0 
+
 Begin
-DEFSTATE a,b,c; DEFIN T,D; DEFOUT z,y;
-[T,D]		=(0,0)(a) 	> [z,y]:(0,0)(a)
-[T,D]		=(0,1)(a) 	> [z,y]:(0,0)(a)
-[T,D]		=(1,0)(a) 	> [z,y]:(x,x)(b)
-[T,D]		=(1,1)(a) 	> [z,y]:(x,x)(d)
-
-[T,D]		=(0,0)(b) 	> [z,y]:(x,x)(a)
-[T,D]		=(0,1)(b) 	> [z,y]:(x,x)(a)
-[T,D]		=(1,0)(b) 	> [z,y]:(0,0)(b)
-[T,D]		=(1,1)(b) 	> [z,y]:(1,0)(b)
-
-[T,D]		=(0,0)(c) 	> [z,y]:(x,x)(a)
-[T,D]		=(0,1)(c) 	> [z,y]:(x,x)(a)
-[T,D]		=(1,0)(c) 	> [z,y]:(0,1)(c)
-[T,D]		=(1,1)(c) 	> [z,y]:(0,0)(c)
+DEFSTATE Aus, Ein, Starten, Fahrbtr; DEFIN Zuendng, Anlassn; DEFOUT Anlassr;
+[Zuendng, Anlassn]		=(0,0)(Aus) 	> [Anlassr]:(0)(Aus)
+[Zuendng, Anlassn]		=(1,0)(Aus) 	> [Anlassr]:(0)(Ein)
+[Zuendng, Anlassn]		=(1,0)(Ein) 	> [Anlassr]:(0)(Ein)
+[Zuendng, Anlassn]		=(1,1)(Ein) 	> [Anlassr]:(1)(Starten)
+[Zuendng, Anlassn]		=(1,1)(Starten) > [Anlassr]:(1)(Starten)
+[Zuendng, Anlassn]		=(1,0)(Starten) > [Anlassr]:(0)(Fahrbtr)
+[Zuendng, Anlassn]		=(1,0)(Fahrbtr) > [Anlassr]:(0)(Fahrbtr)
+[Zuendng, Anlassn]		=(0,0)(Fahrbtr) > [Anlassr]:(0)(Aus)
 End

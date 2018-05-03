@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="in1.txt" />
+    <Text Include="kleine_automatentabelle.txt" />
     <Text Include="mittlere_automatentabelle.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
