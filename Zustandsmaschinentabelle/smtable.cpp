@@ -64,37 +64,38 @@ smtable::fstate smtable::link(elementlist inputs, string inputval, string srcsta
 	int numberOfInput = (1 << iinputs.size());
 	bool foundMatch = false;
 	entry tempentry;
+	/* next state unambiguous, just copy */
 	tempentry.next_state = dststate;
+	/* Now comes the tricky part: Inputs can either be assigned 1, 0 or x or be unassigned, then x */
 	for (int i = 0; i < ioutputs.size(); i++) { /* run through known outputs */
-		for (int j = 0; (j < outputs.size()) && !foundMatch; j++) { /* run through outputs */
-			if (outputs.at(j) == ioutputs.at(i)) { /* output specified? */
-				char tempOutVal[2] = { 0, 0 };
-				tempOutVal[0] = outputval.at(j);   /* YES! copy value */
-				tempentry.out_list.append(tempOutVal);
-				foundMatch = true;
+		for (int j = 0; (j < outputs.size()) && !foundMatch; j++) { /* run through given outputs */
+			if (outputs.at(j) == ioutputs.at(i)) {	/* output specified? */
+				char tempOutVal[2] = { 0, 0 };		/* temp string to append */
+				tempOutVal[0] = outputval.at(j);	/* YES! copy value */
+				tempentry.out_list.append(tempOutVal); /* and save */
+				foundMatch = true;					/* ignore remainder */
 			}
 		}
-		if (!foundMatch) tempentry.out_list.append("x");
-		foundMatch = false;
+		if (!foundMatch) tempentry.out_list.append("x"); /* not found at all? Unassigned, then x */
+		foundMatch = false;							/* reset for next run */
 	}	/* tempentry set up correctly, now has to be copied to matching input values */
 
-
-	foundMatch = false;
-	char* tempInVal = new char[iinputs.size()+1];
-	//for (int i = 0; i < iinputs.size(); i++) tempInVal[i] = 'x';
-	tempInVal[iinputs.size()] = '\0';
-	for (int i = 0; i < iinputs.size(); i++) { /* run through known inputs */
+	/* Another tricky part: extract info, where to copy it all (could be ambiguous) */
+	foundMatch = false;								/* reuse/reset again */
+	char* tempInVal = new char[iinputs.size()+1];	/* set up a temporary string */
+	tempInVal[iinputs.size()] = '\0';				/* determine end of string */
+	for (int i = 0; i < iinputs.size(); i++) {		/* run through known inputs */
 		for (int j = 0; (j < inputs.size()) && !foundMatch; j++) { /* run through inputs */
-			if (inputs.at(j) == iinputs.at(i)) { /* input specified? */
-				tempInVal[i] = inputval.at(j);   /* YES! copy value */
-				foundMatch = true;
+			if (inputs.at(j) == iinputs.at(i)) {	/* input specified? */
+				tempInVal[i] = inputval.at(j);		/* YES! copy value */
+				foundMatch = true;					/* ignore remainder */
 			}
 		}
 		if (!foundMatch) tempInVal[i] = 'x';
 		foundMatch = false;
 	}	/* input values extracted */
-	for (int i = 0; i < numberOfInput; i++) {
-		if (bitsMatch(i, tempInVal)) table[srcstate].at(i) = tempentry;
+	for (int i = 0; i < numberOfInput; i++) {		/* run through all input combinations */
+		if (bitsMatch(i, tempInVal)) table[srcstate].at(i) = tempentry; /* on match copy */
 	}
 
 	//table[srcstate].at(1).next_state = dststate;
@@ -105,22 +106,31 @@ smtable::fstate smtable::link(elementlist inputs, string inputval, string srcsta
 }
 
 smtable::fstate smtable::print() {
+	/* print correct input and output sequences */
 	cout << "Reihenfolge Eingangssignale: ";
 	for (int i = 0; i < iinputs.capacity(); i++) cout << iinputs.at(i).c_str() << " ";
+	cout << "\n";
+	cout << "Reihenfolge Ausgangssignale: ";
+	for (int i = 0; i < ioutputs.capacity(); i++) cout << ioutputs.at(i).c_str() << " ";
 	cout << "\n\t";
-	for (int i = 0; i < iwidth; i++) {
+	/* print all input combinations */
+	for (int i = 0; i < iwidth; i++) { 
 		string *bits = int2bit(i, iinputs.capacity());
 		cout << bits->c_str() << "\t";
-		delete bits;
+		delete bits; /* don't forget to clear heap */
 	}
-	cout << "\n-------|-------|-------|-------|-------|-------|-------|-------|-------";
+	cout << "\n-------"; /* table separator */
+	for(int i = 0; i < iwidth; i++) cout << "|-------";
+	/* print next states determined by current state and input */
 	for (int i = 0; i < iheight; i++) {
 		cout << "\n" << istates.at(i).c_str() << "\t";
 		for (int j = 0; j < iwidth; j++) {
 			cout << table[istates.at(i)].at(j).next_state.c_str() << "\t";
 		}
 	}
-	cout << "\n-------|-------|-------|-------|-------|-------|-------|-------|-------";
+	cout << "\n-------"; /* table separator */
+	for (int i = 0; i < iwidth; i++) cout << "|-------";
+	/* print output values determined by current state and input */
 	for (int i = 0; i < iheight; i++) {
 		cout << "\n" << istates.at(i).c_str() << "\t";
 		for (int j = 0; j < iwidth; j++) {

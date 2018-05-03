@@ -39,8 +39,10 @@ public:
 
 	fstate print();
 
+	/// 
 	string *int2bit(int val, int width); /*delete pointer when finished*/
 
+	/// checks, if int a matches with bit pattern char* b. b is expected as string
 	bool bitsMatch(int a, char * b);
 
 };
