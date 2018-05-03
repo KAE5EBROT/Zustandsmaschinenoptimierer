@@ -25,7 +25,7 @@ public:
 	elementlist iinputs;
 	elementlist ioutputs;
 
-	fstate init(/*int state_count, int input_count, int output_count*/);
+	fstate init(); /** States, Ins and Outs have been initialized seperately */
 
 	fstate init(elementlist states, elementlist inputs, elementlist outputs);
 

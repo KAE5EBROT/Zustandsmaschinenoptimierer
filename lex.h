@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "Zustandsmaschinentabelle\smtable.h"
 using namespace std;
 
 #define	Getc(s)			getc(s)
@@ -30,7 +31,10 @@ public:
 		bool outputs = false;
 	} defScanned;
 	string yytext;								//input buffer
-
+	smtable table;
+	smtable::elementlist scannedStates;
+	smtable::elementlist scannedInputs;
+	smtable::elementlist scannedOutputs;
 	/*
 	*	Lexical analyzer states.
 	*/

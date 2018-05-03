@@ -24,6 +24,9 @@
     <ClCompile Include="lex.cpp">
       <Filter>Quellcodedateien</Filter>
     </ClCompile>
+    <ClCompile Include="Zustandsmaschinentabelle\smtable.cpp">
+      <Filter>Quellcodedateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -35,10 +38,14 @@
     <ClInclude Include="lex.h">
       <Filter>Header-Dateien</Filter>
     </ClInclude>
+    <ClInclude Include="Zustandsmaschinentabelle\smtable.h">
+      <Filter>Header-Dateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="in1.txt" />
     <Text Include="ReadMe.txt" />
+    <Text Include="mittlere_automatentabelle.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Zustandsmaschinencodierungsoptimierer.out" />

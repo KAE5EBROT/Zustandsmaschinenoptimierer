@@ -90,6 +90,7 @@ int	CParser::yyparse()
 	printf("\nAnzahl Zustaende: %d", state_count);
 	printf("\nAnzahl Eingangssignale: %d", input_count);
 	printf("\nAnzahl Ausgangssignale: %d \n", output_count);
+	table.print();
 
 	
 
@@ -372,8 +373,8 @@ CParser::parstates CParser::pfGetDef(int &tok)
 	static int i = 0;
 
 	if (defScanned.states && defScanned.inputs && defScanned.outputs) {
+		table.init(scannedStates, scannedInputs, scannedOutputs);//printf("\n"); //todo vielleicht entfernen, nur zur Ausgabe in Konsole
 		retval = P_READLINE;
-		printf("\n"); //todo vielleicht entfernen, nur zur Ausgabe in Konsole
 	}
 	else if ((((tok = yylex()) < IP_Token_table["DEFSTATE"]) || (tok > IP_Token_table["DEFOUT"])) && (i<1000)) {
 		i++;
@@ -399,7 +400,7 @@ CParser::parstates CParser::pfScanState(int &tok)
 	parstates retval;
 	switch (tok) {
 	case IDENTIFIERDEF:
-		printf("%c ", yylval.s[0]);//todo abspeichern
+		scannedStates.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
 		state_count++;
 		retval = P_DEFSTATE;
 		break;
@@ -422,7 +423,7 @@ CParser::parstates CParser::pfScanInputs(int &tok)
 	parstates retval;
 	switch (tok) {
 	case IDENTIFIERDEF:
-		printf("%c ", yylval.s[0]);//todo abspeichern
+		scannedInputs.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
 		input_count++;
 		retval = P_DEFIN;
 		break;
@@ -445,7 +446,7 @@ CParser::parstates CParser::pfScanOutputs(int &tok)
 	parstates retval;
 	switch (tok) {
 	case IDENTIFIERDEF:
-		printf("%c ", yylval.s[0]);//todo abspeichern
+		scannedOutputs.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
 		output_count++;
 		retval = P_DEFOUT;
 		break;
@@ -467,12 +468,18 @@ CParser::parstates CParser::pfReadLine(int &tok)
 {
 	parstates retval = P_READLINE;
 	int k, j, j_old;
+	smtable::elementlist inputs;
+	string invals;
+	string srcstate;
+	smtable::elementlist outputs;
+	string outvals;
+	string dststate;
 	while (tok != '[')tok = yylex();
 	tok = yylex();									//erste Eingangsvariable
 
 	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
 	{
-		printf("%c ", yylval.s[0]);					//todo abspeichern
+		inputs.push_back(string(yylval.s));// printf("%c ", yylval.s[0]);					//todo abspeichern
 		tok = yylex();
 		if (tok == ',') {
 			tok = yylex();
@@ -501,10 +508,13 @@ CParser::parstates CParser::pfReadLine(int &tok)
 	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
 	{
 		if (tok == IDENTIFIER) {
-			printf("x ");
+			invals.append("x");// printf("x ");
 		}
 		else {
-			printf("%d ", yylval.i);
+			if(yylval.i)
+				invals.append("1");// printf("%d ", yylval.i);
+			else
+				invals.append("0");
 		}
 		tok = yylex();
 		if (tok == ',') {
@@ -530,7 +540,7 @@ CParser::parstates CParser::pfReadLine(int &tok)
 
 	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
 	{
-		printf("%c ", yylval.s[0]);
+		srcstate.append(yylval.s);// printf("%c ", yylval.s[0]);
 
 		tok = yylex();
 
@@ -555,7 +565,7 @@ CParser::parstates CParser::pfReadLine(int &tok)
 
 	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
 	{
-		printf("%c ", yylval.s[0]);
+		outputs.push_back(string(yylval.s));// printf("%c ", yylval.s[0]);
 		tok = yylex();
 		if (tok == ',') {
 			tok = yylex();
@@ -585,10 +595,13 @@ CParser::parstates CParser::pfReadLine(int &tok)
 	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
 	{
 		if (tok == IDENTIFIER) {
-			printf("x ");
+			outvals.append("x");// printf("x ");
 		}
 		else {
-			printf("%d ", yylval.i);
+			if (yylval.i)
+				outvals.append("1");// printf("%d ", yylval.i);
+			else
+				outvals.append("0");
 		}
 		tok = yylex();
 		if (tok == ',') {
@@ -616,7 +629,7 @@ CParser::parstates CParser::pfReadLine(int &tok)
 
 	for (k = 0; tok == IDENTIFIER; k++)
 	{
-		printf("%c ", yylval.s[0]);
+		dststate.append(yylval.s);// printf("%c ", yylval.s[0]);
 		tok = yylex();
 		if (tok == ')') {
 			tok = yylex();
@@ -624,7 +637,7 @@ CParser::parstates CParser::pfReadLine(int &tok)
 				break;
 			}
 			else if (tok == '[') {
-				printf("\n");
+				//printf("\n");
 			}
 			else
 			{
@@ -635,5 +648,6 @@ CParser::parstates CParser::pfReadLine(int &tok)
 			fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		}
 	}
+	table.link(inputs, invals, srcstate, outputs, outvals, dststate);
 	return retval;
 }
