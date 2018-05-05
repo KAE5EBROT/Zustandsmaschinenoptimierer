@@ -1,0 +1,16 @@
+große Automatentabelle (4-Bit Mustererkenner DS-Skript S.66ff.)
+Begin
+DEFSTATE S0,S1,S2,S3,S4,S7,S9; DEFIN E; DEFOUT A;
+[E]		=(0)(S0) 	> [A]:(0)(S1)
+[E]		=(1)(S0) 	> [A]:(0)(S2)
+[E]		=(0)(S1) 	> [A]:(0)(S3)
+[E]		=(1)(S1) 	> [A]:(0)(S4)
+[E]		=(1)(S2) 	> [A]:(0)(S3)
+[E]		=(0)(S2) 	> [A]:(0)(S4)
+[E]		=(x)(S3) 	> [A]:(0)(S7)
+[E]		=(0)(S4) 	> [A]:(0)(S7)
+[E]		=(1)(S4) 	> [A]:(0)(S9)
+[E]		=(x)(S7) 	> [A]:(0)(S0)
+[E]		=(0)(S9) 	> [A]:(1)(S0)
+[E]		=(1)(S9) 	> [A]:(0)(S0)
+End

@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "lex.h"
+#include "Zustandsmaschinentabelle\smtable.h"
 
 #pragma warning(disable:4786)
 
@@ -95,6 +96,23 @@ int	CParser::yyparse()
 
 	// Codierungsoptimierung
 
+	//table.table[zustand].at(input)
+	//table.iheight	//Anzahl States (Zeilen)
+	//table.iwidth	//Anzahl Eingangskombinationen
+	//int inputcount = table.iinputs.size();
+	//table.table[table.iinputs.at(0)].at(0).next_state;			//0te state
+	//table.table.at(0).size();
+	//string str("hallo");
+	//const char* Zeichenkette = str.c_str();//string -> Zeichenkette
+	//str = string(Zeichenkette); // umgekehrt
+
+	string h;
+	//h= table.table[table.iinputs.at(0)].at(0).next_state;
+	//h = table.table.at(0).;
+	//table.ioutputs
+	//
+	//h = table.table[table.istates.at(0)].at(1).next_state.c_str();		// i=Zeile j= Spalte // c_str Umwandeln des String -> C-String (char *)
+
 	//high priority:
 
 	typedef map<string, vector<string>> priority;
@@ -117,16 +135,6 @@ int	CParser::yyparse()
 		t.clear();
 		c = 0;
 	}
-
-	//table.table[zustand].at(input)
-	//table.iheight	//Anzahl States (Zeilen)
-	//table.iwidth	//Anzahl Eingangskombinationen
-	//int inputcount = table.iinputs.size();
-	//table.table[table.iinputs.at(0)].at(0).next_state;			//0te state
-	//table.table.at(0).size();
-	//string str("hallo");
-	//const char* Zeichenkette = str.c_str();//string -> Zeichenkette
-	//str = string(Zeichenkette); // umgekehrt
 
 	return 0;
 
