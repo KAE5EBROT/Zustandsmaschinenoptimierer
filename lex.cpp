@@ -118,6 +118,32 @@ int	CParser::yyparse()
 		c = 0;
 	}
 
+	//mean priority:
+
+	priority mean_priority;
+	c = 0;
+	bool nextstate_unequal = true;
+	
+	for (int j = 0; j < table.iheight; j++) {
+		for (int i = 0; i < table.iwidth; i++) {
+				for (int k = 0; k < table.iwidth; k++) {
+					if (table.table[table.istates.at(j)].at(i).next_state == table.table[table.istates.at(j)].at(k).next_state && k != i) {
+						nextstate_unequal = false;
+					}
+				}
+				if (nextstate_unequal == true) {
+					c++;
+					t.push_back(table.table[table.istates.at(j).c_str()].at(i).next_state);
+				}
+				nextstate_unequal = true;
+		}
+		if (c >= 2) {
+			mean_priority[table.istates.at(j).c_str()] = t;
+		}
+		t.clear();
+		c = 0;
+	}
+
 	//table.table[zustand].at(input)
 	//table.iheight	//Anzahl States (Zeilen)
 	//table.iwidth	//Anzahl Eingangskombinationen
