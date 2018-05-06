@@ -180,8 +180,8 @@ int	CParser::yyparse()
 					ges_val -= k;
 					if (ges_val < 0)
 					{
-						pos = t1.size() - 1;
-						while (pos) {
+						pos = (t1.size())- 1;
+						while (pos>=0) {
 							pos = t1.rfind("x", pos);
 							int tt = ges_val;
 							ges_val += 1 << pos;
@@ -208,9 +208,19 @@ int	CParser::yyparse()
 					t.push_back(table.istates.at(i).c_str());
 					x_found = false;
 				}
-				else if (t1.find("x", 0) == -1)
+				else if (t1.find("x", 0) == -1)  
 				{
-					if (atoi(table.table[table.istates.at(i)].at(j).out_list.c_str()) == k) {   //checks, if output value of the current state is equal with the output possibility
+					string t2 = table.table[table.istates.at(i)].at(j).out_list;			
+					pos = t2.size();													//binary string to int
+					while (pos >= 0) {
+						pos = t2.rfind("1", pos);
+						if (pos >= 0) {
+							ges_val += 1 << (t2.size() - pos - 1);
+							pos = pos - 1;
+						}
+					}
+
+					if (ges_val == k) {   //checks, if output value of the current state is equal with the output possibility
 						c++;
 						t.push_back(table.istates.at(i).c_str());
 						x_found = false;
