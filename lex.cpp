@@ -1,6 +1,7 @@
 
 #include "stdafx.h"
 #include "lex.h"
+#include <iostream>
 
 #pragma warning(disable:4786)
 
@@ -98,21 +99,21 @@ int	CParser::yyparse()
 	//high priority:
 
 	typedef map<string, vector<string>> priority;
-	priority high_priority;
+	priority high_priority;		//high priority is when at least two states have the same next state by the same input value
 	vector<string> t;
-	int c=0;					
+	int c = 0;
 
 	for (int j = 0; j < table.iheight; j++) {
 		for (int i = 0; i < table.iheight; i++) {
-			if (table.istates.at(j).c_str() != table.istates.at(i).c_str()){						//checks, if row state unequal nextstate	
-				if (table.istates.at(j) == table.table[table.istates.at(i)].at(0).next_state){
+			if (table.istates.at(j).c_str() != table.istates.at(i).c_str()) {						//checks, if row state unequal nextstate	
+				if (table.istates.at(j) == table.table[table.istates.at(i)].at(0).next_state) {
 					c++;
-					t.push_back(table.istates.at(i).c_str());
+					t.push_back(table.istates.at(i).c_str());										//push a candidate for high priority into t
 				}
 			}
 		}
 		if (c >= 2) {
-			high_priority[table.istates.at(j).c_str()] = t;			
+			high_priority[table.istates.at(j).c_str()] = t;											//if there are more canditates than one, then the high priority map is passed t
 		}
 		t.clear();
 		c = 0;
@@ -120,43 +121,115 @@ int	CParser::yyparse()
 
 	//mean priority:
 
-	priority mean_priority;
+	priority mean_priority;		// mean priority is when a state have at least two different next states by different input values
 	c = 0;
+	int z = 0;
 	bool nextstate_unequal = true;
-	
+
 	for (int j = 0; j < table.iheight; j++) {
-		for (int i = 0; i < table.iwidth; i++) {
-				for (int k = 0; k < table.iwidth; k++) {
-					if (table.table[table.istates.at(j)].at(i).next_state == table.table[table.istates.at(j)].at(k).next_state && k != i) {
-						nextstate_unequal = false;
-					}
+		for (int i = 0; i < table.iwidth; i++) {					//checks, row for row of mean priority
+			for (int k = 0; k < table.iwidth; k++) {
+				if (table.table[table.istates.at(j)].at(i).next_state == table.table[table.istates.at(j)].at(k).next_state && k != i) {
+					nextstate_unequal = false;					//checks, if the next state is equal of a other next state by a other input value 
 				}
-				if (nextstate_unequal == true) {
-					c++;
-					t.push_back(table.table[table.istates.at(j).c_str()].at(i).next_state);
-				}
-				nextstate_unequal = true;
+			}
+			if (nextstate_unequal == true) {
+				c++;
+				t.push_back(table.table[table.istates.at(j).c_str()].at(i).next_state);
+			}
+			nextstate_unequal = true;
 		}
 		if (c >= 2) {
-			mean_priority[table.istates.at(j).c_str()] = t;
+			mean_priority[table.istates.at(j).c_str()] = t;									//if there are more canditates than one, then the mean priority map is passed t
 		}
 		t.clear();
 		c = 0;
 	}
 
-	//table.table[zustand].at(input)
-	//table.iheight	//Anzahl States (Zeilen)
-	//table.iwidth	//Anzahl Eingangskombinationen
-	//int inputcount = table.iinputs.size();
-	//table.table[table.iinputs.at(0)].at(0).next_state;			//0te state
-	//table.table.at(0).size();
-	//string str("hallo");
-	//const char* Zeichenkette = str.c_str();//string -> Zeichenkette
-	//str = string(Zeichenkette); // umgekehrt
+	//lowest priority:
+
+	priority lowest_priority;		//lowest priority is given when at least two states have the same output behaviour
+	c = 0;							//c counts the states with the same output behaviour 	
+	bool x_found = false;
+	int outputcount = 1;
+	for (int i = 1; i < table.ioutputs.size() + 1; i++) outputcount *= 2;						//outputcount = number of output value possibilties
+
+	for (int j = 0; j < table.iwidth; j++) {												//check all input possibilities
+		for (int k = 0; k < outputcount; k++) {												//check all output possibilities (00 01 10 11 -> 0 1 2 3) 
+			for (int i = 0; i < table.iheight; i++) {
+				string t1 = table.table[table.istates.at(i)].at(j).out_list;
+				int pos = 1;
+				int val = 1;
+				int ges_val = 0;
+				//k = 15;
+				/*t1 = "0x1x1";
+				t1 = "00";
+				k=t1.find("x", 0);*/
+				/*t1 = "00";
+				k = t1.find("x", 0);*/
+
+				if (t1.find("x", 0) != -1) {
+					pos = t1.size();
+					while (pos >= 0) {
+						pos = t1.rfind("1", pos);
+						if (pos >= 0) {
+							ges_val += 1 << (t1.size() - pos - 1);
+							pos = pos - 1;
+						}
+					}
+					ges_val -= k;
+					if (ges_val < 0)
+					{
+						pos = t1.size() - 1;
+						while (pos) {
+							pos = t1.rfind("x", pos);
+							int tt = ges_val;
+							ges_val += 1 << pos;
+							if (ges_val > 0) {
+								ges_val = tt;
+							}
+							else if (ges_val == 0) {
+								x_found = true;
+								pos = -1;
+							}
+							pos -= 1;
+						}
+					}
+					else if (ges_val == 0) {
+						x_found = true;
+					}
+					else {
+						x_found = false;
+					}
+				}
+
+				if (x_found == true) {
+					c++;
+					t.push_back(table.istates.at(i).c_str());
+					x_found = false;
+				}
+				else if (t1.find("x", 0) == -1)
+				{
+					if (atoi(table.table[table.istates.at(i)].at(j).out_list.c_str()) == k) {   //checks, if output value of the current state is equal with the output possibility
+						c++;
+						t.push_back(table.istates.at(i).c_str());
+						x_found = false;
+					}
+				}
+			}
+			if (c >= 2) {
+				lowest_priority[to_string(z)] = t;											//if there are more canditates than one, then the lowest priority map is passed t
+				z += 1;
+			}
+			t.clear();
+			c = 0;
+		}		
+	}
 
 	return 0;
 
-}
+}	
+
 //------------------------------------------------------------------------
 
 /*
