@@ -150,80 +150,78 @@ int	CParser::yyparse()
 
 	priority lowest_priority;		//lowest priority is given when at least two states have the same output behaviour
 	c = 0;							//c counts the states with the same output behaviour 	
-	bool x_found = false;
+	bool output_matched = false;
 	int outputcount = 1;
+	int pos;
+	int val;
+	int tt;
+	string t1, t2;
+
 	for (int i = 1; i < table.ioutputs.size() + 1; i++) outputcount *= 2;						//outputcount = number of output value possibilties
 
-	for (int j = 0; j < table.iwidth; j++) {												//check all input possibilities
-		for (int k = 0; k < outputcount; k++) {												//check all output possibilities (00 01 10 11 -> 0 1 2 3) 
+	for (int j = 0; j < table.iwidth; j++) {													//check all input possibilities
+		for (int k = 0; k < outputcount; k++) {													//check all output possibilities (00 01 10 11 -> 0 1 2 3) 
 			for (int i = 0; i < table.iheight; i++) {
-				string t1 = table.table[table.istates.at(i)].at(j).out_list;
-				int pos = 1;
-				int val = 1;
-				int ges_val = 0;
-				//k = 15;
-				/*t1 = "0x1x1";
-				t1 = "00";
-				k=t1.find("x", 0);*/
-				/*t1 = "00";
-				k = t1.find("x", 0);*/
+				t1 = table.table[table.istates.at(i)].at(j).out_list;							//save output string
+				pos = 1;
+				val = 0;
 
-				if (t1.find("x", 0) != -1) {
+				if (t1.find("x", 0) != -1) {													//checks, if a "x" is in t1
 					pos = t1.size();
 					while (pos >= 0) {
-						pos = t1.rfind("1", pos);
+						pos = t1.rfind("1", pos);												//search backwards after a "1" 
 						if (pos >= 0) {
-							ges_val += 1 << (t1.size() - pos - 1);
+							val += 1 << (t1.size() - pos - 1);									//calculate decimal value of all "1" in binary code 
 							pos = pos - 1;
 						}
 					}
-					ges_val -= k;
-					if (ges_val < 0)
+					val -= k;																	//val= decimal value (all "1" in binary code) - one output possibility															 
+					if (val < 0)
 					{
 						pos = (t1.size())- 1;
 						while (pos>=0) {
-							pos = t1.rfind("x", pos);
-							int tt = ges_val;
-							ges_val += 1 << pos;
-							if (ges_val > 0) {
-								ges_val = tt;
+							pos = t1.rfind("x", pos);						
+							tt = val;															//save val
+							val += 1 << pos;
+							if (val > 0) {
+								val = tt;														//the "1" value (2^n) to high, take the old value tt
 							}
-							else if (ges_val == 0) {
-								x_found = true;
+							else if (val == 0) {
+								output_matched = true;											//matched e.g. "01" --> "0x" 
 								pos = -1;
 							}
 							pos -= 1;
 						}
 					}
-					else if (ges_val == 0) {
-						x_found = true;
+					else if (val == 0) {
+						output_matched = true;
 					}
 					else {
-						x_found = false;
+						output_matched = false;
 					}
 				}
 
-				if (x_found == true) {
+				if (output_matched == true) {
 					c++;
-					t.push_back(table.istates.at(i).c_str());
-					x_found = false;
+					t.push_back(table.istates.at(i).c_str());							//push candidate state in t 
+					output_matched = false;
 				}
 				else if (t1.find("x", 0) == -1)  
 				{
-					string t2 = table.table[table.istates.at(i)].at(j).out_list;			
-					pos = t2.size();													//binary string to int
-					while (pos >= 0) {
+					t2 = table.table[table.istates.at(i)].at(j).out_list;			
+					pos = t2.size();													
+					while (pos >= 0) {													//binary string to int (output binary string -> int)
 						pos = t2.rfind("1", pos);
 						if (pos >= 0) {
-							ges_val += 1 << (t2.size() - pos - 1);
+							val += 1 << (t2.size() - pos - 1);
 							pos = pos - 1;
 						}
 					}
 
-					if (ges_val == k) {   //checks, if output value of the current state is equal with the output possibility
+					if (val == k) {   //checks, if output value of the current state is equal with one output possibility
 						c++;
-						t.push_back(table.istates.at(i).c_str());
-						x_found = false;
+						t.push_back(table.istates.at(i).c_str());							//push candidate state in t 
+						output_matched = false;
 					}
 				}
 			}
@@ -233,7 +231,7 @@ int	CParser::yyparse()
 			}
 			t.clear();
 			c = 0;
-		}		
+		}	
 	}
 
 	return 0;
