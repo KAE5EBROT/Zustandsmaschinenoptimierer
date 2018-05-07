@@ -157,7 +157,7 @@ int	CParser::yyparse()
 	int tt;
 	string t1, t2;
 
-	for (int i = 1; i < table.ioutputs.size() + 1; i++) outputcount *= 2;						//outputcount = number of output value possibilties
+	for (uint i = 1; i < table.ioutputs.size() + 1; i++) outputcount *= 2;						//outputcount = number of output value possibilties
 
 	for (int j = 0; j < table.iwidth; j++) {													//check all input possibilities
 		for (int k = 0; k < outputcount; k++) {													//check all output possibilities (00 01 10 11 -> 0 1 2 3) 

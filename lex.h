@@ -6,6 +6,7 @@
 #include <map>
 #include "Zustandsmaschinentabelle\smtable.h"
 using namespace std;
+typedef unsigned int uint;
 
 #define	Getc(s)			getc(s)
 #define	Ungetc(c)		{ungetc(c,IP_Input); ugetflag=1;}
