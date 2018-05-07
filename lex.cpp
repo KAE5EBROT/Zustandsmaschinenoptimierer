@@ -100,7 +100,7 @@ int	CParser::yyparse()
 
 	typedef map<string, vector<string>> priority;
 	priority high_priority;		//high priority is when at least two states have the same next state by the same input value
-	vector<string> t;
+	vector<string> t, high_priority_string;
 	int c = 0;
 
 	for (int j = 0; j < table.iheight; j++) {
@@ -114,6 +114,7 @@ int	CParser::yyparse()
 		}
 		if (c >= 2) {
 			high_priority[table.istates.at(j).c_str()] = t;											//if there are more canditates than one, then the high priority map is passed t
+			high_priority_string.push_back(table.istates.at(j).c_str());
 		}
 		t.clear();
 		c = 0;
@@ -233,6 +234,70 @@ int	CParser::yyparse()
 			c = 0;
 		}	
 	}
+
+	//Optimierung
+
+	int a = 1;
+	int bit_count = 1;
+	int set_states = 0;
+	int index=1;
+	int gray_index = 1;
+	int high_priority_count = high_priority.size();
+	z = 0;
+	priority::iterator t3;
+	vector<string>::iterator t4;
+
+	vector <string> Zustandscodierung,l1,l2,l3,setstates;
+
+	while (a < table.iheight) {
+		a *= 2;
+	}
+	cout << a;
+	Zustandscodierung.resize(a);
+	Zustandscodierung[0] = table.istates.at(0);										//Set reset state
+	setstates.push_back(table.istates.at(0));
+
+	l1 = high_priority[Zustandscodierung[0]];
+	if (l1.size() > 0) {
+		for (t3 = high_priority.begin(); t3 != high_priority.end(); t3++) {
+			for (int i = 0; i < high_priority_count; i++)
+			{
+				if (l1[i] == t3->first)
+				{
+					Zustandscodierung[index] = t3->first;
+					setstates.push_back(t3->first);
+					gray_index = index;
+					index++;
+					set_states++;
+					l2 = high_priority[t3->first];
+					for (int j = 0; j < l2.size(); j++) {
+						//checken, ob t3->second.at(j) schon in Zustandscodierungstabelle steht if()....
+						gray_index = gray_index + (1 << (j + 1));
+						Zustandscodierung[gray_index] = t3->second.at(j);
+						setstates.push_back(t3->second.at(j));
+						set_states++;
+					}
+				}
+				else {
+					//l3[z] = l1[i];
+					//z++;
+				}
+			}
+		}
+		
+	}
+	else {
+
+	}
+	//table.table[zustand].at(input) 
+	//table.iheight  //Anzahl States (Zeilen) 
+	//table.iwidth  //Anzahl Eingangskombinationen 
+	//int inputcount = table.iinputs.size(); 
+	//table.table[table.iinputs.at(0)].at(0).next_state;      //0te state 
+	//table.table.at(0).size(); 
+	//string str("hallo"); 
+	//const char* Zeichenkette = str.c_str();//string -> Zeichenkette 
+	//str = string(Zeichenkette); // umgekehrt 
 
 	return 0;
 
