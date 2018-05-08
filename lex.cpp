@@ -201,15 +201,7 @@ int	CParser::yyparse()
 			c = 0;
 		}	
 	}
-	/* remove duplicates */
-	for (uint j = 0; j < lowestpriority.size(); j++) {					/* run through list */
-		for (uint k = 0; k < lowestpriority.size(); k++) {			/* run through */
-			if ((isDuplicate(lowestpriority.at(j), lowestpriority.at(k))) && (j != k)) {
-				vector<vector<string>>::iterator it = lowestpriority.begin() + k;
-				lowestpriority.erase(it);
-			}
-		}
-	}
+	removeSubsets(lowestpriority);
 
 	//Optimierung
 
@@ -815,14 +807,26 @@ CParser::parstates CParser::pfReadLine(int &tok)
 	return retval;
 }
 
-bool CParser::isDuplicate(smtable::elementlist base, smtable::elementlist cmp)
+bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp)
 {
 	bool retval = true;
-	for (uint i = 0; i < base.size(); i++) {
+	for (uint i = 0; i < cmp.size(); i++) {
 		smtable::elementlist::iterator it;
-		if ((it = find(cmp.begin(), cmp.end(), base.at(i))) == cmp.end()) {
+		if ((it = find(base.begin(), base.end(), cmp.at(i))) == base.end()) {
 			retval = false;
 		}
 	}
 	return retval;
+}
+
+void CParser::removeSubsets(vector<vector<string>> &tab) {
+	for (uint i = 0; i < tab.size(); i++) {					/* run through list */
+		for (uint j = 0; (j < tab.size()) && (i < tab.size()); j++) {				/* run through list again */
+			if ((contains(tab.at(i), tab.at(j))) && (i != j)) {
+				vector<vector<string>>::iterator it = tab.begin() + j;
+				tab.erase(it);
+				j--;													/* adjust k, because current element at k is unchecked */
+			}
+		}
+	}
 }

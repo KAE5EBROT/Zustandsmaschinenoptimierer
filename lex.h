@@ -79,7 +79,8 @@ public:
 	CParser::parstates CParser::pfScanInputs(int & tok);
 	CParser::parstates CParser::pfScanOutputs(int & tok);
 	CParser::parstates CParser::pfReadLine(int & tok);
-	bool CParser::isDuplicate(smtable::elementlist base, smtable::elementlist cmp);
+	bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp);
+	void CParser::removeSubsets(vector<vector<string>>& tab);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
 //------------------------------------------------------------------------

@@ -148,6 +148,7 @@
     <ClInclude Include="Zustandsmaschinentabelle\smtable.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="große_automatentabelle.txt" />
     <Text Include="in1.txt" />
     <Text Include="kleine_automatentabelle.txt" />
     <Text Include="mittlere_automatentabelle.txt" />

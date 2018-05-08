@@ -47,6 +47,7 @@
     <Text Include="ReadMe.txt" />
     <Text Include="mittlere_automatentabelle.txt" />
     <Text Include="kleine_automatentabelle.txt" />
+    <Text Include="große_automatentabelle.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Zustandsmaschinencodierungsoptimierer.out" />
