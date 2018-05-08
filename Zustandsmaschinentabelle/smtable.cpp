@@ -146,7 +146,7 @@ string *smtable::int2bit(int val, int width) {
 	return retval;
 }
 
-bool smtable::bitsMatch(int a, char* b) {
+bool smtable::bitsMatch(int a, const char* b) {
 	int length = 0;
 	bool ret = true;
 	for (length = 0; b[length] != '\0'; length++);	/* get length of string							*/

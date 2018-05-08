@@ -100,12 +100,12 @@ int	CParser::yyparse()
 
 	typedef map<string, vector<string>> priority;
 	priority high_priority;		//high priority is when at least two states have the same next state by the same input value
-	vector<string> t, high_priority_string;
+	vector<string> t;
 	int c = 0;
 
 	for (int j = 0; j < table.iheight; j++) {
 		for (int i = 0; i < table.iheight; i++) {
-			if (table.istates.at(j).c_str() != table.istates.at(i).c_str()) {						//checks, if row state unequal nextstate	
+			if (i != j) {
 				if (table.istates.at(j) == table.table[table.istates.at(i)].at(0).next_state) {
 					c++;
 					t.push_back(table.istates.at(i).c_str());										//push a candidate for high priority into t
@@ -114,7 +114,6 @@ int	CParser::yyparse()
 		}
 		if (c >= 2) {
 			high_priority[table.istates.at(j).c_str()] = t;											//if there are more canditates than one, then the high priority map is passed t
-			high_priority_string.push_back(table.istates.at(j).c_str());
 		}
 		t.clear();
 		c = 0;
@@ -150,7 +149,8 @@ int	CParser::yyparse()
 	//lowest priority:
 
 	priority lowest_priority;		//lowest priority is given when at least two states have the same output behaviour
-	c = 0;							//c counts the states with the same output behaviour 	
+	c = 0;							//c counts the states with the same output behaviour 
+	vector < vector<string>> lowestpriority;
 	bool output_matched = false;
 	int outputcount = 1;
 	int pos;
@@ -163,44 +163,10 @@ int	CParser::yyparse()
 	for (int j = 0; j < table.iwidth; j++) {													//check all input possibilities
 		for (int k = 0; k < outputcount; k++) {													//check all output possibilities (00 01 10 11 -> 0 1 2 3) 
 			for (int i = 0; i < table.iheight; i++) {
-				t1 = table.table[table.istates.at(i)].at(j).out_list;							//save output string
+				//t1 = table.table[table.istates.at(i)].at(j).out_list;							//save output string
 				pos = 1;
 				val = 0;
-
-				if (t1.find("x", 0) != -1) {													//checks, if a "x" is in t1
-					pos = t1.size();
-					while (pos >= 0) {
-						pos = t1.rfind("1", pos);												//search backwards after a "1" 
-						if (pos >= 0) {
-							val += 1 << (t1.size() - pos - 1);									//calculate decimal value of all "1" in binary code 
-							pos = pos - 1;
-						}
-					}
-					val -= k;																	//val= decimal value (all "1" in binary code) - one output possibility															 
-					if (val < 0)
-					{
-						pos = (t1.size())- 1;
-						while (pos>=0) {
-							pos = t1.rfind("x", pos);						
-							tt = val;															//save val
-							val += 1 << pos;
-							if (val > 0) {
-								val = tt;														//the "1" value (2^n) to high, take the old value tt
-							}
-							else if (val == 0) {
-								output_matched = true;											//matched e.g. "01" --> "0x" 
-								pos = -1;
-							}
-							pos -= 1;
-						}
-					}
-					else if (val == 0) {
-						output_matched = true;
-					}
-					else {
-						output_matched = false;
-					}
-				}
+				output_matched =table.bitsMatch(k, table.table[table.istates.at(i)].at(j).out_list.c_str());
 
 				if (output_matched == true) {
 					c++;
@@ -229,6 +195,16 @@ int	CParser::yyparse()
 			if (c >= 2) {
 				lowest_priority[to_string(z)] = t;											//if there are more canditates than one, then the lowest priority map is passed t
 				z += 1;
+				bool dd = true;
+				for (int i=0; i < lowestpriority.size(); i++) {
+					if (lowestpriority[i] != t)
+						dd = false;
+				}
+				if(dd == true)
+					lowestpriority.push_back(t);
+				dd = true;
+				
+				
 			}
 			t.clear();
 			c = 0;

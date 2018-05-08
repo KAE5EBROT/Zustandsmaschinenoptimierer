@@ -55,6 +55,6 @@ public:
 	string *int2bit(int val, int width);
 
 	/// checks, if int a matches with bit pattern char* b. b is expected as string containing either '0', '1' or 'x'.
-	bool bitsMatch(int a, char * b);
+	bool bitsMatch(int a, const char * b);
 
 };
