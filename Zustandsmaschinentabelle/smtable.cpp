@@ -155,3 +155,4 @@ bool smtable::bitsMatch(int a, const char* b) {
 	}												/* if bit doesn't match							*/
 	return ret;
 }
+
