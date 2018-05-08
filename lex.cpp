@@ -238,7 +238,7 @@ int	CParser::yyparse()
 		l2 = high_priority[t3->second.at(0)];
 		is_set = true;
 
-		for (uint i = 0; i < high_priority_count; i++) {
+		for (int i = 0; i < high_priority_count; i++) {
 			if (is_set) {
 				l2 = high_priority[t3->second.at(0)];
 				if (l2.size() > 0) {							//other high priority for t3->second.at(i)
@@ -284,40 +284,54 @@ int	CParser::yyparse()
 	//str = string(Zeichenkette); // umgekehrt 
 
 
-	uint stateCodeBitCount = 1;
+	int stateCodeBitCount = 1;
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
 	ofstream outfile;
 	outfile.open("ZMnichtoptimiert.tbl");
 	outfile << "table ZMnichtoptimiert\n  input ";
-	for (uint i = 0; i < table.iinputs.size(); i++) {
+	for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
 		outfile << table.iinputs.at(i).c_str() << " ";
 	}
-	for (uint i = 0; i < stateCodeBitCount; i++) {
+	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
 		char statetemp[4] = { 'C', '0', '0', '\0' };
 		statetemp[1] = i / 10 + '0';
 		statetemp[2] = i + '0';
 		outfile << statetemp << " ";
 	}
 	outfile << "\n  output ";
-	for (uint i = 0; i < stateCodeBitCount; i++) {
+	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
 		char statetemp[4] = { 'D', '0', '0', '\0' };
 		statetemp[1] = i / 10 + '0';
 		statetemp[2] = i + '0';
 		outfile << statetemp << " ";
 	}
 	outfile << "\n\" nonoptimized transitiontable\n";
-	for (uint i = 0; i < (1 << table.iinputs.size()); i++) {
-		for (uint j = 0; j < (1 << stateCodeBitCount); j++) {
+	for (int i = 0; i < (1 << table.iinputs.size()); i++) {
+		for (int j = 0; j < (1 << stateCodeBitCount); j++) {
 			int nextstate = 0;
-			for (; (table.iinputs.at(nextstate) != table.table[table.iinputs.at(i)].at(j).next_state) && (nextstate < table.iinputs.size()); nextstate++);
-			outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-			outfile << *table.int2bit(nextstate, stateCodeBitCount);
-			outfile << "\n";
+			if (j < table.istates.size()) {
+				for (; (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state) && (nextstate < table.istates.size()); nextstate++);
+				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+				if (nextstate < table.istates.size()) {
+					outfile << *table.int2bit(nextstate, stateCodeBitCount);
+				}
+				else {
+					for (int k = 0; k < stateCodeBitCount; k++) {
+						outfile << "-";
+					}
+				}
+				outfile << "\n";
+			}
+			else {
+				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+				for (int k = 0; k < stateCodeBitCount; k++) {
+					outfile << "-";
+				}
+				outfile << "\n";
+			}
 		}
 	}
-
-
-
+	outfile << "end\n";
 	outfile.close();
 	return 0;
 
