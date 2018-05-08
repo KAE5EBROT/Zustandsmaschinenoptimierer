@@ -268,7 +268,7 @@ int	CParser::yyparse()
 		}
 		else
 		{
-			cout << "No high priority for reset state!";
+			cout << "\nNo high priority for reset state!";
 		}
 	}
 
@@ -287,7 +287,7 @@ int	CParser::yyparse()
 					Zustandscodierung[set_states] = t3->first;
 					set_states++;
 				}
-				for (uint p = 0; p < t3->second.at(j).size(); p++) {
+				for (uint p = 0; p < t3->second.size(); p++) {
 					Zustandscodierung[set_states] = t3->second.at(p);
 					set_states++;
 				}
@@ -353,7 +353,7 @@ int	CParser::yyparse()
 		for (int j = 0; j < (1 << stateCodeBitCount); j++) {
 			int nextstate = 0;
 			if (j < table.istates.size()) {
-				for (; (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state) && (nextstate < table.istates.size()); nextstate++);
+				for (; (nextstate < table.istates.size())  && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
 				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
 				if (nextstate < table.istates.size()) {
 					outfile << *table.int2bit(nextstate, stateCodeBitCount);
