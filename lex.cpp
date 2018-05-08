@@ -148,14 +148,13 @@ int	CParser::yyparse()
 
 	//lowest priority:
 
-	priority lowest_priority;		//lowest priority is given when at least two states have the same output behaviour
-	c = 0;							//c counts the states with the same output behaviour 
-	vector < vector<string>> lowestpriority;
+	vector < vector<string>> lowest_priority;		//lowest priority is given when at least two states have the same output behaviour
+	c = 0;											//c counts the states with the same output behaviour 
+	
 	bool output_matched = false;
 	int outputcount = 1;
 	int pos;
-	int val;
-	int tt;
+	int val = 0;
 	string t1, t2;
 
 	for (uint i = 1; i < table.ioutputs.size() + 1; i++) outputcount *= 2;						//outputcount = number of output value possibilties
@@ -163,9 +162,6 @@ int	CParser::yyparse()
 	for (int j = 0; j < table.iwidth; j++) {													//check all input possibilities
 		for (int k = 0; k < outputcount; k++) {													//check all output possibilities (00 01 10 11 -> 0 1 2 3) 
 			for (int i = 0; i < table.iheight; i++) {
-				//t1 = table.table[table.istates.at(i)].at(j).out_list;							//save output string
-				pos = 1;
-				val = 0;
 				output_matched =table.bitsMatch(k, table.table[table.istates.at(i)].at(j).out_list.c_str());
 
 				if (output_matched == true) {
@@ -192,94 +188,141 @@ int	CParser::yyparse()
 					}
 				}
 			}
-			if (c >= 2) {
-				lowest_priority[to_string(z)] = t;											//if there are more canditates than one, then the lowest priority map is passed t
-				lowestpriority.push_back(t);
+			if (c >= 2) {										
+				lowest_priority.push_back(t);												//if there are more canditates than one, then the lowest priority map is passed t
 				z += 1;
 			}
 			t.clear();
 			c = 0;
 		}	
 	}
-	removeSubsets(lowestpriority);
+	removeSubsets(lowest_priority);
 
 	//Optimierung
 
 	int a = 1;
 	int bit_count = 1;
 	int set_states = 0;
-	int index=1;
-	int gray_index = 1;
 	int high_priority_count = high_priority.size();
+	int mean_priority_count = mean_priority.size();
+	int low_priority_count = lowest_priority.size();
 	bool is_set =false;
 	z = 0;
 	priority::iterator t3;
-	vector<string>::iterator t4;
+	vector<vector<string>>::iterator t4;
 
-	vector <string> Zustandscodierung,l1,l2,l3,setstates;
+	vector <string> Zustandscodierung,l1,l2,l3;
 
 	while (a < table.iheight) {
 		a *= 2;
 	}
-	//cout << a;
 	Zustandscodierung.resize(a);
 	Zustandscodierung[set_states] = table.istates.at(0);										//Set reset state
 	set_states++;
-	setstates.push_back(table.istates.at(0));
 
-	l1 = high_priority[Zustandscodierung[0]];
+	if (set_states < table.istates.size()) {
+		if (high_priority[Zustandscodierung[0]].size() > 0) {			//high priority
+			t3 = high_priority.begin();
+			cout << t3->second.at(0).c_str();
+			l2 = high_priority[t3->second.at(0)];
+			is_set = true;
 
-
-	if (l1.size() > 0) {
-		t3 = high_priority.begin();
-		cout << t3->second.at(0).c_str();
-		l2 = high_priority[t3->second.at(0)];
-		is_set = true;
-
-		for (uint i = 0; i < high_priority_count; i++) {
-			if (is_set) {
-				l2 = high_priority[t3->second.at(0)];
-				if (l2.size() > 0) {							//other high priority for t3->second.at(i)
-					Zustandscodierung[set_states] = t3->second.at(1);
-					set_states++;
-					Zustandscodierung[set_states] = t3->second.at(0);
-					set_states++;
-					is_set = true;
+			for (uint i = 0; i < high_priority_count; i++) {
+				if (is_set) {
+					l2 = high_priority[t3->second.at(0)];
+					if (l2.size() > 0) {							//other high priority for t3->second.at(i)
+						Zustandscodierung[set_states] = t3->second.at(1);
+						set_states++;
+						Zustandscodierung[set_states] = t3->second.at(0);
+						set_states++;
+						is_set = true;
+					}
+					else {
+						Zustandscodierung[set_states] = t3->second.at(0);
+						set_states++;
+						Zustandscodierung[set_states] = t3->second.at(1);
+						set_states++;
+						is_set = false;
+					}
 				}
 				else {
-					Zustandscodierung[set_states] = t3->second.at(0);
-					set_states++;
-					Zustandscodierung[set_states] = t3->second.at(1);
-					set_states++;
-					is_set = false;
+					if ((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first)) != Zustandscodierung.end()) {
+						Zustandscodierung[set_states] = t3->second.at(0);
+						set_states++;
+						Zustandscodierung[set_states] = t3->second.at(1);
+						set_states++;
+					}
+					else {
+						Zustandscodierung[set_states] = t3->first;
+						set_states++;
+						Zustandscodierung[set_states] = t3->second.at(0);
+						set_states++;
+						Zustandscodierung[set_states] = t3->second.at(1);
+						set_states++;
+					}
+				}
+				t3++;
+			}
+		}
+		else
+		{
+			cout << "No high priority for reset state!";
+		}
+	}
+
+	t3 = mean_priority.begin();
+	is_set = false;
+
+	if (set_states < table.istates.size()) {
+		for (uint j = 0; j < mean_priority_count; j++) {//mean priority
+			for (uint i = 0; i < t3->second.size(); i++) {
+				if (find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->second.at(i)) != Zustandscodierung.end()) {
+					is_set = true;
 				}
 			}
-			else {
-
-				Zustandscodierung[set_states] = t3->first;
-				set_states++;
-				Zustandscodierung[set_states] = t3->second.at(0);
-				set_states++;
-				Zustandscodierung[set_states] = t3->second.at(1);
-				set_states++;
+			if (is_set == false) {
+				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end())) {
+					Zustandscodierung[set_states] = t3->first;
+					set_states++;
+				}
+				for (uint p = 0; p < t3->second.at(j).size(); p++) {
+					Zustandscodierung[set_states] = t3->second.at(p);
+					set_states++;
+				}
 			}
+			is_set = false;
 			t3++;
 		}
 	}
-	else
+
+	if (set_states < table.istates.size())
 	{
-		cout << "No high priority for reset state!";
+		for (uint j = 0; j < low_priority_count; j++) {//low priority
+			for (uint i = 0; i < lowest_priority[j].size(); i++) {
+				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), lowest_priority[j].at(i)) != Zustandscodierung.end())) {
+					z++;
+					l3.push_back(lowest_priority[j].at(i));
+					cout << lowest_priority[j].at(i);
+				}
+				if (z >= 2) {
+					for (uint k; k < l3.size(); k++) {
+						Zustandscodierung[set_states] = t3->second.at(k);
+						set_states++;
+					}
+				}
+				l3.clear();
+				z = 0;
+			}
+		}
 	}
-	
-	//table.table[zustand].at(input) 
-	//table.iheight  //Anzahl States (Zeilen) 
-	//table.iwidth  //Anzahl Eingangskombinationen 
-	//int inputcount = table.iinputs.size(); 
-	//table.table[table.iinputs.at(0)].at(0).next_state;      //0te state 
-	//table.table.at(0).size(); 
-	//string str("hallo"); 
-	//const char* Zeichenkette = str.c_str();//string -> Zeichenkette 
-	//str = string(Zeichenkette); // umgekehrt 
+	if (set_states < table.istates.size()) {
+		for (uint i = 0; i < table.istates.size(); i++) {		//set left states
+			if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), table.istates.at(i)) != Zustandscodierung.end())) {
+				Zustandscodierung[set_states] = table.istates.at(i);
+				set_states++;
+			}
+		}
+	}
 
 	return 0;
 
