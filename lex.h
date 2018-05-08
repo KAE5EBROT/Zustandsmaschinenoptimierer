@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <algorithm>
 #include "Zustandsmaschinentabelle\smtable.h"
 using namespace std;
 typedef unsigned int uint;
@@ -78,6 +79,7 @@ public:
 	CParser::parstates CParser::pfScanInputs(int & tok);
 	CParser::parstates CParser::pfScanOutputs(int & tok);
 	CParser::parstates CParser::pfReadLine(int & tok);
+	bool CParser::isDuplicate(smtable::elementlist base, smtable::elementlist cmp);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
 //------------------------------------------------------------------------

@@ -194,21 +194,21 @@ int	CParser::yyparse()
 			}
 			if (c >= 2) {
 				lowest_priority[to_string(z)] = t;											//if there are more canditates than one, then the lowest priority map is passed t
+				lowestpriority.push_back(t);
 				z += 1;
-				bool dd = true;
-				for (int i=0; i < lowestpriority.size(); i++) {
-					if (lowestpriority[i] != t)
-						dd = false;
-				}
-				if(dd == true)
-					lowestpriority.push_back(t);
-				dd = true;
-				
-				
 			}
 			t.clear();
 			c = 0;
 		}	
+	}
+	/* remove duplicates */
+	for (uint j = 0; j < lowestpriority.size(); j++) {					/* run through list */
+		for (uint k = 0; k < lowestpriority.size(); k++) {			/* run through */
+			if ((isDuplicate(lowestpriority.at(j), lowestpriority.at(k))) && (j != k)) {
+				vector<vector<string>>::iterator it = lowestpriority.begin() + k;
+				lowestpriority.erase(it);
+			}
+		}
 	}
 
 	//Optimierung
@@ -798,5 +798,17 @@ CParser::parstates CParser::pfReadLine(int &tok)
 		}
 	}
 	table.link(inputs, invals, srcstate, outputs, outvals, dststate);
+	return retval;
+}
+
+bool CParser::isDuplicate(smtable::elementlist base, smtable::elementlist cmp)
+{
+	bool retval = true;
+	for (uint i = 0; i < base.size(); i++) {
+		smtable::elementlist::iterator it;
+		if ((it = find(cmp.begin(), cmp.end(), base.at(i))) == cmp.end()) {
+			retval = false;
+		}
+	}
 	return retval;
 }
