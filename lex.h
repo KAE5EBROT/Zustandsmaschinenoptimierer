@@ -82,6 +82,7 @@ public:
 	CParser::parstates CParser::pfReadLine(int & tok);
 	bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp);
 	void CParser::removeSubsets(vector<vector<string>>& tab);
+	void CParser::writeOutputFile(string option);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
 //------------------------------------------------------------------------

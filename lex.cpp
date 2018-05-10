@@ -59,31 +59,31 @@ int	CParser::yyparse()
 	*	Go parse things!
 	*/
 	//Einlesen
-	while (tok != IP_Token_table["End"]) {
+	while (tok != IP_Token_table["End"]) {			/* Run til*/
 		switch (state) {
-		case P_HEADER:
+		case P_HEADER:								/* Skip everything until "Begin" */
 			tok = yylex();
-			state = pfSkipHeader(tok);		//Alles vor BEGIN nicht beachten
+			state = pfSkipHeader(tok);
 			break;
-		case P_DEFSELECT:
+		case P_DEFSELECT:							/* Which definition is in queue? */
 			state = pfGetDef(tok);
 			break;
-		case P_DEFSTATE:
+		case P_DEFSTATE:							/* read in state definitions */
 			tok = yylex();
 			state = pfScanState(tok);
 			break;
-		case P_DEFIN:
+		case P_DEFIN:								/* read in input definitions */
 			tok = yylex();
 			state = pfScanInputs(tok);
 			break;
-		case P_DEFOUT:
+		case P_DEFOUT:								/* read in output definitions */
 			tok = yylex();
 			state = pfScanOutputs(tok);
 			break;
-		case P_READLINE:
+		case P_READLINE:							/* read in state transition definitions */
 			state = pfReadLine(tok);
 			break;
-		case P_ERROR:
+		case P_ERROR:								/* catch error */
 			state = pfScanOutputs(tok);
 			break;
 		}
@@ -202,18 +202,18 @@ int	CParser::yyparse()
 
 	//Optimierung
 
-	int a = 1;
-	int bit_count = 1;
-	int set_states = 0;
-	int high_priority_count = high_priority.size();
-	int mean_priority_count = mean_priority.size();
-	int low_priority_count = lowest_priority.size();
+	uint a = 1;
+	uint bit_count = 1;
+	uint set_states = 0;
+	uint high_priority_count = high_priority.size();
+	uint mean_priority_count = mean_priority.size();
+	uint low_priority_count = lowest_priority.size();
 	bool is_set =false;
 	z = 0;
 	priority::iterator t3;
 	vector<vector<string>>::iterator t4;
 
-	vector <string> Zustandscodierung,l1,l2,l3;
+	vector <string> Zustandscodierung, l1, l2, l3;
 
 	while (a < table.iheight) {
 		a *= 2;
@@ -326,56 +326,7 @@ int	CParser::yyparse()
 		}
 	}
 
-
-	int stateCodeBitCount = 1;
-	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
-	ofstream outfile;
-	outfile.open("ZMnichtoptimiert.tbl");
-	outfile << "table ZMnichtoptimiert\n  input ";
-	for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
-		outfile << table.iinputs.at(i).c_str() << " ";
-	}
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
-		char statetemp[4] = { 'C', '0', '0', '\0' };
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n  output ";
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
-		char statetemp[4] = { 'D', '0', '0', '\0' };
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n\" nonoptimized transitiontable\n";
-	for (int i = 0; i < (1 << table.iinputs.size()); i++) {
-		for (int j = 0; j < (1 << stateCodeBitCount); j++) {
-			int nextstate = 0;
-			if (j < table.istates.size()) {
-				for (; (nextstate < table.istates.size())  && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-				if (nextstate < table.istates.size()) {
-					outfile << *table.int2bit(nextstate, stateCodeBitCount);
-				}
-				else {
-					for (int k = 0; k < stateCodeBitCount; k++) {
-						outfile << "-";
-					}
-				}
-				outfile << "\n";
-			}
-			else {
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-				for (int k = 0; k < stateCodeBitCount; k++) {
-					outfile << "-";
-				}
-				outfile << "\n";
-			}
-		}
-	}
-	outfile << "end\n";
-	outfile.close();
+	writeOutputFile("nonoptimized");
 	return 0;
 
 }	
@@ -923,5 +874,114 @@ void CParser::removeSubsets(vector<vector<string>> &tab) {
 				j--;													/* adjust k, because current element at k is unchecked */
 			}
 		}
+	}
+}
+
+void CParser::writeOutputFile(string option)
+{
+	if ((option == "nonoptimized") || (option == "notoptimized")) {
+		int stateCodeBitCount = 1;
+		for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
+		ofstream outfile;
+		outfile.open("ZMnichtoptimiert.tbl");
+		outfile << "table ZMnichtoptimiert\n  input ";
+		for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
+			outfile << table.iinputs.at(i).c_str() << " ";
+		}
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
+			char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n  output ";
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
+			char statetemp[4] = { 'D', '0', '0', '\0' };
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n\" nonoptimized transitiontable\n";
+		for (int i = 0; i < (1 << table.iinputs.size()); i++) {
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {
+				int nextstate = 0;
+				if (j < table.istates.size()) {
+					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					if (nextstate < table.istates.size()) {
+						outfile << *table.int2bit(nextstate, stateCodeBitCount);
+					}
+					else {
+						for (int k = 0; k < stateCodeBitCount; k++) {
+							outfile << "-";
+						}
+					}
+					outfile << "\n";
+				}
+				else {
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					for (int k = 0; k < stateCodeBitCount; k++) {
+						outfile << "-";
+					}
+					outfile << "\n";
+				}
+			}
+		}
+		outfile << "end\n";
+		outfile.close();
+	}
+	else if (option == "optimized") {
+		int stateCodeBitCount = 1;
+		for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
+		ofstream outfile;
+		outfile.open("ZMnichtoptimiert.tbl");
+		outfile << "table ZMnichtoptimiert\n  input ";
+		for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
+			outfile << table.iinputs.at(i).c_str() << " ";
+		}
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
+			char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n  output ";
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
+			char statetemp[4] = { 'D', '0', '0', '\0' };
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n\" nonoptimized transitiontable\n";
+		for (int i = 0; i < (1 << table.iinputs.size()); i++) {
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {
+				int nextstate = 0;
+				if (j < table.istates.size()) {
+					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					if (nextstate < table.istates.size()) {
+						outfile << *table.int2bit(nextstate, stateCodeBitCount);
+					}
+					else {
+						for (int k = 0; k < stateCodeBitCount; k++) {
+							outfile << "-";
+						}
+					}
+					outfile << "\n";
+				}
+				else {
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					for (int k = 0; k < stateCodeBitCount; k++) {
+						outfile << "-";
+					}
+					outfile << "\n";
+				}
+			}
+		}
+		outfile << "end\n";
+		outfile.close();
+	}
+	else {
+
 	}
 }
