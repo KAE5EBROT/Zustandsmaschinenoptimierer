@@ -131,15 +131,15 @@ int	CParser::yyparse()
 		cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";
 	}
 	//smtable::elementlist temp;//testdatei für Schäfers minimallösung
-	//temp.push_back("S0");
-	//temp.push_back("S7");
-	//temp.push_back("S3");
+	//temp.push_back("Fahrbtr");
+	//temp.push_back("Starten");
+	//temp.push_back("Aus_Ein");
 	//temp.push_back("S1");
 	//temp.push_back("S2");
 	//temp.push_back("S4");
 	//temp.push_back("S9");
-	temp.push_back("");
-	writeOutputFile(temp);
+	//temp.push_back("");
+	//writeOutputFile(temp);
 	return 0;
 
 }	
