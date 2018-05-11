@@ -105,7 +105,7 @@ smtable::fstate smtable::print() {
 	cout << "\n";
 	cout << "Reihenfolge Ausgangssignale: ";
 	for (uint i = 0; i < ioutputs.capacity(); i++) cout << ioutputs.at(i).c_str() << " ";
-	cout << "\n\t";
+	cout << "\n\n\t";
 
 	/* print all input combinations																	*/
 	for (int i = 0; i < iwidth; i++) { 
@@ -133,6 +133,7 @@ smtable::fstate smtable::print() {
 			cout << table[istates.at(i)].at(j).out_list.c_str() << "\t";
 		}
 	}
+	cout << "\n\n";
 	return eOK;
 }
 
