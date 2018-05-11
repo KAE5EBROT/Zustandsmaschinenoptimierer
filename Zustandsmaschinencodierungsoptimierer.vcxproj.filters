@@ -51,5 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Zustandsmaschinencodierungsoptimierer.out" />
+    <None Include="gatterzaehlen.bat">
+      <Filter>Quellcodedateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

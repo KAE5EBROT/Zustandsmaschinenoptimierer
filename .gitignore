@@ -287,6 +287,12 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-Minilog/
+Minilog/Library Files
 
 *.tbl
+
+Minilog/Minilog\.exe
+
+gatter\.exe
+
+*.min
