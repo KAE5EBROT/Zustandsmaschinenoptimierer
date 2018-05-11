@@ -892,110 +892,124 @@ void CParser::removeSubsets(vector<vector<string>> &tab) {
 	}
 }
 
-void CParser::writeOutputFile(void)
+CParser::funcreturn CParser::writeOutputFile(void)
 {
+	CParser::funcreturn retval = F_SUCCESS;
 	int stateCodeBitCount = 1;
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
 	ofstream outfile;
-	outfile.open("ZMnichtoptimiert.tbl");
-	outfile << "table ZMnichtoptimiert\n  input ";
-	for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
-		outfile << table.iinputs.at(i).c_str() << " ";
-	}
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
-		char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n  output ";
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
-		char statetemp[4] = { 'D', '0', '0', '\0' };
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n\" nonoptimized transitiontable\n";
-	for (int i = 0; i < (1 << table.iinputs.size()); i++) {		/* run through input combinations */
-		for (int j = 0; j < (1 << stateCodeBitCount); j++) {	/* run through state combinations */
-			int nextstate = 0;
-			if (j < table.istates.size()) {
-				for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-				if (nextstate < table.istates.size()) {
-					outfile << *table.int2bit(nextstate, stateCodeBitCount);
+	try {
+		outfile.open("ZMnichtoptimiert.tbl");
+		outfile << "table ZMnichtoptimiert\n  input ";
+		for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
+			outfile << table.iinputs.at(i).c_str() << " ";
+		}
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
+			char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n  output ";
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
+			char statetemp[4] = { 'D', '0', '0', '\0' };
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n\" nonoptimized transitiontable\n";
+		for (int i = 0; i < (1 << table.iinputs.size()); i++) {		/* run through input combinations */
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {	/* run through state combinations */
+				int nextstate = 0;
+				if (j < table.istates.size()) {
+					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					if (nextstate < table.istates.size()) {
+						outfile << *table.int2bit(nextstate, stateCodeBitCount);
+					}
+					else {
+						for (int k = 0; k < stateCodeBitCount; k++) {
+							outfile << "-";
+						}
+					}
+					outfile << "\n";
 				}
 				else {
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
 					for (int k = 0; k < stateCodeBitCount; k++) {
 						outfile << "-";
 					}
+					outfile << "\n";
 				}
-				outfile << "\n";
-			}
-			else {
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-				for (int k = 0; k < stateCodeBitCount; k++) {
-					outfile << "-";
-				}
-				outfile << "\n";
 			}
 		}
+		outfile << "end\n";
+		outfile.close();
 	}
-	outfile << "end\n";
-	outfile.close();
+	catch(...){
+		retval = F_FAIL;
+	}
+	return retval;
 }
 
-void CParser::writeOutputFile(smtable::elementlist statelist)
+CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist)
 {
+	CParser::funcreturn retval = F_SUCCESS;
 	int stateCodeBitCount = 1;
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++); /* calculate bits needed */
 	ofstream outfile;
-	outfile.open("ZMoptimiert.tbl");
-	outfile << "table ZMoptimiert\n  input ";
-	for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
-		outfile << table.iinputs.at(i).c_str() << " ";
-	}
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
-		char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n  output ";
-	for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
-		char statetemp[4] = { 'D', '0', '0', '\0' };
-		statetemp[1] = i / 10 + '0';
-		statetemp[2] = i + '0';
-		outfile << statetemp << " ";
-	}
-	outfile << "\n\" nonoptimized transitiontable\n";
-	for (int i = 0; i < (1 << table.iinputs.size()); i++) {		/* run through input combinations */
-		for (int j = 0; j < (1 << stateCodeBitCount); j++) {	/* run through state combinations */
-			int nextstate = 0;
-			if (statelist.at(j).size() != 0) {					/* if entry not empty get number of next state */
-				for (; (nextstate < table.istates.size()) && (statelist.at(nextstate) != table.table[statelist.at(j)].at(i).next_state); nextstate++);
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
-				if (nextstate < table.istates.size()) {			/* if next_state found print it */
-					outfile << *table.int2bit(int2gray(nextstate), stateCodeBitCount);
+	try{
+		outfile.open("ZMoptimiert.tbl");
+		outfile << "table ZMoptimiert\n  input ";
+		for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
+			outfile << table.iinputs.at(i).c_str() << " ";
+		}
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
+			char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n  output ";
+		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
+			char statetemp[4] = { 'D', '0', '0', '\0' };
+			statetemp[1] = i / 10 + '0';
+			statetemp[2] = i + '0';
+			outfile << statetemp << " ";
+		}
+		outfile << "\n\" nonoptimized transitiontable\n";
+		for (int i = 0; i < (1 << table.iinputs.size()); i++) {		/* run through input combinations */
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {	/* run through state combinations */
+				int nextstate = 0;
+				if (statelist.at(j).size() != 0) {					/* if entry not empty get number of next state */
+					for (; (nextstate < table.istates.size()) && (statelist.at(nextstate) != table.table[statelist.at(j)].at(i).next_state); nextstate++);
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
+					if (nextstate < table.istates.size()) {			/* if next_state found print it */
+						outfile << *table.int2bit(int2gray(nextstate), stateCodeBitCount);
+					}
+					else {											/* if no next_state found */
+						for (int k = 0; k < stateCodeBitCount; k++) {/* fill with don't cares */
+							outfile << "-";
+						}
+					}
+					outfile << "\n";
 				}
-				else {											/* if no next_state found */
-					for (int k = 0; k < stateCodeBitCount; k++) {/* fill with don't cares */
+				else {												/* if entry empty */
+					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
+					for (int k = 0; k < stateCodeBitCount; k++) {	/* fill with don't cares */
 						outfile << "-";
 					}
+					outfile << "\n";
 				}
-				outfile << "\n";
-			}
-			else {												/* if entry empty */
-				outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
-				for (int k = 0; k < stateCodeBitCount; k++) {	/* fill with don't cares */
-					outfile << "-";
-				}
-				outfile << "\n";
 			}
 		}
+		outfile << "end\n";
+		outfile.close();
 	}
-	outfile << "end\n";
-	outfile.close();
+	catch (...) {
+		retval = F_FAIL;
+	}
+	return retval;
 }
 
 int CParser::int2gray(int input)

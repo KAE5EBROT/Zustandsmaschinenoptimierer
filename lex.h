@@ -47,12 +47,17 @@ public:
 		L_START, L_INT, L_IDENT, L_STRING, L_STRING2,
 		L_COMMENT, L_TEXT_COMMENT, L_LINE_COMMENT, L_END_TEXT_COMMENT
 	};
-
 	/*
 	*	Parser states
 	*/
 	enum parstates {
 		P_HEADER, P_DEFSELECT, P_DEFSTATE, P_DEFIN, P_DEFOUT, P_READLINE, P_ERROR
+	};
+	/*
+	*	Parser states
+	*/
+	enum funcreturn {
+		F_SUCCESS = 0, F_FAIL
 	};
 	struct tyylval {								//value return
 		string s;								//structure
@@ -88,8 +93,8 @@ public:
 	smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority);
 	bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp);
 	void CParser::removeSubsets(vector<vector<string>>& tab);
-	void CParser::writeOutputFile();
-	void CParser::writeOutputFile(smtable::elementlist statelist);
+	CParser::funcreturn CParser::writeOutputFile();
+	CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist);
 	int CParser::int2gray(int input);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
