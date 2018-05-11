@@ -21,6 +21,8 @@ class CParser
 {
 public:
 
+	typedef map<string, vector<string>> prioritytype;
+	typedef vector < vector<string>> lowpriotype;
 	const int STRING1 = STRING1DEF;
 	const int IDENTIFIER = IDENTIFIERDEF;
 	const int INTEGER1 = INTEGER1DEF;
@@ -80,6 +82,10 @@ public:
 	CParser::parstates CParser::pfScanInputs(int & tok);
 	CParser::parstates CParser::pfScanOutputs(int & tok);
 	CParser::parstates CParser::pfReadLine(int & tok);
+	CParser::prioritytype CParser::highPriority();
+	CParser::prioritytype CParser::meanPriority();
+	CParser::lowpriotype CParser::lowPriority();
+	smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority);
 	bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp);
 	void CParser::removeSubsets(vector<vector<string>>& tab);
 	void CParser::writeOutputFile();
