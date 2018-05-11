@@ -117,8 +117,19 @@ int	CParser::yyparse()
 
 	Zustandscodierung = optimize(high_priority, mean_priority, lowest_priority);
 
-	writeOutputFile();
-	writeOutputFile(Zustandscodierung);
+	/* Write output files */
+	if (writeOutputFile()) {
+		fprintf(stderr, "Ausgabedatei \"ZMnichtoptimiert.tbl\" fehlgeschlagen\n");
+	}
+	else {
+		cout << "Ausgabedatei \"ZMnichtoptimiert.tbl\" erfolgreich geschrieben\n";
+	}
+	if (writeOutputFile(Zustandscodierung)) {
+		fprintf(stderr, "Ausgabedatei \"ZMoptimiert.tbl\" fehlgeschlagen\n");
+	}
+	else {
+		cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";
+	}
 	//smtable::elementlist temp;//testdatei für Schäfers minimallösung
 	//temp.push_back("S0");
 	//temp.push_back("S7");
