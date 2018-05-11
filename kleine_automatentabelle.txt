@@ -21,13 +21,14 @@ C	    | A | A | D | C | 1
 D	    | A | A | D | D | 0 
 
 Begin
-DEFSTATE Aus, Ein, Starten, Fahrbtr; DEFIN Zuendng, Anlassn; DEFOUT Anlassr;
-[Zuendng, Anlassn]		=(0,0)(Aus) 	> [Anlassr]:(0)(Aus)
-[Zuendng, Anlassn]		=(1,0)(Aus) 	> [Anlassr]:(0)(Ein)
-[Zuendng, Anlassn]		=(1,0)(Ein) 	> [Anlassr]:(0)(Ein)
-[Zuendng, Anlassn]		=(1,1)(Ein) 	> [Anlassr]:(1)(Starten)
-[Zuendng, Anlassn]		=(1,1)(Starten) > [Anlassr]:(1)(Starten)
-[Zuendng, Anlassn]		=(1,0)(Starten) > [Anlassr]:(0)(Fahrbtr)
-[Zuendng, Anlassn]		=(1,0)(Fahrbtr) > [Anlassr]:(0)(Fahrbtr)
-[Zuendng, Anlassn]		=(0,0)(Fahrbtr) > [Anlassr]:(0)(Aus)
+DEFSTATE Aus_Ein, Starten, Fahrbtr; DEFIN Zuendng, Anlassn; DEFOUT Anlassr;
+[Zuendng, Anlassn]		=(0,x)(Aus_Ein) 	> [Anlassr]:(0)(Aus_Ein)
+[Zuendng, Anlassn]		=(0,x)(Starten) 	> [Anlassr]:(0)(Aus_Ein)
+[Zuendng, Anlassn]		=(0,x)(Fahrbtr) 	> [Anlassr]:(0)(Aus_Ein)
+[Zuendng, Anlassn]		=(1,0)(Aus_Ein) 	> [Anlassr]:(0)(Aus_Ein)
+[Zuendng, Anlassn]		=(1,1)(Aus_Ein) 	> [Anlassr]:(0)(Starten)
+[Zuendng, Anlassn]		=(1,0)(Starten) 	> [Anlassr]:(0)(Fahrbtr)
+[Zuendng, Anlassn]		=(1,1)(Starten) 	> [Anlassr]:(1)(Starten)
+[Zuendng, Anlassn]		=(1,0)(Fahrbtr) 	> [Anlassr]:(0)(Fahrbtr)
+[Zuendng, Anlassn]		=(1,1)(Fahrbtr) 	> [Anlassr]:(0)(Fahrbtr)
 End
