@@ -209,6 +209,7 @@ int	CParser::yyparse()
 	uint mean_priority_count = mean_priority.size();
 	uint low_priority_count = lowest_priority.size();
 	bool is_set =false;
+
 	z = 0;
 	priority::iterator t3;
 	vector<vector<string>>::iterator t4;
@@ -219,57 +220,41 @@ int	CParser::yyparse()
 		a *= 2;
 	}
 	Zustandscodierung.resize(a);
-	Zustandscodierung[set_states] = table.istates.at(0);										//Set reset state
-	set_states++;
+	t3 = high_priority.begin();
+	is_set = false;
 
 	if (set_states < table.istates.size()) {
-		if (high_priority[Zustandscodierung[0]].size() > 0) {			//high priority
-			t3 = high_priority.begin();
-			cout << t3->second.at(0).c_str();
-			l2 = high_priority[t3->second.at(0)];
-			is_set = true;
-
 			for (uint i = 0; i < high_priority_count; i++) {
-				if (is_set) {
-					l2 = high_priority[t3->second.at(0)];
-					if (l2.size() > 0) {							//other high priority for t3->second.at(i)
-						Zustandscodierung[set_states] = t3->second.at(1);
-						set_states++;
-						Zustandscodierung[set_states] = t3->second.at(0);
-						set_states++;
-						is_set = true;
+					if (!((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end()))) {
+							Zustandscodierung[set_states] = t3->first;
+							set_states++;
+							t3++;
+							is_set = true;
 					}
-					else {
-						Zustandscodierung[set_states] = t3->second.at(0);
-						set_states++;
-						Zustandscodierung[set_states] = t3->second.at(1);
-						set_states++;
-						is_set = false;
+					else
+					{
+							t3++;
 					}
-				}
-				else {
-					if ((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first)) != Zustandscodierung.end()) {
-						Zustandscodierung[set_states] = t3->second.at(0);
-						set_states++;
-						Zustandscodierung[set_states] = t3->second.at(1);
-						set_states++;
+					while (is_set) {
+						if (high_priority[Zustandscodierung[set_states - 1]].size() > 0) {              //other high priority for t3->second.at(i)
+							Zustandscodierung[set_states] = high_priority[Zustandscodierung[set_states - 1]].at(1);
+							Zustandscodierung[set_states+1] = high_priority[Zustandscodierung[set_states - 1]].at(0);
+							set_states+=2;
+						}
+						else {
+							cout << high_priority[Zustandscodierung[set_states - 1]].at(0);
+							Zustandscodierung[set_states] = high_priority[Zustandscodierung[set_states - 1]].at(0);
+							Zustandscodierung[set_states+1] = high_priority[Zustandscodierung[set_states - 1]].at(1);
+							set_states += 2;
+						}
+						if (high_priority[Zustandscodierung[set_states - 1]].size() > 0) {
+							is_set = true;
+						}
+						else {
+							is_set = false;
+						}
 					}
-					else {
-						Zustandscodierung[set_states] = t3->first;
-						set_states++;
-						Zustandscodierung[set_states] = t3->second.at(0);
-						set_states++;
-						Zustandscodierung[set_states] = t3->second.at(1);
-						set_states++;
-					}
-				}
-				t3++;
-			}
-		}
-		else
-		{
-			cout << "\nNo high priority for reset state!";
-		}
+			}	
 	}
 
 	t3 = mean_priority.begin();
