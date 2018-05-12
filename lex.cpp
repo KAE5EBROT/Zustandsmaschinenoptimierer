@@ -111,9 +111,12 @@ int	CParser::yyparse()
 
 	lowest_priority=lowPriority();
 
+	/* lowPriority() creates a list of state combinations, satisfying low priority conditions.
+	*  This list will most likely contain similar entries. removeSunsets() only leaves the biggest
+	*  combinations in that list. These combinations are not compatible with each other. */
 	removeSubsets(lowest_priority);
 
-	//Optimierung
+	//Optimizing
 
 	Zustandscodierung = optimize(high_priority, mean_priority, lowest_priority);
 
@@ -368,14 +371,14 @@ CParser::parstates CParser::pfSkipHeader(int &tok)
 	parstates retval;
 	static int i = 0;
 	i++;
-	if (i > 100000) {										//maximal 100000 Zeichen
+	if (i > 100000) {										/* maximum of 100000 elements					*/
 		fprintf(stderr, "Ihr Header ist zu lang");
 		retval = P_ERROR;
 	}
-	else if (tok != IP_Token_table["Begin"]) {
+	else if (tok != IP_Token_table["Begin"]) {				/* still no "Begin"								*/
 		retval = P_HEADER;
 	}
-	else {
+	else {													/* "Begin" found! definitions are next			*/
 		retval = P_DEFSELECT;
 	}
 	return retval;
@@ -386,24 +389,24 @@ CParser::parstates CParser::pfGetDef(int &tok)
 	parstates retval;
 	static int i = 0;
 
-	if (defScanned.states && defScanned.inputs && defScanned.outputs) {
-		table.init(scannedStates, scannedInputs, scannedOutputs);//printf("\n"); //todo vielleicht entfernen, nur zur Ausgabe in Konsole
+	if (defScanned.states && defScanned.inputs && defScanned.outputs) { /* everything defined! Now state machine definitions! */
+		table.init(scannedStates, scannedInputs, scannedOutputs);	/* let the table know the definitions	*/
 		retval = P_READLINE;
 	}
 	else if ((((tok = yylex()) < IP_Token_table["DEFSTATE"]) || (tok > IP_Token_table["DEFOUT"])) && (i<1000)) {
-		i++;
+		i++;												/* still no definition key? skip				*/
 		retval = P_DEFSELECT;
 	}
 	else if ((tok == IP_Token_table["DEFSTATE"]) && !defScanned.states) {
-		retval = P_DEFSTATE;
+		retval = P_DEFSTATE;								/* DEFSTATE found								*/
 	}
 	else if ((tok == IP_Token_table["DEFIN"]) && !defScanned.inputs) {
-		retval = P_DEFIN;
+		retval = P_DEFIN;									/* DEFIN found									*/
 	}
 	else if ((tok == IP_Token_table["DEFOUT"]) && !defScanned.outputs) {
-		retval = P_DEFOUT;
+		retval = P_DEFOUT;									/* DEFOUT found									*/
 	}
-	else {
+	else {													/* 1000 keys reached and still not defined?		*/
 		retval = P_ERROR;
 	}
 	return retval;
@@ -411,21 +414,21 @@ CParser::parstates CParser::pfGetDef(int &tok)
 
 CParser::parstates CParser::pfScanState(int &tok)
 {
-	parstates retval;
+	parstates retval = P_DEFSTATE;;
 	switch (tok) {
-	case IDENTIFIERDEF:
-		scannedStates.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
-		state_count++;
+	case IDENTIFIERDEF:										/* valid name									*/
+		scannedStates.push_back(string(yylval.s));			/* save											*/
+		state_count++;										/* update count									*/
 		retval = P_DEFSTATE;
 		break;
-	case ',':
+	case ',':												/* skip separator								*/
 		retval = P_DEFSTATE;
 		break;
-	case ';':
-		defScanned.states = true;
-		retval = P_DEFSELECT;
+	case ';':												/* end of DEF									*/
+		defScanned.states = true;							/* mark finished scan							*/
+		retval = P_DEFSELECT;								/* return to selection							*/
 		break;
-	default:
+	default:												/* anything else scanned?						*/
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		break;
 	}
@@ -434,21 +437,21 @@ CParser::parstates CParser::pfScanState(int &tok)
 
 CParser::parstates CParser::pfScanInputs(int &tok)
 {
-	parstates retval;
+	parstates retval = P_DEFIN;;
 	switch (tok) {
-	case IDENTIFIERDEF:
-		scannedInputs.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
-		input_count++;
+	case IDENTIFIERDEF:										/* valid name									*/
+		scannedInputs.push_back(string(yylval.s));			/* save											*/
+		input_count++;										/* update count									*/
 		retval = P_DEFIN;
 		break;
-	case ',':
+	case ',':												/* skip separator								*/
 		retval = P_DEFIN;
 		break;
-	case ';':
-		defScanned.inputs = true;
-		retval = P_DEFSELECT;
+	case ';':												/* end of DEF									*/
+		defScanned.inputs = true;							/* mark finished scan							*/
+		retval = P_DEFSELECT;								/* return to selection							*/
 		break;
-	default:
+	default:												/* anything else scanned?						*/
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		break;
 	}
@@ -457,21 +460,21 @@ CParser::parstates CParser::pfScanInputs(int &tok)
 
 CParser::parstates CParser::pfScanOutputs(int &tok)
 {
-	parstates retval;
+	parstates retval = P_DEFOUT;;
 	switch (tok) {
-	case IDENTIFIERDEF:
-		scannedOutputs.push_back(string(yylval.s));//printf("%c ", yylval.s[0]);//todo abspeichern
-		output_count++;
+	case IDENTIFIERDEF:										/* valid name									*/
+		scannedOutputs.push_back(string(yylval.s));			/* save											*/
+		output_count++;										/* update count									*/
 		retval = P_DEFOUT;
 		break;
-	case ',':
+	case ',':												/* skip separator								*/
 		retval = P_DEFOUT;
 		break;
-	case ';':
-		defScanned.outputs = true;
-		retval = P_DEFSELECT;
+	case ';':												/* end of DEF									*/
+		defScanned.outputs = true;							/* mark finished scan							*/
+		retval = P_DEFSELECT;								/* return to selection							*/
 		break;
-	default:
+	default:												/* anything else scanned?						*/
 		fprintf(stderr, "Eingabedaten sind fehlerhaft");
 		break;
 	}
@@ -480,191 +483,191 @@ CParser::parstates CParser::pfScanOutputs(int &tok)
 
 CParser::parstates CParser::pfReadLine(int &tok)
 {
-	parstates retval = P_READLINE;
-	int k, j, j_old;
-	smtable::elementlist inputs;
-	string invals;
-	string srcstate;
-	smtable::elementlist outputs;
-	string outvals;
-	string dststate;
-	while (tok != '[')tok = yylex();
-	tok = yylex();									//erste Eingangsvariable
-
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)	//j = Anzahl der DEFSTATES
-	{
-		inputs.push_back(string(yylval.s));// printf("%c ", yylval.s[0]);					//todo abspeichern
-		tok = yylex();
-		if (tok == ',') {
-			tok = yylex();
-		}
-		else if (tok == ']') {
-			tok = yylex();
-			if (tok != '=') {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-	tok = yylex();
-
-	if (tok == '(') {
-		tok = yylex();
-	}
-	else {
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");
-	}
-
-	j_old = j;
-
+	parstates retval = P_READLINE;							/* stay in here									*/
+	int k, j, j_old;										/* counting variables							*/
+	smtable::elementlist inputs;							/* list of mentioned inputs						*/
+	string invals;											/* string of associated input trigger values	*/
+	string srcstate;										/* source state of transition					*/
+	smtable::elementlist outputs;							/* list of mentioned outputs					*/
+	string outvals;											/* string of associated output values			*/
+	string dststate;										/* destination state of transition				*/
+	while (tok != '[')tok = yylex();						/* skip until expected character				*/
+	tok = yylex();											/* first input									*/
+															/*												*/
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* j should be defstate count					*/
+	{														/*												*/
+		inputs.push_back(string(yylval.s));					/* save for linking until everything is read	*/
+		tok = yylex();										/* get next										*/
+		if (tok == ',') {									/* if separator									*/
+			tok = yylex();									/* get next										*/
+		}													/*												*/
+		else if (tok == ']') {								/* if end of inputs								*/
+			tok = yylex();									/* get next										*/
+			if (tok != '=') {								/* check for expected character					*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/*												*/
+		}													/*												*/
+		else {												/* if neither separator, nor end				*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/*												*/
+		}													/*												*/
+	}														/*												*/
+	tok = yylex();											/* get next										*/
+															/*												*/
+	if (tok == '(') {										/* check for expected character					*/
+		tok = yylex();										/* get next										*/	
+	}														/*												*/
+	else {													/* not as expected								*/
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/*												*/
+	}														/*												*/
+															/*												*/
+	j_old = j;												/* save number of gathered inputs				*/
+															/*												*/
 	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-	{
-		if (tok == IDENTIFIER) {
-			invals.append("x");// printf("x ");
-		}
-		else {
-			if(yylval.i)
-				invals.append("1");// printf("%d ", yylval.i);
-			else
-				invals.append("0");
-		}
-		tok = yylex();
-		if (tok == ',') {
-			tok = yylex();
-		}
-		else if (tok == ')') {
-			tok = yylex();
-			if (tok != '(') {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-
-	if (j > j_old)
-		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");
-	else if (j < j_old)
-		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");
-
-	tok = yylex();
-
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
-	{
-		srcstate.append(yylval.s);// printf("%c ", yylval.s[0]);
-
-		tok = yylex();
-
-		if (tok == ')') {
-			tok = yylex();
-			if (tok != '>') {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-	tok = yylex();
-
-	if (tok == '[') {
-		tok = yylex();
-	}
-	else {
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");
-	}
-
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)
-	{
-		outputs.push_back(string(yylval.s));// printf("%c ", yylval.s[0]);
-		tok = yylex();
-		if (tok == ',') {
-			tok = yylex();
-		}
-		else if (tok == ']') {
-			tok = yylex();
-			if (tok != ':') {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-
-	tok = yylex();
-
-	if (tok == '(') {
-		tok = yylex();
-	}
-	else {
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");
-	}
-
-	j_old = j;
-
+	{														/* as long as '0', '1', 'x' or 'X' is read		*/
+		if (tok == IDENTIFIER) {							/* if 'x' or 'X'								*/
+			invals.append("x");								/* save											*/
+		}													/*												*/
+		else {												/* else should be '0' or '1'					*/
+			if(yylval.i)									/* decide which one								*/
+				invals.append("1");							/* save											*/
+			else											/*												*/
+				invals.append("0");							/* save											*/
+		}													/*												*/
+		tok = yylex();										/* get next										*/
+		if (tok == ',') {									/* check for separator							*/
+			tok = yylex();									/* get next										*/
+		}													/*												*/
+		else if (tok == ')') {								/* check for end								*/		
+			tok = yylex();									/* get next										*/
+			if (tok != '(') {								/* if not as expected							*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/* 												*/
+		}													/* 												*/
+		else {												/* if neither separator nor end					*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+		}													/* 												*/
+	}														/* 												*/
+															/* 												*/
+	if (j > j_old)											/* compare number of values to number of inputs	*/
+		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");/*	*/
+	else if (j < j_old)										/* 												*/
+		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");/*	*/
+															/* 												*/
+	tok = yylex();											/* get next										*/
+															/* 												*/
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* as long as there are identifiers				*/
+	{														/* although only one state is expected			*/
+		srcstate.append(yylval.s);							/* save it										*/
+															/* 												*/
+		tok = yylex();										/* get next										*/
+															/* 												*/
+		if (tok == ')') {									/* check for expected end						*/
+			tok = yylex();									/* get next										*/
+			if (tok != '>') {								/* check for expected character					*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/* 												*/
+		}													/* 												*/
+		else {												/* no expected end								*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+		}													/* 												*/
+	}														/* 												*/
+	tok = yylex();											/* get next										*/
+															/* 												*/
+	if (tok == '[') {										/* check expected start							*/
+		tok = yylex();										/* get next										*/
+	}														/* 												*/
+	else {													/* 												*/
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/* 												*/
+	}														/* 												*/
+															/* 												*/
+	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* for as lomg as there are output names		*/
+	{														/* 												*/
+		outputs.push_back(string(yylval.s));				/* save them									*/
+		tok = yylex();										/* get next										*/
+		if (tok == ',') {									/* check for separator							*/
+			tok = yylex();									/* get next										*/
+		}													/* 												*/
+		else if (tok == ']') {								/* check for end								*/
+			tok = yylex();									/* get next										*/
+			if (tok != ':') {								/* check for expected character					*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/* 												*/
+		}													/* 												*/
+		else {												/* if neither separator nor end 				*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+		}													/* 												*/
+	}														/* 												*/
+															/* 												*/
+	tok = yylex();											/* get next										*/
+															/* 												*/
+	if (tok == '(') {										/* check expected start							*/
+		tok = yylex();										/* get next										*/
+	}														/* 												*/
+	else {													/* 												*/
+		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/* 												*/
+	}														/* 												*/
+															/* 												*/
+	j_old = j;												/* save number of gathered outputs				*/
+															/* 												*/
 	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-	{
-		if (tok == IDENTIFIER) {
-			outvals.append("x");// printf("x ");
-		}
-		else {
-			if (yylval.i)
-				outvals.append("1");// printf("%d ", yylval.i);
-			else
-				outvals.append("0");
-		}
-		tok = yylex();
-		if (tok == ',') {
-			tok = yylex();
-		}
-		else if (tok == ')') {
-			tok = yylex();
-			if (tok != '(') {
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-
-
-
-	if (j > j_old)
-		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");
-	else if (j < j_old)
-		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");
-
-	tok = yylex();
-
-	for (k = 0; tok == IDENTIFIER; k++)
-	{
-		dststate.append(yylval.s);// printf("%c ", yylval.s[0]);
-		tok = yylex();
-		if (tok == ')') {
-			tok = yylex();
-			if (tok == 303) {
-				break;
-			}
-			else if (tok == '[') {
-				//printf("\n");
-			}
-			else
-			{
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");
-			}
-		}
-		else {
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");
-		}
-	}
-	table.link(inputs, invals, srcstate, outputs, outvals, dststate);
-	return retval;
-}
+	{														/* as long as '0', '1', 'x' or 'X' is read		*/
+		if (tok == IDENTIFIER) {							/* 												*/
+			outvals.append("x");							/* 												*/
+		}													/* 												*/
+		else {												/* 												*/
+			if (yylval.i)									/* 												*/
+				outvals.append("1");						/* 												*/
+			else											/* 												*/
+				outvals.append("0");						/* 												*/
+		}													/* 												*/
+		tok = yylex();										/* 												*/
+		if (tok == ',') {									/* 												*/
+			tok = yylex();									/* 												*/
+		}													/* 												*/
+		else if (tok == ')') {								/* 												*/
+			tok = yylex();									/* 												*/
+			if (tok != '(') {								/* 												*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/* 												*/
+		}													/* 												*/
+		else {												/* 												*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+		}													/* 												*/
+	}														/* 												*/
+															/* 												*/
+															/* 												*/
+															/* 												*/
+	if (j > j_old)											/* compare number of values to number of outputs*/
+		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");/*	*/
+	else if (j < j_old)										/* 												*/
+		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");/*	*/
+															/* 												*/
+	tok = yylex();											/* 												*/
+															/* 												*/
+	for (k = 0; tok == IDENTIFIER; k++)						/* 												*/
+	{														/* 												*/
+		dststate.append(yylval.s);							/* 												*/
+		tok = yylex();										/* 												*/
+		if (tok == ')') {									/* 												*/
+			tok = yylex();									/* 												*/
+			if (tok == 303) {								/* 												*/
+				break;										/* 												*/
+			}												/* 												*/
+			else if (tok == '[') {							/* 												*/
+				//printf("\n");								/* 												*/
+			}												/* 												*/
+			else											/* 												*/
+			{												/* 												*/
+				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+			}												/* 												*/
+		}													/* 												*/
+		else {												/* 												*/
+			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+		}													/* 												*/
+	}														/* 												*/
+	table.link(inputs, invals, srcstate, outputs, outvals, dststate);/*										*/
+	return retval;											/*												*/
+}															/*												*/
 
 CParser::prioritytype CParser::highPriority()
 {
@@ -878,91 +881,91 @@ smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype 
 	}
 	return Zustandscodierung;
 }
-
-bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp)
-{
-	bool retval = true;
-	for (uint i = 0; i < cmp.size(); i++) {
-		smtable::elementlist::iterator it;
-		if ((it = find(base.begin(), base.end(), cmp.at(i))) == base.end()) {
-			retval = false;
-		}
-	}
-	return retval;
-}
-
-void CParser::removeSubsets(vector<vector<string>> &tab) {
-	for (uint i = 0; i < tab.size(); i++) {					/* run through list */
-		for (uint j = 0; (j < tab.size()) && (i < tab.size()); j++) {				/* run through list again */
-			if ((contains(tab.at(i), tab.at(j))) && (i != j)) {
-				vector<vector<string>>::iterator it = tab.begin() + j;
-				tab.erase(it);
-				j--;													/* adjust k, because current element at k is unchecked */
-			}
-		}
-	}
-}
-
-CParser::funcreturn CParser::writeOutputFile(void)
-{
-	CParser::funcreturn retval = F_SUCCESS;
-	int stateCodeBitCount = 1;
-	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);
-	ofstream outfile;
-	try {
-		outfile.open("ZMnichtoptimiert.tbl");
-		outfile << "table ZMnichtoptimiert\n  input ";
-		for (uint i = 0; i < table.iinputs.size(); i++) {/* print actual input names */
-			outfile << table.iinputs.at(i).c_str() << " ";
-		}
-		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for current state coding */
-			char statetemp[4] = { 'C', '0', '0', '\0' };/* 2^100 = 10^30 States */
-			statetemp[1] = i / 10 + '0';
-			statetemp[2] = i + '0';
-			outfile << statetemp << " ";
-		}
-		outfile << "\n  output ";
-		for (uint i = 0; i < stateCodeBitCount; i++) {	/* print names for next state coding */
-			char statetemp[4] = { 'D', '0', '0', '\0' };
-			statetemp[1] = i / 10 + '0';
-			statetemp[2] = i + '0';
-			outfile << statetemp << " ";
-		}
-		outfile << "\n\" nonoptimized transitiontable\n";
-		for (int i = 0; i < (1 << table.iinputs.size()); i++) {		/* run through input combinations */
-			for (int j = 0; j < (1 << stateCodeBitCount); j++) {	/* run through state combinations */
-				int nextstate = 0;
-				if (j < table.istates.size()) {
+															/* 												*/
+bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp)/*								*/
+{															/* check, if base contains all entries of cmp	*/
+	bool retval = true;										/* preset retval								*/
+	for (uint i = 0; i < cmp.size(); i++) {					/* run through cmp								*/
+		smtable::elementlist::iterator it;					/* declare iterator for search					*/
+		if ((it = find(base.begin(), base.end(), cmp.at(i))) == base.end()) {/* if entry not found in base	*/
+			retval = false;									/* cmp can't be subset of base					*/
+		}													/* 												*/
+	}														/* 												*/
+	return retval;											/* 												*/
+}															/* 												*/
+															/* 												*/
+void CParser::removeSubsets(vector<vector<string>> &tab) {	/*												*/
+	for (uint i = 0; i < tab.size(); i++) {					/* run through list								*/
+		for (uint j = 0; (j < tab.size()) && (i < tab.size()); j++) {/* run through list again				*/
+			if ((contains(tab.at(i), tab.at(j))) && (i != j)) {/* if j is subset of i and doesnt compar self*/
+				vector<vector<string>>::iterator it = tab.begin() + j;/* declare pointer to subset for erase*/
+				tab.erase(it);								/* erase										*/
+				j--;										/* adjust k, because current element at k is	*/
+			}												/*							not checked, yet	*/
+		}													/* 												*/
+	}														/* 												*/
+}															/* 												*/
+															/* 												*/
+CParser::funcreturn CParser::writeOutputFile(void)			/* 												*/
+{															/* 												*/
+	CParser::funcreturn retval = F_SUCCESS;					/* preset return								*/
+	int stateCodeBitCount = 1;								/* number of bits needed to code states			*/
+	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);/* calculation				*/
+	ofstream outfile;										/* output file object							*/
+	try {													/* safe code block, if write exception occours	*/
+		outfile.open("ZMnichtoptimiert.tbl");				/* 												*/
+		outfile << "table ZMnichtoptimiert\n  input ";		/* write file header							*/
+		for (uint i = 0; i < table.iinputs.size(); i++) {	/* print actual input names						*/
+			outfile << table.iinputs.at(i).c_str() << " ";	/* 												*/
+		}													/* 												*/
+		for (uint i = 0; i < stateCodeBitCount; i++) {		/* print names for current state coding			*/
+			char statetemp[4] = { 'C', '0', '0', '\0' };	/* 2^100 = 10^30 States, should be enough		*/
+			statetemp[1] = i / 10 + '0';					/* 												*/
+			statetemp[2] = i + '0';							/* 												*/
+			outfile << statetemp << " ";					/* 												*/
+		}													/* 												*/
+		outfile << "\n  output ";							/* 												*/
+		for (uint i = 0; i < stateCodeBitCount; i++) {		/* print names for next state coding			*/
+			char statetemp[4] = { 'D', '0', '0', '\0' };	/* 												*/
+			statetemp[1] = i / 10 + '0';					/* 												*/
+			statetemp[2] = i + '0';							/* 												*/
+			outfile << statetemp << " ";					/* 												*/
+		}													/* 												*/
+		outfile << "\n\" nonoptimized transitiontable\n";	/* 												*/
+		for (int i = 0; i < (1 << table.iinputs.size()); i++) {/* run through input combinations			*/
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {/* run through state combinations			*/
+				int nextstate = 0;							/* 												*/
+				if (j < table.istates.size()) {				/* 												*/
 					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
 					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-					if (nextstate < table.istates.size()) {
-						outfile << *table.int2bit(nextstate, stateCodeBitCount);
-					}
-					else {
-						for (int k = 0; k < stateCodeBitCount; k++) {
-							outfile << "-";
-						}
-					}
-					outfile << "\n";
-				}
-				else {
+					if (nextstate < table.istates.size()) {	/* 												*/
+						outfile << *table.int2bit(nextstate, stateCodeBitCount);/* 							*/
+					}										/* 												*/
+					else {									/* 												*/
+						for (int k = 0; k < stateCodeBitCount; k++) {/* 									*/
+							outfile << "-";					/* 												*/
+						}									/* 												*/
+					}										/* 												*/
+					outfile << "\n";						/* 												*/
+				}											/* 												*/
+				else {										/* 												*/
 					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-					for (int k = 0; k < stateCodeBitCount; k++) {
-						outfile << "-";
-					}
-					outfile << "\n";
-				}
-			}
-		}
-		outfile << "end\n";
-		outfile.close();
-	}
-	catch(...){
-		retval = F_FAIL;
-	}
-	return retval;
-}
-
+					for (int k = 0; k < stateCodeBitCount; k++) {/* 										*/
+						outfile << "-";						/* 												*/
+					}										/* 												*/
+					outfile << "\n";						/* 												*/
+				}											/* 												*/
+			}												/* 												*/
+		}													/* 												*/
+		outfile << "end\n";									/* 												*/
+		outfile.close();									/* 												*/
+	}														/* 												*/
+	catch(...){												/* 												*/
+		retval = F_FAIL;									/* 												*/
+	}														/* 												*/
+	return retval;											/* 												*/
+}															/* 												*/
+															/* 												*/
 CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist)
 {
 	CParser::funcreturn retval = F_SUCCESS;
