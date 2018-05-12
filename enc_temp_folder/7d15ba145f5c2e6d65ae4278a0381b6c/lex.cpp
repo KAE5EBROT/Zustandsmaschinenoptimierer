@@ -746,6 +746,8 @@ CParser::lowpriotype CParser::lowPriority()																			/*lowest priority 
 
 smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority)
 {
+	uint a = 1;
+	uint bit_count = 1;
 	uint set_states = 0;
 	uint high_priority_count = high_priority.size();
 	uint mean_priority_count = mean_priority.size();
@@ -755,10 +757,16 @@ smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype 
 	prioritytype::iterator t3;
 	vector <string> Zustandscodierung, l3;
 
-	Zustandscodierung.resize((1 << (table.iheight - 1)));
+	while (a < table.iheight) {
+		a *= 2;
+	}
+	cout << a;
+	cout << (1 << (table.iheight-1));
+	Zustandscodierung.resize(a);
 	t3 = high_priority.begin();
+	is_set = false;
 
-	if (set_states < table.istates.size()) {			
+	if (set_states < table.istates.size()) {
 		for (uint i = 0; i < high_priority_count; i++) {
 			if (!((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end()))) {
 				Zustandscodierung[set_states] = t3->first;
