@@ -747,42 +747,45 @@ CParser::lowpriotype CParser::lowPriority()																			/*lowest priority 
 smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority)
 {
 	uint set_states = 0;
+	uint Zustandscodierung_size = 1;
 	uint high_priority_count = high_priority.size();
 	uint mean_priority_count = mean_priority.size();
 	uint low_priority_count = low_priority.size();
 	bool is_set = false;
-	int z = 0;
+	int candidate_count = 0;
 	prioritytype::iterator t3;
-	vector <string> Zustandscodierung, l3;
+	vector <string> Zustandscodierung, candidates;
 
-	Zustandscodierung.resize((1 << (table.iheight - 1)));
+	while (Zustandscodierung_size < table.iheight) {
+		Zustandscodierung_size *= 2;																					/*Zustandscodierung_size is the next power of 2 (2^n)*/
+	}
+
+
+	Zustandscodierung.resize(Zustandscodierung_size);																
 	t3 = high_priority.begin();
 
-	if (set_states < table.istates.size()) {			
-		for (uint i = 0; i < high_priority_count; i++) {
-			if (!((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end()))) {
-				Zustandscodierung[set_states] = t3->first;
-				set_states++;
-				t3++;
-				is_set = true;
+	/*high priorities*/
+	if (set_states < table.istates.size()) {																			/*ckecks, if a state isn't set in the Zustandscodierung*/
+		for (uint i = 0; i < high_priority_count; i++) {										
+			if (!((find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end()))) {  /*ckecks, if a high priority state isn't set in the Zustandscodierung*/
+				Zustandscodierung[set_states] = t3->first;																/*sets a high priority state*/
+				set_states++;																																										
+				is_set = true;																							/*sets a bool bit*/
 			}
-			else
-			{
-				t3++;
-			}
-			while (is_set) {
-				if (high_priority[Zustandscodierung[set_states - 1]].size() > 0) {              //other high priority for t3->second.at(i)
+			t3++;																										/*increase t3 iterator*/
+
+			while (is_set) {																							/*run through till bool bit isn't set anymore*/
+				if (high_priority[high_priority.at(Zustandscodierung[set_states - 1]).at(0)].size() > 0) {				/*checks, if there is a other high priority of the first state of the high priority state*/
 					Zustandscodierung[set_states] = high_priority[Zustandscodierung[set_states - 1]].at(1);
-					Zustandscodierung[set_states + 1] = high_priority[Zustandscodierung[set_states - 1]].at(0);
-					set_states += 2;
+					Zustandscodierung[set_states + 1] = high_priority[Zustandscodierung[set_states - 1]].at(0);			/*set the first state of the high priority state at second (the next high priority can be set directly afterwards*/
+					set_states += 2;																					/*e.g. S0 S7 S9 + S7 S3 S4 -> S0 S9 S7 S3 S4*/
 				}
 				else {
-					cout << high_priority[Zustandscodierung[set_states - 1]].at(0);
 					Zustandscodierung[set_states] = high_priority[Zustandscodierung[set_states - 1]].at(0);
 					Zustandscodierung[set_states + 1] = high_priority[Zustandscodierung[set_states - 1]].at(1);
 					set_states += 2;
 				}
-				if (high_priority[Zustandscodierung[set_states - 1]].size() > 0) {
+				if (high_priority[Zustandscodierung[set_states - 1]].size() > 0) {										/*checks, if there is a high priority state of the last set state*/
 					is_set = true;
 				}
 				else {
@@ -795,52 +798,55 @@ smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype 
 	t3 = mean_priority.begin();
 	is_set = false;
 
-	if (set_states < table.istates.size()) {
-		for (uint j = 0; j < mean_priority_count; j++) {//mean priority
+	/*mean priority*/
+	if (set_states < table.istates.size()) {																						/*ckecks, if a state isn't set in the Zustandscodierung*/
+		for (uint j = 0; j < mean_priority_count; j++) {
 			for (uint i = 0; i < t3->second.size(); i++) {
-				if (find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->second.at(i)) != Zustandscodierung.end()) {
+				if (find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->second.at(i)) != Zustandscodierung.end()) {		/*ckecks, if a state of a mean priority is set in the Zustandscodierung*/
 					is_set = true;
 				}
 			}
 			if (is_set == false) {
-				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end())) {
-					Zustandscodierung[set_states] = t3->first;
+				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end())) {			/*ckecks, if a mean priority state isn't set in the Zustandscodierung*/
+					Zustandscodierung[set_states] = t3->first;																		/*set mean priority state in the Zustandscodierung*/
 					set_states++;
 				}
 				for (uint p = 0; p < t3->second.size(); p++) {
-					Zustandscodierung[set_states] = t3->second.at(p);
+					Zustandscodierung[set_states] = t3->second.at(p);																/*set states of mean priority in the Zustandscodierung*/
 					set_states++;
 				}
 			}
 			is_set = false;
-			t3++;
+			t3++;																													/*increase t3 iterator*/
 		}
 	}
 
-	if (set_states < table.istates.size())
+	/*low priority*/
+	if (set_states < table.istates.size())																							/*ckecks, if a state isn't set in the Zustandscodierung*/
 	{
-		for (uint j = 0; j < low_priority_count; j++) {//low priority
+		for (uint j = 0; j < low_priority_count; j++) {
 			for (uint i = 0; i < low_priority[j].size(); i++) {
-				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), low_priority[j].at(i)) != Zustandscodierung.end())) {
-					z++;
-					l3.push_back(low_priority[j].at(i));
+				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), low_priority[j].at(i)) != Zustandscodierung.end())) {/*ckecks, if a state of a low priority isn't set in the Zustandscodierung*/
+					candidate_count++;																								/*count candidates*/
+					candidates.push_back(low_priority[j].at(i));																	/*push a candidate for low priority (in Zustandscodierung) into candidates*/
 				}
-				if (z >= 2) {
-					for (uint k; k < l3.size(); k++) {
-						Zustandscodierung[set_states] = t3->second.at(k);
-						set_states++;
-					}
-				}
-				l3.clear();
-				z = 0;
 			}
+			if (candidate_count >= 2) {																								/*if there are more candidates than one, then the candidates is set in Zustandscodierung*/
+				for (uint k; k < candidates.size(); k++) {
+					Zustandscodierung[set_states] = t3->second.at(k);																
+					set_states++;
+				}
+			}	
+			candidates.clear();																										/*clear candidates*/
+			candidate_count = 0;																									/*reset candidate_count*/
 		}
 	}
-	if (set_states < table.istates.size()) {
-		for (uint i = 0; i < table.istates.size(); i++) {		//set left states
-			if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), table.istates.at(i)) != Zustandscodierung.end())) {
-				Zustandscodierung[set_states] = table.istates.at(i);
-				set_states++;
+	/*Set left states*/
+	if (set_states < table.istates.size()) {																						/*ckecks, if a state isn't set in the Zustandscodierung*/
+		for (uint i = 0; i < table.istates.size(); i++) {																		
+			if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), table.istates.at(i)) != Zustandscodierung.end())) {		/*ckecks, if a state isn't set in the Zustandscodierung*/
+				Zustandscodierung[set_states] = table.istates.at(i);																/*set a state in the Zustandscodierung*/
+				set_states++;																					
 			}
 		}
 	}
