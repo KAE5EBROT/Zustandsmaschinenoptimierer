@@ -87,6 +87,7 @@ public:
 	CParser::parstates CParser::pfScanInputs(int & tok);
 	CParser::parstates CParser::pfScanOutputs(int & tok);
 	CParser::parstates CParser::pfReadLine(int & tok);
+	CParser::parstates CParser::pfError(void);
 	CParser::prioritytype CParser::highPriority();
 	CParser::prioritytype CParser::meanPriority();
 	CParser::lowpriotype CParser::lowPriority();
