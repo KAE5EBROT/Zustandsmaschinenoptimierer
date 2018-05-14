@@ -54,5 +54,8 @@
     <None Include="gatterzaehlen.bat">
       <Filter>Quellcodedateien</Filter>
     </None>
+    <None Include="runMinilog.bat">
+      <Filter>Quellcodedateien</Filter>
+    </None>
   </ItemGroup>
 </Project>
