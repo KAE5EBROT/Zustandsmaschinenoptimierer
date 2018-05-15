@@ -81,12 +81,12 @@ public:
 	void CParser::IP_init_token_table();		//loads the tokens
 	void CParser::Load_tokenentry(string str, int index);//load one token
 	void CParser::PushString(char c);			//Used for dtring assembly
-	CParser::parstates CParser::pfSkipHeader(int &tok);
-	CParser::parstates CParser::pfGetDef(int & tok);
-	CParser::parstates CParser::pfScanState(int & tok);
-	CParser::parstates CParser::pfScanInputs(int & tok);
-	CParser::parstates CParser::pfScanOutputs(int & tok);
-	CParser::parstates CParser::pfReadLine(int & tok);
+	CParser::parstates CParser::pfSkipHeader(int tok);
+	CParser::parstates CParser::pfGetDef(int tok);
+	CParser::parstates CParser::pfScanState(int tok);
+	CParser::parstates CParser::pfScanInputs(int tok);
+	CParser::parstates CParser::pfScanOutputs(int tok);
+	CParser::parstates CParser::pfReadLine(int tok);
 	CParser::parstates CParser::pfError(void);
 	CParser::prioritytype CParser::highPriority();
 	CParser::prioritytype CParser::meanPriority();

@@ -59,29 +59,26 @@ int	CParser::yyparse()										/*												*/
 	parstates state = P_HEADER;								/*												*/
 	if (prflag)fprintf(IP_List, "%5d ", (int)IP_LineNumber);/*												*/
 															/*												*/
-	while (tok != IP_Token_table["End"]) {					/* Run till End									*/
+	while ((tok = yylex()) != IP_Token_table["End"]) {					/* Run till End									*/
 		switch (state) {									/*												*/
 		case P_HEADER:										/* Skip everything until "Begin"				*/
-			tok = yylex();									/*												*/
 			state = pfSkipHeader(tok);						/*												*/
 			break;											/*												*/
 		case P_DEFSELECT:									/* Which definition is in queue?				*/
-			state = pfGetDef(tok);							/*												*/
+			state = pfGetDef(tok);							/*0												*/
 			break;											/*												*/
 		case P_DEFSTATE:									/* read in state definitions					*/
-			tok = yylex();									/*												*/
 			state = pfScanState(tok);						/*												*/
 			break;											/*												*/
 		case P_DEFIN:										/* read in input definitions					*/
-			tok = yylex();									/*												*/
 			state = pfScanInputs(tok);						/*												*/
 			break;											/*												*/
 		case P_DEFOUT:										/* read in output definitions					*/
-			tok = yylex();									/*												*/
 			state = pfScanOutputs(tok);						/*												*/
 			break;											/*												*/
 		case P_READLINE:									/* read in state transition definitions			*/
-			state = pfReadLine(tok);						/*												*/
+			state = pfReadLine(tok);						/*0												*/ SCHEIßE UMBAUEN!!!
+			while (tok != '[')tok = yylex();				/* skip until expected character				*/
 			break;											/*												*/
 		case P_ERROR:										/* catch error									*/
 			state = pfError();								/*												*/
@@ -352,13 +349,13 @@ int CParser::yylex()
 //------------------------------------------------------------------------
 															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfSkipHeader(int &tok)			/* Parser function: Skip until begin			*/
+CParser::parstates CParser::pfSkipHeader(int tok)			/* Parser function: Skip until begin			*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
 	i++;													/*												*/
 	if (i > 100000) {										/* maximum of 100000 elements					*/
-		fprintf(stderr, "Ihr Header ist zu lang");			/*												*/
+		fprintf(stderr, "\nIhr Header ist zu lang");			/*												*/
 		retval = P_ERROR;									/*												*/
 	}														/*												*/
 	else if (tok != IP_Token_table["Begin"]) {				/* still no "Begin"								*/
@@ -370,7 +367,7 @@ CParser::parstates CParser::pfSkipHeader(int &tok)			/* Parser function: Skip un
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfGetDef(int &tok)				/* Parser function: Select next definition		*/
+CParser::parstates CParser::pfGetDef(int tok)				/* Parser function: Select next definition		*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
@@ -379,7 +376,7 @@ CParser::parstates CParser::pfGetDef(int &tok)				/* Parser function: Select nex
 		table.init(scannedStates, scannedInputs, scannedOutputs);	/* let the table know the definitions	*/
 		retval = P_READLINE;								/*												*/
 	}														/*												*/
-	else if ((((tok = yylex()) < IP_Token_table["DEFSTATE"]) || (tok > IP_Token_table["DEFOUT"])) && (i<1000)) {
+	else if (((tok < IP_Token_table["DEFSTATE"]) || (tok > IP_Token_table["DEFOUT"])) && (i<1000)) {
 		i++;												/* still no definition key? skip				*/
 		retval = P_DEFSELECT;								/*												*/
 	}														/*												*/
@@ -398,7 +395,7 @@ CParser::parstates CParser::pfGetDef(int &tok)				/* Parser function: Select nex
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanState(int &tok)			/* Parser function: Read in state definition	*/
+CParser::parstates CParser::pfScanState(int tok)			/* Parser function: Read in state definition	*/
 {															/*												*/
 	parstates retval = P_DEFSTATE;;							/*												*/
 	switch (tok) {											/*												*/
@@ -415,13 +412,13 @@ CParser::parstates CParser::pfScanState(int &tok)			/* Parser function: Read in 
 		retval = P_DEFSELECT;								/* return to selection							*/
 		break;												/*												*/
 	default:												/* anything else scanned?						*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/*												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft (DEFSTATE)");/*										*/
 		break;												/*												*/
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanInputs(int &tok)			/* Parser function: Read in input definition	*/
+CParser::parstates CParser::pfScanInputs(int tok)			/* Parser function: Read in input definition	*/
 {															/*												*/
 	parstates retval = P_DEFIN;;							/*												*/
 	switch (tok) {											/*												*/
@@ -438,13 +435,13 @@ CParser::parstates CParser::pfScanInputs(int &tok)			/* Parser function: Read in
 		retval = P_DEFSELECT;								/* return to selection							*/
 		break;												/*												*/
 	default:												/* anything else scanned?						*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/*												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft (DEFIN)");/*										*/
 		break;												/*												*/
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanOutputs(int &tok)			/* Parser function: Read in output definition	*/
+CParser::parstates CParser::pfScanOutputs(int tok)			/* Parser function: Read in output definition	*/
 {															/*												*/
 	parstates retval = P_DEFOUT;;							/*												*/
 	switch (tok) {											/*												*/
@@ -461,13 +458,13 @@ CParser::parstates CParser::pfScanOutputs(int &tok)			/* Parser function: Read i
 		retval = P_DEFSELECT;								/* return to selection							*/
 		break;												/*												*/
 	default:												/* anything else scanned?						*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/*												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft (DEFOUT)");/*										*/
 		break;												/*												*/
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in transitions			*/
+CParser::parstates CParser::pfReadLine(int tok)				/* Parser function: Read in transitions			*/
 {															/*												*/
 	parstates retval = P_READLINE;							/* stay in here, unless error occours			*/
 	int k, j, j_old;										/* counting variables							*/
@@ -477,8 +474,7 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 	smtable::elementlist outputs;							/* list of mentioned outputs					*/
 	string outvals;											/* string of associated output values			*/
 	string dststate;										/* destination state of transition				*/
-	while (tok != '[')tok = yylex();						/* skip until expected character				*/
-	tok = yylex();											/* first input									*/
+	if(tok == '[')tok = yylex();											/* first input								*/
 															/*												*/
 	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* j should be defstate count					*/
 	{														/*												*/
@@ -490,11 +486,11 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		else if (tok == ']') {								/* if end of inputs								*/
 			tok = yylex();									/* get next										*/
 			if (tok != '=') {								/* check for expected character					*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 1");/*									*/
 			}												/*												*/
 		}													/*												*/
 		else {												/* if neither separator, nor end				*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/*												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 2");/*										*/
 		}													/*												*/
 	}														/*												*/
 	tok = yylex();											/* get next										*/
@@ -503,7 +499,7 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		tok = yylex();										/* get next										*/	
 	}														/*												*/
 	else {													/* not as expected								*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/*												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 3");	/*										*/
 	}														/*												*/
 															/*												*/
 	j_old = j;												/* save number of gathered inputs				*/
@@ -526,18 +522,18 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		else if (tok == ')') {								/* check for end								*/		
 			tok = yylex();									/* get next										*/
 			if (tok != '(') {								/* if not as expected							*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 4");/*									*/
 			}												/* 												*/
 		}													/* 												*/
 		else {												/* if neither separator nor end					*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 5");/* 										*/
 		}													/* 												*/
 	}														/* 												*/
 															/* 												*/
 	if (j > j_old)											/* compare number of values to number of inputs	*/
-		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale");/*	*/
+		fprintf(stderr, "\nFehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale bei 6");
 	else if (j < j_old)										/* 												*/
-		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale");/*	*/
+		fprintf(stderr, "\nFehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale bei 7");
 															/* 												*/
 	tok = yylex();											/* get next										*/
 															/* 												*/
@@ -550,11 +546,11 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		if (tok == ')') {									/* check for expected end						*/
 			tok = yylex();									/* get next										*/
 			if (tok != '>') {								/* check for expected character					*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 8");/*									*/
 			}												/* 												*/
 		}													/* 												*/
 		else {												/* no expected end								*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 9");/* 										*/
 		}													/* 												*/
 	}														/* 												*/
 	tok = yylex();											/* get next										*/
@@ -563,7 +559,7 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		tok = yylex();										/* get next										*/
 	}														/* 												*/
 	else {													/* 												*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/* 												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 10");/* 										*/
 	}														/* 												*/
 															/* 												*/
 	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* for as lomg as there are output names		*/
@@ -576,11 +572,11 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		else if (tok == ']') {								/* check for end								*/
 			tok = yylex();									/* get next										*/
 			if (tok != ':') {								/* check for expected character					*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 11");/*									*/
 			}												/* 												*/
 		}													/* 												*/
 		else {												/* if neither separator nor end 				*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 12");/* 									*/
 		}													/* 												*/
 	}														/* 												*/
 															/* 												*/
@@ -590,7 +586,7 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		tok = yylex();										/* get next										*/
 	}														/* 												*/
 	else {													/* 												*/
-		fprintf(stderr, "Eingabedaten sind fehlerhaft");	/* 												*/
+		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 13");/* 										*/
 	}														/* 												*/
 															/* 												*/
 	j_old = j;												/* save number of gathered outputs				*/
@@ -613,27 +609,27 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 		else if (tok == ')') {								/* 												*/
 			tok = yylex();									/* 												*/
 			if (tok != '(') {								/* 												*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 14");/*									*/
 			}												/* 												*/
 		}													/* 												*/
 		else {												/* 												*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 15");/* 									*/
 		}													/* 												*/
 	}														/* 												*/
 															/* 												*/
 															/* 												*/
 															/* 												*/
 	if (j > j_old)											/* compare number of values to number of outputs*/
-		fprintf(stderr, "Fehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale");/*	*/
+		fprintf(stderr, "\nFehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale bei 16");
 	else if (j < j_old)										/* 												*/
-		fprintf(stderr, "Fehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale");/*	*/
+		fprintf(stderr, "\nFehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale bei 17");
 															/* 												*/
 	tok = yylex();											/* 												*/
 															/* 												*/
 	for (k = 0; tok == IDENTIFIER; k++)						/* 												*/
 	{														/* 												*/
 		dststate.append(yylval.s);							/* 												*/
-		tok = yylex();										/* 												*/
+		//tok = yylex();										/* 												*/
 		if (tok == ')') {									/* 												*/
 			tok = yylex();									/* 												*/
 			if (tok == 303) {								/* 												*/
@@ -644,11 +640,13 @@ CParser::parstates CParser::pfReadLine(int &tok)			/* Parser function: Read in t
 			}												/* 												*/
 			else											/* 												*/
 			{												/* 												*/
-				fprintf(stderr, "Eingabedaten sind fehlerhaft");/*											*/
+				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 18");/*									*/
+				break;										/* BUG!	todo									*/
 			}												/* 												*/
 		}													/* 												*/
 		else {												/* 												*/
-			fprintf(stderr, "Eingabedaten sind fehlerhaft");/* 												*/
+			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 19");/* 									*/
+			break;											/* BUG!	todo									*/
 		}													/* 												*/
 	}														/* 												*/
 	table.link(inputs, invals, srcstate, outputs, outvals, dststate);/*										*/
@@ -672,10 +670,10 @@ CParser::prioritytype CParser::highPriority()				/* high priority: when at least
 		for (int j = 0; j < table.iheight; j++) {			/*												*/
 			for (int i = 0; i < table.iheight; i++) {		/*												*/
 				if (i != j) {				/* checks, if the table height j is unequal the table height i	*/
-					if (table.istates.at(j) == table.table[table.istates.at(i)].at(k).next_state) {	/*			*/
-					/* checks, if a state is equal with a next state from a other state							*/
+					if (table.istates.at(j) == table.table[table.istates.at(i)].at(k).next_state) {	/*		*/
+					/* checks, if a state is equal with a next state from a other state						*/
 						candidate_count++;					/* count candidates								*/
-						candidates.push_back(table.istates.at(i).c_str());/* save candidate						*/
+						candidates.push_back(table.istates.at(i).c_str());/* save candidate					*/
 					}										/*												*/
 				}											/*												*/
 			}												/*												*/
