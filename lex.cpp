@@ -667,21 +667,24 @@ CParser::prioritytype CParser::highPriority()				/* high priority: when at least
 	vector<string> candidates;								/* candidates for high priority					*/
 	int candidate_count = 0;								/*												*/
 															/*												*/
-	for (int j = 0; j < table.iheight; j++) {				/*												*/
-		for (int i = 0; i < table.iheight; i++) {			/*												*/
-			if (i != j) {					/* checks, if the table height j is unequal the table height i	*/	
-				if (table.istates.at(j) == table.table[table.istates.at(i)].at(0).next_state) {	/*			*/
-				/* checks, if a state is equal with a next state from a other state							*/	
-					candidate_count++;						/* count candidates								*/	
-					candidates.push_back(table.istates.at(i).c_str());/* save candidate						*/				
+	for (int k = 0; k < table.iwidth; k++)					/*												*/
+	{														/*												*/
+		for (int j = 0; j < table.iheight; j++) {			/*												*/
+			for (int i = 0; i < table.iheight; i++) {		/*												*/
+				if (i != j) {				/* checks, if the table height j is unequal the table height i	*/
+					if (table.istates.at(j) == table.table[table.istates.at(i)].at(k).next_state) {	/*			*/
+					/* checks, if a state is equal with a next state from a other state							*/
+						candidate_count++;					/* count candidates								*/
+						candidates.push_back(table.istates.at(i).c_str());/* save candidate						*/
+					}										/*												*/
 				}											/*												*/
 			}												/*												*/
+			if (candidate_count >= 2) {						/* condition for high priority					*/
+				high_priority[table.istates.at(j).c_str()] = candidates;/* if there are more candidates than	*/
+			}											/* one, then the high priority map is passed candidates	*/
+			candidates.clear();								/* clear candidates								*/
+			candidate_count = 0;							/* reset candidate_count						*/
 		}													/*												*/
-		if (candidate_count >= 2) {							/* condition for high priority					*/
-			high_priority[table.istates.at(j).c_str()] = candidates;/* if there are more candidates than	*/
-		}											/* one, then the high priority map is passed candidates	*/
-		candidates.clear();									/* clear candidates								*/
-		candidate_count = 0;								/* reset candidate_count						*/
 	}														/*												*/
 	return high_priority;									/*												*/
 }															/*												*/
