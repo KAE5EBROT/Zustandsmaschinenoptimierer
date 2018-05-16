@@ -1,18 +1,21 @@
-mittlere Automatentabelle (Klausur WS15/16)
+mittlere Automatentabelle (Klausur WS11/12)
 Begin
-DEFSTATE a,b,c; DEFIN T,D; DEFOUT y,z;
-[T,D]		=(0,0)(a) 	> [z,y]:(0,0)(a)
-[T,D]		=(0,1)(a) 	> [z,y]:(0,0)(a)
-[T,D]		=(1,0)(a) 	> [z,y]:(x,x)(b)
-[T,D]		=(1,1)(a) 	> [z,y]:(x,x)(c)
+DEFSTATE a,b,c,d; DEFIN D,C; DEFOUT Q;
+[C,D]		=(0,0)(a) 	> [Q]:(0)(a)
+[C,D]		=(1,0)(a) 	> [Q]:(x)(b)
+[C,D]		=(0,1)(a) 	> [Q]:(0)(a)
+[C,D]		=(1,1)(a) 	> [Q]:(x)(c)
+[C,D]		=(0,0)(b) 	> [Q]:(x)(a)
+[C,D]		=(1,0)(b) 	> [Q]:(0)(b)
+[C,D]		=(0,1)(b) 	> [Q]:(x)(a)
+[C,D]		=(1,1)(b) 	> [Q]:(0)(b)
+[C,D]		=(0,0)(c) 	> [Q]:(x)(d)
+[C,D]		=(1,0)(c) 	> [Q]:(1)(c)
+[C,D]		=(0,1)(c) 	> [Q]:(x)(d)
+[C,D]		=(1,1)(c) 	> [Q]:(1)(c)
+[C,D]		=(0,0)(d) 	> [Q]:(1)(d)
+[C,D]		=(1,0)(d) 	> [Q]:(x)(b)
+[C,D]		=(0,1)(d) 	> [Q]:(1)(d)
+[C,D]		=(1,1)(d) 	> [Q]:(x)(a)
 
-[T,D]		=(0,0)(b) 	> [z,y]:(x,x)(a)
-[T,D]		=(0,1)(b) 	> [z,y]:(x,x)(a)
-[T,D]		=(1,0)(b) 	> [z,y]:(0,0)(b)
-[T,D]		=(1,1)(b) 	> [z,y]:(1,0)(b)
-
-[T,D]		=(0,0)(c) 	> [z,y]:(x,x)(a)
-[T,D]		=(0,1)(c) 	> [z,y]:(x,x)(a)
-[T,D]		=(1,0)(c) 	> [z,y]:(0,1)(c)
-[T,D]		=(1,1)(c) 	> [z,y]:(0,0)(c)
 End
