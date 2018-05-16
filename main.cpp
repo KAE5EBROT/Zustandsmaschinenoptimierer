@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	printf("Enter .txt filename:\n");
 	//scanf("%s",fistr);//gets(fistr);
 	//inf = fopen(strcat(fistr,".txt"),"r");
-	inf = fopen("riesige_automatentabelle.txt", "r");
+	inf = fopen("kleine_automatentabelle.txt", "r");
 	if(inf==NULL){
 		printf("Cannot open input file %s\n",fistr);
 		return 0;
