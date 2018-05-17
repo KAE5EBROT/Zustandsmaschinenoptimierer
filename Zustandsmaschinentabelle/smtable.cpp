@@ -6,6 +6,19 @@
 #include <map>
 #include "smtable.h"
 
+/*!
+* \brief Initialize table only
+*
+* Set up table with initial values. The next_state of each entry is left blank, but
+* output is preset with don't cares.
+* 
+* \warning setStates(), setInputs() and setOutputs() have to be called beforehand
+*
+* \param[in] none
+* \param[out] none
+* \return operation success
+* \note Global variables used: table
+*/
 smtable::fstate smtable::init() {
 	vector<entry> temp;
 	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;
@@ -21,7 +34,18 @@ smtable::fstate smtable::init() {
 	return eOK;
 }
 
-
+/*!
+* \brief Initialize table with 
+*
+* 
+* 
+* \warning setStates(), setInputs() and setOutputs() have to be called beforehand
+*
+* \param[in] none
+* \param[out] none
+* \return operation success
+* \note Global variables used: table
+*/
 smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlist outputs) {
 	vector<entry> temp;
 	istates = states;
@@ -40,21 +64,61 @@ smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlis
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::fstate smtable::setStates(elementlist inputs) {
 	istates = inputs;
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::fstate smtable::setInputs(elementlist inputs) {
 	iinputs = inputs;
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::fstate smtable::setOutputs(elementlist outputs) {
 	ioutputs = outputs;
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::fstate smtable::link(elementlist inputs, string inputval, string srcstate, elementlist outputs, string outputval, string dststate) {
 	int numberOfMatchingInput = 1;
 	int numberOfInput = (1 << iinputs.size());
@@ -98,6 +162,16 @@ smtable::fstate smtable::link(elementlist inputs, string inputval, string srcsta
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::fstate smtable::print() {
 	/* print correct input and output sequences														*/
 	cout << "Reihenfolge Eingangssignale: ";
@@ -137,6 +211,16 @@ smtable::fstate smtable::print() {
 	return eOK;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 string *smtable::int2bit(int val, int width) {
 	string *retval = new string;
 	string::iterator strbegin = retval->begin();	/* set pointer to beginning of string			*/
@@ -147,6 +231,16 @@ string *smtable::int2bit(int val, int width) {
 	return retval;
 }
 
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 bool smtable::bitsMatch(int a, const char* b) {
 	int length = 0;
 	bool ret = true;

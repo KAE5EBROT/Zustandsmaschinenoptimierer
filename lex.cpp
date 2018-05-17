@@ -588,6 +588,7 @@ CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist
 CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEINVALS;					/*												*/
+	char temp[2] = { '0', '\0' };							/* temporary string to append value				*/
 	switch (tok) {											/*												*/
 	case '=':												/* start of line								*/
 		break;												/* no operation									*/
@@ -599,7 +600,8 @@ CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*			
 		invals.append("x");									/* save for linking until everything is read	*/
 		break;												/*												*/
 	case INTEGER1DEF:										/* value detected								*/
-		invals.append({ char(yylval.i) + '0', '\0' });		/* save											*/
+		temp[0] += char(yylval.i);							/* update string								*/
+		invals.append(temp);								/* save											*/
 		break;												/*												*/
 	case ')':												/* end of input names							*/
 		retval = P_READLINESSTATE;							/* read values next								*/
@@ -686,6 +688,7 @@ CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlis
 CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEOUTVALS;					/*												*/
+	char temp[2] = { '0', '\0' };							/* temporary string to append value				*/
 	switch (tok) {											/*												*/
 	case ':':												/* start of outvals								*/
 		break;												/* no operation									*/
@@ -697,7 +700,8 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 		outvals.append("x");								/* save for linking until everything is read	*/
 		break;												/*												*/
 	case INTEGER1DEF:										/* value detected								*/
-		outvals.append({ char(yylval.i) + '0', '\0' });		/* save											*/
+		temp[0] += char(yylval.i);							/* update string								*/
+		outvals.append(temp);								/* save											*/
 		break;												/*												*/
 	case ')':												/* end of input names							*/
 		retval = P_READLINEDSTATE;							/* read values next								*/
