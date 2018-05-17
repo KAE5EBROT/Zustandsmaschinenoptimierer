@@ -64,8 +64,10 @@ public:
 		P_READLINEDSTATE,		/* Read in destination state of transition definition	*/
 		P_ERROR					/* Error handler										*/
 	};
-	/*
-	*	Parser states
+	/**
+	*  \brief function returns
+	*  
+	*  \input 
 	*/
 	enum funcreturn {
 		F_SUCCESS = 0, F_FAIL
@@ -92,17 +94,17 @@ public:
 	void CParser::IP_init_token_table();		//loads the tokens
 	void CParser::Load_tokenentry(string str, int index);//load one token
 	void CParser::PushString(char c);			//Used for dtring assembly
-	CParser::parstates CParser::pfSkipHeader(int tok);
-	CParser::parstates CParser::pfGetDef(int tok);
-	CParser::parstates CParser::pfScanState(int tok);
-	CParser::parstates CParser::pfScanInputs(int tok);
-	CParser::parstates CParser::pfScanOutputs(int tok);
-	CParser::parstates CParser::pfReadLineInputs(int tok, smtable::elementlist &inlist);
-	CParser::parstates CParser::pfReadLineInvals(int tok, string &invals);
-	CParser::parstates CParser::pfReadLineSState(int tok, string &srcstate);
-	CParser::parstates CParser::pfReadLineOutputs(int tok, smtable::elementlist &outlist);
-	CParser::parstates CParser::pfReadLineOutvals(int tok, string &outvals);
-	CParser::parstates CParser::pfReadLineDState(int tok, string &dststate);
+	CParser::parstates CParser::pfSkipHeader(const int tok);
+	CParser::parstates CParser::pfGetDef(const int tok);
+	CParser::parstates CParser::pfScanState(const int tok);
+	CParser::parstates CParser::pfScanInputs(const int tok);
+	CParser::parstates CParser::pfScanOutputs(const int tok);
+	CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist);
+	CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals);
+	CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate);
+	CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist);
+	CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals);
+	CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate);
 	CParser::parstates CParser::pfError(void);
 	CParser::prioritytype CParser::highPriority();
 	CParser::prioritytype CParser::meanPriority();

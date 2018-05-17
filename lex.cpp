@@ -378,7 +378,17 @@ int CParser::yylex()
 //------------------------------------------------------------------------
 															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfSkipHeader(const int tok)			/* Parser function: Skip until begin			*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
+CParser::parstates CParser::pfSkipHeader(const int tok)		/* Parser function: Skip until begin			*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
@@ -396,7 +406,17 @@ CParser::parstates CParser::pfSkipHeader(const int tok)			/* Parser function: Sk
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfGetDef(const int tok)				/* Parser function: Select next definition		*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
+CParser::parstates CParser::pfGetDef(const int tok)			/* Parser function: Select next definition		*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
@@ -424,7 +444,7 @@ CParser::parstates CParser::pfGetDef(const int tok)				/* Parser function: Selec
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanState(const int tok)			/* Parser function: Read in state definition	*/
+CParser::parstates CParser::pfScanState(const int tok)		/* Parser function: Read in state definition	*/
 {															/*												*/
 	parstates retval = P_DEFSTATE;							/*												*/
 	switch (tok) {											/*												*/
@@ -447,7 +467,7 @@ CParser::parstates CParser::pfScanState(const int tok)			/* Parser function: Rea
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanInputs(const int tok)			/* Parser function: Read in input definition	*/
+CParser::parstates CParser::pfScanInputs(const int tok)		/* Parser function: Read in input definition	*/
 {															/*												*/
 	parstates retval = P_DEFIN;								/*												*/
 	switch (tok) {											/*												*/
@@ -470,7 +490,7 @@ CParser::parstates CParser::pfScanInputs(const int tok)			/* Parser function: Re
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanOutputs(const int tok)			/* Parser function: Read in output definition	*/
+CParser::parstates CParser::pfScanOutputs(const int tok)	/* Parser function: Read in output definition	*/
 {															/*												*/
 	parstates retval = P_DEFOUT;							/*												*/
 	switch (tok) {											/*												*/
@@ -493,7 +513,7 @@ CParser::parstates CParser::pfScanOutputs(const int tok)			/* Parser function: R
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist)/*						*/
+CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist)/*					*/
 {															/*												*/
 	parstates retval = P_READLINEINPUTS;					/*												*/
 	switch (tok) {											/*												*/
@@ -514,7 +534,7 @@ CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*										*/
+CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEINVALS;					/*												*/
 	switch (tok) {											/*												*/
@@ -540,7 +560,7 @@ CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*			
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*									*/
+CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINESSTATE;					/*												*/
 	switch (tok) {											/*												*/
@@ -559,7 +579,7 @@ CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*	
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist)/*						*/
+CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist)/*				*/
 {															/*												*/
 	parstates retval = P_READLINEOUTPUTS;					/*												*/
 	switch (tok) {											/*												*/
@@ -582,7 +602,7 @@ CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlis
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*									*/
+CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEOUTVALS;					/*												*/
 	switch (tok) {											/*												*/
@@ -593,7 +613,7 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 	case ',':												/* separator									*/
 		break;												/*												*/
 	case IDENTIFIERDEF:										/* don't care ('x') detected					*/
-		outvals.append("x");									/* save for linking until everything is read	*/
+		outvals.append("x");								/* save for linking until everything is read	*/
 		break;												/*												*/
 	case INTEGER1DEF:										/* value detected								*/
 		outvals.append({ char(yylval.i) + '0', '\0' });		/* save											*/
@@ -608,7 +628,7 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*									*/
+CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEDSTATE;					/*												*/
 	switch (tok) {											/*												*/
