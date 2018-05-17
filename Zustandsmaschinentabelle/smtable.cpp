@@ -30,7 +30,7 @@ smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlis
 	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;
 	iheight = istates.size();
 	temp.resize(iwidth);
-	for (uint i = 0; i < iwidth; i++) {
+	for (int i = 0; i < iwidth; i++) {
 		for (uint j = 0; j < ioutputs.size(); j++)
 			temp.at(i).out_list.append("x");
 	}
