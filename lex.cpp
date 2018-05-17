@@ -378,7 +378,7 @@ int CParser::yylex()
 //------------------------------------------------------------------------
 															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfSkipHeader(int tok)			/* Parser function: Skip until begin			*/
+CParser::parstates CParser::pfSkipHeader(const int tok)			/* Parser function: Skip until begin			*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
@@ -396,7 +396,7 @@ CParser::parstates CParser::pfSkipHeader(int tok)			/* Parser function: Skip unt
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfGetDef(int tok)				/* Parser function: Select next definition		*/
+CParser::parstates CParser::pfGetDef(const int tok)				/* Parser function: Select next definition		*/
 {															/*												*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
@@ -424,7 +424,7 @@ CParser::parstates CParser::pfGetDef(int tok)				/* Parser function: Select next
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanState(int tok)			/* Parser function: Read in state definition	*/
+CParser::parstates CParser::pfScanState(const int tok)			/* Parser function: Read in state definition	*/
 {															/*												*/
 	parstates retval = P_DEFSTATE;							/*												*/
 	switch (tok) {											/*												*/
@@ -447,7 +447,7 @@ CParser::parstates CParser::pfScanState(int tok)			/* Parser function: Read in s
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanInputs(int tok)			/* Parser function: Read in input definition	*/
+CParser::parstates CParser::pfScanInputs(const int tok)			/* Parser function: Read in input definition	*/
 {															/*												*/
 	parstates retval = P_DEFIN;								/*												*/
 	switch (tok) {											/*												*/
@@ -470,7 +470,7 @@ CParser::parstates CParser::pfScanInputs(int tok)			/* Parser function: Read in 
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanOutputs(int tok)			/* Parser function: Read in output definition	*/
+CParser::parstates CParser::pfScanOutputs(const int tok)			/* Parser function: Read in output definition	*/
 {															/*												*/
 	parstates retval = P_DEFOUT;							/*												*/
 	switch (tok) {											/*												*/
@@ -493,7 +493,7 @@ CParser::parstates CParser::pfScanOutputs(int tok)			/* Parser function: Read in
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineInputs(int tok, smtable::elementlist &inlist)/*						*/
+CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist)/*						*/
 {															/*												*/
 	parstates retval = P_READLINEINPUTS;					/*												*/
 	switch (tok) {											/*												*/
@@ -514,7 +514,7 @@ CParser::parstates CParser::pfReadLineInputs(int tok, smtable::elementlist &inli
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineInvals(int tok, string &invals)/*										*/
+CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*										*/
 {															/*												*/
 	parstates retval = P_READLINEINVALS;					/*												*/
 	switch (tok) {											/*												*/
@@ -540,7 +540,7 @@ CParser::parstates CParser::pfReadLineInvals(int tok, string &invals)/*									
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineSState(int tok, string &srcstate)/*									*/
+CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*									*/
 {															/*												*/
 	parstates retval = P_READLINESSTATE;					/*												*/
 	switch (tok) {											/*												*/
@@ -559,7 +559,7 @@ CParser::parstates CParser::pfReadLineSState(int tok, string &srcstate)/*							
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineOutputs(int tok, smtable::elementlist &outlist)/*						*/
+CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist)/*						*/
 {															/*												*/
 	parstates retval = P_READLINEOUTPUTS;					/*												*/
 	switch (tok) {											/*												*/
@@ -582,7 +582,7 @@ CParser::parstates CParser::pfReadLineOutputs(int tok, smtable::elementlist &out
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineOutvals(int tok, string &outvals)/*									*/
+CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*									*/
 {															/*												*/
 	parstates retval = P_READLINEOUTVALS;					/*												*/
 	switch (tok) {											/*												*/
@@ -608,7 +608,7 @@ CParser::parstates CParser::pfReadLineOutvals(int tok, string &outvals)/*							
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-CParser::parstates CParser::pfReadLineDState(int tok, string &dststate)/*									*/
+CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*									*/
 {															/*												*/
 	parstates retval = P_READLINEDSTATE;					/*												*/
 	switch (tok) {											/*												*/
@@ -626,201 +626,10 @@ CParser::parstates CParser::pfReadLineDState(int tok, string &dststate)/*							
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
-															/*----------------------------------------------*/
-#if 0
-CParser::parstates CParser::pfReadLine(int tok)				/* Parser function: Read in transitions			*/
-{															/*												*/
-	parstates retval = P_READLINE;							/* stay in here, unless error occours			*/
-	int k, j, j_old;										/* counting variables							*/
-	smtable::elementlist inputs;							/* list of mentioned inputs						*/
-	string invals;											/* string of associated input trigger values	*/
-	string srcstate;										/* source state of transition					*/
-	smtable::elementlist outputs;							/* list of mentioned outputs					*/
-	string outvals;											/* string of associated output values			*/
-	string dststate;										/* destination state of transition				*/
-	if(tok == '[')tok = yylex();											/* first input								*/
 															/*												*/
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* j should be defstate count					*/
-	{														/*												*/
-		inputs.push_back(string(yylval.s));					/* save for linking until everything is read	*/
-		tok = yylex();										/* get next										*/
-		if (tok == ',') {									/* if separator									*/
-			tok = yylex();									/* get next										*/
-		}													/*												*/
-		else if (tok == ']') {								/* if end of inputs								*/
-			tok = yylex();									/* get next										*/
-			if (tok != '=') {								/* check for expected character					*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 1");/*									*/
-			}												/*												*/
-		}													/*												*/
-		else {												/* if neither separator, nor end				*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 2");/*										*/
-		}													/*												*/
-	}														/*												*/
-	tok = yylex();											/* get next										*/
-															/*												*/
-	if (tok == '(') {										/* check for expected character					*/
-		tok = yylex();										/* get next										*/	
-	}														/*												*/
-	else {													/* not as expected								*/
-		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 3");	/*										*/
-	}														/*												*/
-															/*												*/
-	j_old = j;												/* save number of gathered inputs				*/
-															/*												*/
-	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-	{														/* as long as '0', '1', 'x' or 'X' is read		*/
-		if (tok == IDENTIFIER) {							/* if 'x' or 'X'								*/
-			invals.append("x");								/* save											*/
-		}													/*												*/
-		else {												/* else should be '0' or '1'					*/
-			if(yylval.i)									/* decide which one								*/
-				invals.append("1");							/* save											*/
-			else											/*												*/
-				invals.append("0");							/* save											*/
-		}													/*												*/
-		tok = yylex();										/* get next										*/
-		if (tok == ',') {									/* check for separator							*/
-			tok = yylex();									/* get next										*/
-		}													/*												*/
-		else if (tok == ')') {								/* check for end								*/		
-			tok = yylex();									/* get next										*/
-			if (tok != '(') {								/* if not as expected							*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 4");/*									*/
-			}												/* 												*/
-		}													/* 												*/
-		else {												/* if neither separator nor end					*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 5");/* 										*/
-		}													/* 												*/
-	}														/* 												*/
-															/* 												*/
-	if (j > j_old)											/* compare number of values to number of inputs	*/
-		fprintf(stderr, "\nFehlermeldung: Es gibt mehr Werte fuer Eingangssignale als Eingangssignale bei 6");
-	else if (j < j_old)										/* 												*/
-		fprintf(stderr, "\nFehlermeldung: Es gibt weniger Werte fuer Eingangssignale als Eingangssignale bei 7");
-															/* 												*/
-	tok = yylex();											/* get next										*/
-															/* 												*/
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* as long as there are identifiers				*/
-	{														/* although only one state is expected			*/
-		srcstate.append(yylval.s);							/* save it										*/
-															/* 												*/
-		tok = yylex();										/* get next										*/
-															/* 												*/
-		if (tok == ')') {									/* check for expected end						*/
-			tok = yylex();									/* get next										*/
-			if (tok != '>') {								/* check for expected character					*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 8");/*									*/
-			}												/* 												*/
-		}													/* 												*/
-		else {												/* no expected end								*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 9");/* 										*/
-		}													/* 												*/
-	}														/* 												*/
-	tok = yylex();											/* get next										*/
-															/* 												*/
-	if (tok == '[') {										/* check expected start							*/
-		tok = yylex();										/* get next										*/
-	}														/* 												*/
-	else {													/* 												*/
-		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 10");/* 										*/
-	}														/* 												*/
-															/* 												*/
-	for (k = 0, j = 0; tok == IDENTIFIER; k++, j++)			/* for as lomg as there are output names		*/
-	{														/* 												*/
-		outputs.push_back(string(yylval.s));				/* save them									*/
-		tok = yylex();										/* get next										*/
-		if (tok == ',') {									/* check for separator							*/
-			tok = yylex();									/* get next										*/
-		}													/* 												*/
-		else if (tok == ']') {								/* check for end								*/
-			tok = yylex();									/* get next										*/
-			if (tok != ':') {								/* check for expected character					*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 11");/*									*/
-			}												/* 												*/
-		}													/* 												*/
-		else {												/* if neither separator nor end 				*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 12");/* 									*/
-		}													/* 												*/
-	}														/* 												*/
-															/* 												*/
-	tok = yylex();											/* get next										*/
-															/* 												*/
-	if (tok == '(') {										/* check expected start							*/
-		tok = yylex();										/* get next										*/
-	}														/* 												*/
-	else {													/* 												*/
-		fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 13");/* 										*/
-	}														/* 												*/
-															/* 												*/
-	j_old = j;												/* save number of gathered outputs				*/
-															/* 												*/
-	for (k = 0, j = 0; tok == INTEGER1 || (*yylval.s.c_str() == 'x' && tok == IDENTIFIER) || (*yylval.s.c_str() == 'X' && tok == IDENTIFIER); k++, j++)
-	{														/* as long as '0', '1', 'x' or 'X' is read		*/
-		if (tok == IDENTIFIER) {							/* 												*/
-			outvals.append("x");							/* 												*/
-		}													/* 												*/
-		else {												/* 												*/
-			if (yylval.i)									/* 												*/
-				outvals.append("1");						/* 												*/
-			else											/* 												*/
-				outvals.append("0");						/* 												*/
-		}													/* 												*/
-		tok = yylex();										/* 												*/
-		if (tok == ',') {									/* 												*/
-			tok = yylex();									/* 												*/
-		}													/* 												*/
-		else if (tok == ')') {								/* 												*/
-			tok = yylex();									/* 												*/
-			if (tok != '(') {								/* 												*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 14");/*									*/
-			}												/* 												*/
-		}													/* 												*/
-		else {												/* 												*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 15");/* 									*/
-		}													/* 												*/
-	}														/* 												*/
-															/* 												*/
-															/* 												*/
-															/* 												*/
-	if (j > j_old)											/* compare number of values to number of outputs*/
-		fprintf(stderr, "\nFehlermeldung: Es gibt mehr Werte fuer Ausgangssignale als Ausgangssignale bei 16");
-	else if (j < j_old)										/* 												*/
-		fprintf(stderr, "\nFehlermeldung: Es gibt weniger Werte fuer Ausgangssignale als Ausgangssignale bei 17");
-															/* 												*/
-	tok = yylex();											/* 												*/
-															/* 												*/
-	for (k = 0; tok == IDENTIFIER; k++)						/* 												*/
-	{														/* 												*/
-		dststate.append(yylval.s);							/* 												*/
-		//tok = yylex();										/* 												*/
-		if (tok == ')') {									/* 												*/
-			tok = yylex();									/* 												*/
-			if (tok == 303) {								/* 												*/
-				break;										/* 												*/
-			}												/* 												*/
-			else if (tok == '[') {							/* 												*/
-				//printf("\n");								/* 												*/
-			}												/* 												*/
-			else											/* 												*/
-			{												/* 												*/
-				fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 18");/*									*/
-				break;										/* BUG!	todo									*/
-			}												/* 												*/
-		}													/* 												*/
-		else {												/* 												*/
-			fprintf(stderr, "\nEingabedaten sind fehlerhaft bei 19");/* 									*/
-			break;											/* BUG!	todo									*/
-		}													/* 												*/
-	}														/* 												*/
-	table.link(inputs, invals, srcstate, outputs, outvals, dststate);/*										*/
-	return retval;											/*												*/
-}															/*												*/
-															/*----------------------------------------------*/
-#endif
 CParser::parstates CParser::pfError(void)					/*												*/
 {															/*												*/
-	parstates retval = P_ERROR;							/*												*/
+	parstates retval = P_ERROR;								/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
