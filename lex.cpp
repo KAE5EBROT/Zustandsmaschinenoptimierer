@@ -872,7 +872,7 @@ CParser::lowpriotype CParser::lowPriority()					/*lowest priority is given when 
 smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority)
 {															/*												*/
 	uint set_states = 0;									/*												*/
-	int Zustandscodierung_size = 1;						/*												*/
+	int Zustandscodierung_size = 1;							/*												*/
 	uint high_priority_count = high_priority.size();		/*												*/
 	uint mean_priority_count = mean_priority.size();		/*												*/
 	uint low_priority_count = low_priority.size();			/*												*/
@@ -965,7 +965,7 @@ smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype 
 			}												/*												*/
 			if (candidate_count >= 2) {						/*if there are more candidates than one, then the candidates is set in Zustandscodierung*/
 				for (uint k = 0; k < candidates.size(); k++) {	/*												*/
-					Zustandscodierung[set_states] = t3->second.at(k);/*										*/
+					Zustandscodierung[set_states] = candidates.at(k);/*										*/
 					set_states++;							/*												*/
 				}											/*												*/
 			}												/*												*/
