@@ -407,11 +407,12 @@ CParser::parstates CParser::pfSkipHeader(const int tok)		/* Parser function: Ski
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Select next definition
 *
-* Ignores everything until "Begin".
+* At the beginning of each state machine to read, states, inputs and outputs have to be defined first.
+* To make things more flexible, this sequence is not fixed. This function selects which definition comes next.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for definition key
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: none
@@ -444,6 +445,16 @@ CParser::parstates CParser::pfGetDef(const int tok)			/* Parser function: Select
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Scan state definitions
+*
+* Read in defined states and save in list.
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: CParser::scannedStates
+*/
 CParser::parstates CParser::pfScanState(const int tok)		/* Parser function: Read in state definition	*/
 {															/*												*/
 	parstates retval = P_DEFSTATE;							/*												*/
@@ -467,6 +478,16 @@ CParser::parstates CParser::pfScanState(const int tok)		/* Parser function: Read
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Scan input definitions
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfScanInputs(const int tok)		/* Parser function: Read in input definition	*/
 {															/*												*/
 	parstates retval = P_DEFIN;								/*												*/
@@ -490,6 +511,16 @@ CParser::parstates CParser::pfScanInputs(const int tok)		/* Parser function: Rea
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfScanOutputs(const int tok)	/* Parser function: Read in output definition	*/
 {															/*												*/
 	parstates retval = P_DEFOUT;							/*												*/
@@ -513,6 +544,16 @@ CParser::parstates CParser::pfScanOutputs(const int tok)	/* Parser function: Rea
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist)/*					*/
 {															/*												*/
 	parstates retval = P_READLINEINPUTS;					/*												*/
@@ -534,6 +575,16 @@ CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEINVALS;					/*												*/
@@ -560,6 +611,16 @@ CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*			
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINESSTATE;					/*												*/
@@ -579,6 +640,16 @@ CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*	
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist)/*				*/
 {															/*												*/
 	parstates retval = P_READLINEOUTPUTS;					/*												*/
@@ -602,6 +673,16 @@ CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlis
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEOUTVALS;					/*												*/
@@ -628,6 +709,16 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEDSTATE;					/*												*/
@@ -653,6 +744,16 @@ CParser::parstates CParser::pfError(void)					/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::prioritytype CParser::highPriority()				/* high priority: when at least two states have */
 {															/* the same next state by the same input value	*/
 	prioritytype high_priority;					/* save all high priorities in a map<string,vector<string>>	*/
@@ -681,6 +782,16 @@ CParser::prioritytype CParser::highPriority()				/* high priority: when at least
 	return high_priority;									/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::prioritytype CParser::meanPriority()				/* mean priority: is when a state have at least	*/
 {													/* two different next states by different input values	*/
 	prioritytype mean_priority;					/* save all mean priorities in a map<string,vector<string>> */
@@ -707,6 +818,16 @@ CParser::prioritytype CParser::meanPriority()				/* mean priority: is when a sta
 	return mean_priority;									/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::lowpriotype CParser::lowPriority()					/*lowest priority is given when at least two states have the same output behaviour*/
 {															/*												*/
 	vector < vector<string>> low_priority;					/*save all low priorities in a vector<vector<string>>*/
@@ -733,6 +854,16 @@ CParser::lowpriotype CParser::lowPriority()					/*lowest priority is given when 
 	return low_priority;									/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority)
 {															/*												*/
 	uint set_states = 0;									/*												*/
@@ -850,6 +981,16 @@ smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype 
 	return Zustandscodierung;								/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp)/*								*/
 {															/* check, if base contains all entries of cmp	*/
 	bool retval = true;										/* preset retval								*/
@@ -862,6 +1003,16 @@ bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp)/*			
 	return retval;											/* 												*/
 }															/* 												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 void CParser::removeSubsets(vector<vector<string>> &tab) {	/*												*/
 	for (uint i = 0; i < tab.size(); i++) {					/* run through list								*/
 		for (uint j = 0; (j < tab.size()) && (i < tab.size()); j++) {/* run through list again				*/
@@ -874,6 +1025,16 @@ void CParser::removeSubsets(vector<vector<string>> &tab) {	/*												*/
 	}														/* 												*/
 }															/* 												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::funcreturn CParser::writeOutputFile(void)			/* 												*/
 {															/* 												*/
 	CParser::funcreturn retval = F_SUCCESS;					/* preset return								*/
@@ -934,6 +1095,16 @@ CParser::funcreturn CParser::writeOutputFile(void)			/* 												*/
 	return retval;											/* 												*/
 }															/* 												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist)/*								*/
 {															/*												*/
 	CParser::funcreturn retval = F_SUCCESS;					/*												*/
@@ -994,6 +1165,16 @@ CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist)/*		
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
+/*!
+* \brief Skip documentation
+*
+* Ignores everything until "Begin".
+*
+* \param[in] tok Current token to check for "Begin"
+* \param[out] none
+* \return Next state to enter
+* \note Global variables used: none
+*/
 int CParser::int2gray(int input)							/* returns integer, which bit structure is gray	*/
 {															/* coded										*/
 	return input ^ (input >> 1);							/*												*/
