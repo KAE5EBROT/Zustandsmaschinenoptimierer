@@ -747,16 +747,16 @@ CParser::parstates CParser::pfError(void)					/*												*/
 /*!
 * \brief Skip documentation
 *
-* Ignores everything until "Begin".
+* Get the high priorities of the state diagramm and return them
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] none
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return prioritytype highPriority 
+* \note Global variables used: class smtable table: iwidth, iheight, istates and tabletype table
 */
 CParser::prioritytype CParser::highPriority()				/* high priority: when at least two states have */
 {															/* the same next state by the same input value	*/
-	prioritytype high_priority;					/* save all high priorities in a map<string,vector<string>>	*/
+	prioritytype high_priority;								/* save all high priorities in a map<string,vector<string>>	*/
 	vector<string> candidates;								/* candidates for high priority					*/
 	int candidate_count = 0;								/*												*/
 															/*												*/
@@ -785,12 +785,12 @@ CParser::prioritytype CParser::highPriority()				/* high priority: when at least
 /*!
 * \brief Skip documentation
 *
-* Ignores everything until "Begin".
+* Get the mean priorities of the state diagramm and return them
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] none
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return prioritytype meanPriority
+* \note Global variables used: class smtable table: iwidth, iheight, istates and tabletype table
 */
 CParser::prioritytype CParser::meanPriority()				/* mean priority: is when a state have at least	*/
 {													/* two different next states by different input values	*/
@@ -821,12 +821,12 @@ CParser::prioritytype CParser::meanPriority()				/* mean priority: is when a sta
 /*!
 * \brief Skip documentation
 *
-* Ignores everything until "Begin".
+* Get the low priorities of the state diagramm and return them
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] none
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return lowpriotype lowPriority
+* \note Global variables used: class smtable table: iwidth, iheight, istates and tabletype table
 */
 CParser::lowpriotype CParser::lowPriority()					/*lowest priority is given when at least two states have the same output behaviour*/
 {															/*												*/
@@ -854,16 +854,17 @@ CParser::lowpriotype CParser::lowPriority()					/*lowest priority is given when 
 	return low_priority;									/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
-/*!
-* \brief Skip documentation
-*
-* Ignores everything until "Begin".
-*
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
-*/
+	/*!
+	* \brief Skip documentation
+	*
+	* Get the optimize state coding of the state diagramm and return them
+	* Set first the high priorities, then the mean priorities, then the low priorities and at last left states in Zustandscodierung
+	*
+	* \param[in] prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority
+	* \param[out] none
+	* \return elementlist Zustandscodierung
+	* \note Global variables used: class smtable table: istates
+	*/
 smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority)
 {															/*												*/
 	uint set_states = 0;									/*												*/
