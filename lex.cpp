@@ -450,7 +450,7 @@ CParser::parstates CParser::pfGetDef(const int tok)			/* Parser function: Select
 *
 * Read in defined states and save in list.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: CParser::scannedStates
@@ -481,12 +481,12 @@ CParser::parstates CParser::pfScanState(const int tok)		/* Parser function: Read
 /*!
 * \brief Scan input definitions
 *
-* Ignores everything until "Begin".
+* Read in defined inputs and save in list.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name
 * \param[out] none
 * \return Next state to enter
-* \note Global variables used: none
+* \note Global variables used: CParser::scannedInputs
 */
 CParser::parstates CParser::pfScanInputs(const int tok)		/* Parser function: Read in input definition	*/
 {															/*												*/
@@ -512,14 +512,14 @@ CParser::parstates CParser::pfScanInputs(const int tok)		/* Parser function: Rea
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Scan output definitions
 *
-* Ignores everything until "Begin".
+* Read in defined outputs and save in list.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name
 * \param[out] none
 * \return Next state to enter
-* \note Global variables used: none
+* \note Global variables used: CParser::scannedOutputs
 */
 CParser::parstates CParser::pfScanOutputs(const int tok)	/* Parser function: Read in output definition	*/
 {															/*												*/
@@ -545,12 +545,12 @@ CParser::parstates CParser::pfScanOutputs(const int tok)	/* Parser function: Rea
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: inputs
 *
-* Ignores everything until "Begin".
+* Read in inputs to be defined for transition to trigger.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for input
+* \param[in,out] List of mentioned inputs with current one appended
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -576,12 +576,12 @@ CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: input values
 *
-* Ignores everything until "Begin".
+* Read in input values for transition to trigger.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for input values
+* \param[in,out] String of read input values with current one appended
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -612,12 +612,12 @@ CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*			
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: initial state
 *
-* Ignores everything until "Begin".
+* Read in initial state (or source state) from which the transition should trigger.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for state
+* \param[out] String of initial state name
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -628,7 +628,7 @@ CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*	
 	case '(':												/* start of line								*/
 		break;												/* no operation									*/
 	case IDENTIFIERDEF:										/* name of input detected						*/
-		srcstate.append(string(yylval.s));					/* save for linking until everything is read	*/
+		srcstate = string(yylval.s);						/* save for linking until everything is read	*/
 		break;												/*												*/
 	case ')':												/* end of input names							*/
 		retval = P_READLINEOUTPUTS;							/* read values next								*/
@@ -641,12 +641,12 @@ CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*	
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: outputs
 *
-* Ignores everything until "Begin".
+* Read in outputs to be set at the end of the transition.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for output
+* \param[in,out] List of mentioned outputs with current one appended
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -674,12 +674,12 @@ CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlis
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: output values
 *
-* Ignores everything until "Begin".
+* Read in output values to be set at the end of the transition.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for output values
+* \param[in,out] String of read output values with current one appended
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -710,12 +710,12 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Read transition definition: destinantion state
 *
-* Ignores everything until "Begin".
+* Read in destinanion state (or next state) to which the transition should step to.
 *
-* \param[in] tok Current token to check for "Begin"
-* \param[out] none
+* \param[in] tok Current token to check for state
+* \param[out] String of destination state name
 * \return Next state to enter
 * \note Global variables used: none
 */
@@ -726,7 +726,7 @@ CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*	
 	case '(':												/* start of line								*/
 		break;												/* no operation									*/
 	case IDENTIFIERDEF:										/* name of input detected						*/
-		dststate.append(string(yylval.s));					/* save for linking until everything is read	*/
+		dststate = string(yylval.s);					/* save for linking until everything is read	*/
 		break;												/*												*/
 	case ')':												/* end of input names							*/
 		retval = P_READLINEINPUTS;							/* read values next								*/
