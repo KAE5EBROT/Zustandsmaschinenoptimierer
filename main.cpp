@@ -31,7 +31,6 @@ int main(int argc, char* argv[])
 	smtable table;
 	obj.InitParse(inf,stderr,stdout);
 //	obj.pr_tokentable();
-	obj.yyparse();
 	obj.yyparse(table);
 	table.print();											/* 												*/
 															/* 												*/
