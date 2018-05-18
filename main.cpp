@@ -15,11 +15,14 @@ int main(int argc, char* argv[])
 	prioritytype high_priority, mean_priority;				/* map of state combinations to prioritize		*/
 	lowpriotype low_priority;								/* different structure for low priority			*/
 	smtable::elementlist Zustandscodierung;					/* vector of optimized state name sequence		*/
-
-	printf("Enter .txt filename:\n");
-	//scanf("%s",fistr);//gets(fistr);
-	//inf = fopen(strcat(fistr,".txt"),"r");
-	inf = fopen("grosse_automatentabelle.txt", "r");
+	if (argc == 1) {
+		printf("Enter .txt filename:\n");
+		scanf("%s", fistr);//gets(fistr);
+		inf = fopen(strcat(fistr, ".txt"), "r");
+	}
+	else {
+		inf = fopen(argv[1], "r");
+	}
 	if(inf==NULL){
 		printf("Cannot open input file %s\n",fistr);
 		return 0;
@@ -28,6 +31,10 @@ int main(int argc, char* argv[])
 	smtable table;
 	obj.InitParse(inf,stderr,stdout);
 //	obj.pr_tokentable();
+	obj.yyparse();
+	if (argc < 2) {
+		char c; cin >> c;
+	}
 	obj.yyparse(table);
 	table.print();											/* 												*/
 															/* 												*/
@@ -56,8 +63,6 @@ int main(int argc, char* argv[])
 	else {													/*												*/
 		cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";/*								*/
 	}														/*												*/
-
-	char c; cin>>c;
 
 	return 0;
 }
