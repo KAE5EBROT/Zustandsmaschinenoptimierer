@@ -35,11 +35,11 @@ smtable::fstate smtable::init() {
 }
 
 /*!
-* \brief Initialize table with 
+* \brief Get definitions and initialize table 
 *
-* 
-* 
-* \warning setStates(), setInputs() and setOutputs() have to be called beforehand
+* Set definitions of class.
+* Set up table with initial values. The next_state of each entry is left blank, but
+* output is preset with don't cares.
 *
 * \param[in] none
 * \param[out] none
@@ -65,9 +65,9 @@ smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlis
 }
 
 /*!
-* \brief Skip documentation
+* \brief Set state definitions for calss
 *
-* Ignores everything until "Begin".
+* Reads list of state names into class.
 *
 * \param[in] tok Current token to check for "Begin"
 * \param[out] none
