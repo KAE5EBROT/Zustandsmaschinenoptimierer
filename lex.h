@@ -1,5 +1,4 @@
 #pragma once
-//#include "StdAfx.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -7,6 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include "Zustandsmaschinentabelle\smtable.h"
+
 using namespace std;
 typedef unsigned int uint;
 
@@ -21,25 +21,11 @@ class CParser
 {
 public:
 
-	typedef map<string, vector<string>> prioritytype;
-	typedef vector < vector<string>> lowpriotype;
 	const int STRING1 = STRING1DEF;
 	const int IDENTIFIER = IDENTIFIERDEF;
 	const int INTEGER1 = INTEGER1DEF;
 	const int TOKENSTART = TOKENSTARTDEF;
-	int state_count = 0;
-	int input_count = 0;
-	int output_count = 0;
-	struct {
-		bool states = false;
-		bool inputs = false;
-		bool outputs = false;
-	} defScanned;
 	string yytext;								//input buffer
-	smtable table;
-	smtable::elementlist scannedStates;
-	smtable::elementlist scannedInputs;
-	smtable::elementlist scannedOutputs;
 	/*
 	*	Lexical analyzer states.
 	*/
@@ -64,14 +50,19 @@ public:
 		P_READLINEDSTATE,		/* Read in destination state of transition definition	*/
 		P_ERROR					/* Error handler										*/
 	};
+	typedef struct {
+		bool states = false;
+		bool inputs = false;
+		bool outputs = false;
+		smtable::elementlist scannedStates;
+		smtable::elementlist scannedInputs;
+		smtable::elementlist scannedOutputs;
+	} defScanType;
 	/**
 	*  \brief function returns
 	*  
 	*  \input 
 	*/
-	enum funcreturn {
-		F_SUCCESS = 0, F_FAIL
-	};
 	struct tyylval {								//value return
 		string s;								//structure
 		int i;
@@ -82,23 +73,23 @@ public:
 	int  IP_LineNumber;							//Line counter
 	int ugetflag;								//checks ungets
 	int prflag;									//controls printing
-	map<string, int> IP_Token_table;				//Tokendefinitions
+	map<string, int> IP_Token_table;			//Tokendefinitions
 	map<int, string> IP_revToken_table;			//reverse Tokendefinitions
 
 	int CParser::yylex();						//lexial analyser
 	void CParser::yyerror(char *ers);			//error reporter
 	int CParser::IP_MatchToken(string &tok);	//checks the token
 	void CParser::InitParse(FILE *inp, FILE *err, FILE *lst);
-	int	CParser::yyparse();						//parser
+	int	CParser::yyparse(smtable &table);		//parser
 	void CParser::pr_tokentable();				//test output for tokens
 	void CParser::IP_init_token_table();		//loads the tokens
 	void CParser::Load_tokenentry(string str, int index);//load one token
 	void CParser::PushString(char c);			//Used for dtring assembly
 	CParser::parstates CParser::pfSkipHeader(const int tok);
-	CParser::parstates CParser::pfGetDef(const int tok);
-	CParser::parstates CParser::pfScanState(const int tok);
-	CParser::parstates CParser::pfScanInputs(const int tok);
-	CParser::parstates CParser::pfScanOutputs(const int tok);
+	CParser::parstates CParser::pfGetDef(const int tok, smtable &table, defScanType &defScanned);
+	CParser::parstates CParser::pfScanState(const int tok, defScanType &defScanned);
+	CParser::parstates CParser::pfScanInputs(const int tok, defScanType &defScanned);
+	CParser::parstates CParser::pfScanOutputs(const int tok, defScanType &defScanned);
 	CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist);
 	CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals);
 	CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate);
@@ -106,15 +97,6 @@ public:
 	CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals);
 	CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate);
 	CParser::parstates CParser::pfError(void);
-	CParser::prioritytype CParser::highPriority();
-	CParser::prioritytype CParser::meanPriority();
-	CParser::lowpriotype CParser::lowPriority();
-	smtable::elementlist CParser::optimize(prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority);
-	bool CParser::contains(smtable::elementlist base, smtable::elementlist cmp);
-	void CParser::removeSubsets(vector<vector<string>>& tab);
-	CParser::funcreturn CParser::writeOutputFile();
-	CParser::funcreturn CParser::writeOutputFile(smtable::elementlist statelist);
-	int CParser::int2gray(int input);
 	CParser() { IP_LineNumber = 1; ugetflag = 0; prflag = 0; };	//Constructor
 };
 //------------------------------------------------------------------------
