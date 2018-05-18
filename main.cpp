@@ -13,10 +13,14 @@ int main(int argc, char* argv[])
 {
 	FILE *inf;
 	char fistr[100];
-	printf("Enter .txt filename:\n");
-	//scanf("%s",fistr);//gets(fistr);
-	//inf = fopen(strcat(fistr,".txt"),"r");
-	inf = fopen("riesige_automatentabelle.txt", "r");
+	if (argc == 1) {
+		printf("Enter .txt filename:\n");
+		scanf("%s", fistr);//gets(fistr);
+		inf = fopen(strcat(fistr, ".txt"), "r");
+	}
+	else {
+		inf = fopen(argv[1], "r");
+	}
 	if(inf==NULL){
 		printf("Cannot open input file %s\n",fistr);
 		return 0;
@@ -25,7 +29,9 @@ int main(int argc, char* argv[])
 	obj.InitParse(inf,stderr,stdout);
 //	obj.pr_tokentable();
 	obj.yyparse();
-	char c; cin>>c;
+	if (argc < 2) {
+		char c; cin >> c;
+	}
 
 	return 0;
 }

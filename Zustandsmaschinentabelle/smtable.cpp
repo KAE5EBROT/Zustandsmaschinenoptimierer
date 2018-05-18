@@ -69,10 +69,10 @@ smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlis
 *
 * Reads list of state names into class.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name of state
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return operation success
+* \note Global variables used: istates
 */
 smtable::fstate smtable::setStates(elementlist inputs) {
 	istates = inputs;
@@ -80,14 +80,14 @@ smtable::fstate smtable::setStates(elementlist inputs) {
 }
 
 /*!
-* \brief Skip documentation
+* \brief input definitions for calss
 *
-* Ignores everything until "Begin".
+* Reads list of input names into class.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name of input
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return operation success
+* \note Global variables used: iinput
 */
 smtable::fstate smtable::setInputs(elementlist inputs) {
 	iinputs = inputs;
@@ -95,14 +95,14 @@ smtable::fstate smtable::setInputs(elementlist inputs) {
 }
 
 /*!
-* \brief Skip documentation
+* \brief output definitions for calss
 *
-* Ignores everything until "Begin".
+* Reads list of output names into class.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] tok Current token to check for name of output
 * \param[out] none
-* \return Next state to enter
-* \note Global variables used: none
+* \return operation success
+* \note Global variables used: iinput
 */
 smtable::fstate smtable::setOutputs(elementlist outputs) {
 	ioutputs = outputs;
