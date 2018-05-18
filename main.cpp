@@ -32,9 +32,6 @@ int main(int argc, char* argv[])
 	obj.InitParse(inf,stderr,stdout);
 //	obj.pr_tokentable();
 	obj.yyparse();
-	if (argc < 2) {
-		char c; cin >> c;
-	}
 	obj.yyparse(table);
 	table.print();											/* 												*/
 															/* 												*/
@@ -64,6 +61,9 @@ int main(int argc, char* argv[])
 		cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";/*								*/
 	}														/*												*/
 
+	if (argc < 2) {
+		char c; cin >> c;
+	}
 	return 0;
 }
 
