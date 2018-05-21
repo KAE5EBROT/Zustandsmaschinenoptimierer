@@ -149,13 +149,14 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="große_automatentabelle.txt" />
-    <Text Include="in1.txt" />
     <Text Include="kleine_automatentabelle.txt" />
     <Text Include="mittlere_automatentabelle.txt" />
     <Text Include="ReadMe.txt" />
+    <Text Include="riesige_automatentabelle.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gatterzaehlen.bat" />
+    <None Include="runAll.bat" />
     <None Include="runMinilog.bat" />
     <None Include="Zustandsmaschinencodierungsoptimierer.out" />
   </ItemGroup>

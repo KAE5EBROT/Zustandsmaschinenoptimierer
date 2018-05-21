@@ -43,11 +43,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="in1.txt" />
     <Text Include="ReadMe.txt" />
     <Text Include="mittlere_automatentabelle.txt" />
     <Text Include="kleine_automatentabelle.txt" />
     <Text Include="große_automatentabelle.txt" />
+    <Text Include="riesige_automatentabelle.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Zustandsmaschinencodierungsoptimierer.out" />
@@ -55,6 +55,9 @@
       <Filter>Quellcodedateien</Filter>
     </None>
     <None Include="runMinilog.bat">
+      <Filter>Quellcodedateien</Filter>
+    </None>
+    <None Include="runAll.bat">
       <Filter>Quellcodedateien</Filter>
     </None>
   </ItemGroup>

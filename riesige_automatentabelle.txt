@@ -1,6 +1,6 @@
 riesige Automatentabelle (8-Bit Mustererkenner) Muster: 01100110 10100110 10100111
 Begin
-DEFSTATE S0,S1,S2,S3,S4,S7,S9,S10,S11,S12,S13,S14,S15,S16,S17; DEFIN E; DEFOUT A;
+DEFSTATE S0,S1,S2,S3,S4,S7,S11,S9,S10,S12,S13,S14,S15,S16,S17; DEFIN E; DEFOUT A;
 [E]		=(0)(S0) 	> [A]:(0)(S1)
 [E]		=(1)(S0) 	> [A]:(0)(S2)
 [E]		=(1)(S2) 	> [A]:(0)(S3)

@@ -99,12 +99,12 @@ int	CParser::yyparse(smtable &table)						/*												*/
 			state = pfReadLineDState(tok, dststate);		/* 												*/
 			if (state == P_READLINEINPUTS){					/* following state read successfully			*/
 				table.link(inputs, invals, srcstate, outputs, outvals, dststate);/*							*/
-				inputs.clear();								/* clear variables for next line				*/
-				invals.clear();								/*												*/
-				srcstate.clear();							/*												*/
-				outputs.clear();							/*												*/
-				outvals.clear();							/*												*/
-				dststate.clear();							/*												*/
+				inputs.clear();								/* clear variables for next line to process		*/
+				invals.clear();								/* ^											*/
+				srcstate.clear();							/* ^											*/
+				outputs.clear();							/* ^											*/
+				outvals.clear();							/* ^											*/
+				dststate.clear();							/* ^											*/
 			}												/*												*/
 			break;											/* 												*/
 		case P_ERROR:										/* catch error									*/
@@ -337,8 +337,7 @@ int CParser::yylex()
 	}
 }
 //------------------------------------------------------------------------
-															/*												*/
-															/*----------------------------------------------*/
+
 /*!
 * \brief Skip documentation
 *
@@ -348,7 +347,7 @@ int CParser::yylex()
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfSkipHeader(const int tok)		/* Parser function: Skip until begin			*/
 {															/*												*/
 	parstates retval;										/*												*/
@@ -377,9 +376,9 @@ CParser::parstates CParser::pfSkipHeader(const int tok)		/* Parser function: Ski
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: none
-*/
-CParser::parstates CParser::pfGetDef(const int tok, smtable &table, defScanType &defScanned)			/* Parser function: Select next definition		*/
-{															/*												*/
+*/															/*----------------------------------------------*/
+CParser::parstates CParser::pfGetDef(const int tok, smtable &table, defScanType &defScanned)/*				*/
+{															/* Parser function: Select next definition		*/
 	parstates retval;										/*												*/
 	static int i = 0;										/*												*/
 															/*												*/
@@ -415,7 +414,7 @@ CParser::parstates CParser::pfGetDef(const int tok, smtable &table, defScanType 
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: CParser::scannedStates
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfScanState(const int tok, defScanType &defScanned )		/* Parser function: Read in state definition	*/
 {															/*												*/
 	parstates retval = P_DEFSTATE;							/*												*/
@@ -447,7 +446,7 @@ CParser::parstates CParser::pfScanState(const int tok, defScanType &defScanned )
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: CParser::scannedInputs
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfScanInputs(const int tok, defScanType &defScanned)		/* Parser function: Read in input definition	*/
 {															/*												*/
 	parstates retval = P_DEFIN;								/*												*/
@@ -479,7 +478,7 @@ CParser::parstates CParser::pfScanInputs(const int tok, defScanType &defScanned)
 * \param[out] none
 * \return Next state to enter
 * \note Global variables used: CParser::scannedOutputs
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfScanOutputs(const int tok, defScanType &defScanned)	/* Parser function: Read in output definition	*/
 {															/*												*/
 	parstates retval = P_DEFOUT;							/*												*/
@@ -511,7 +510,7 @@ CParser::parstates CParser::pfScanOutputs(const int tok, defScanType &defScanned
 * \param[in,out] List of mentioned inputs with current one appended
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist &inlist)/*					*/
 {															/*												*/
 	parstates retval = P_READLINEINPUTS;					/*												*/
@@ -542,7 +541,7 @@ CParser::parstates CParser::pfReadLineInputs(const int tok, smtable::elementlist
 * \param[in,out] String of read input values with current one appended
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEINVALS;					/*												*/
@@ -580,7 +579,7 @@ CParser::parstates CParser::pfReadLineInvals(const int tok, string &invals)/*			
 * \param[out] String of initial state name
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINESSTATE;					/*												*/
@@ -609,7 +608,7 @@ CParser::parstates CParser::pfReadLineSState(const int tok, string &srcstate)/*	
 * \param[in,out] List of mentioned outputs with current one appended
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlist &outlist)/*				*/
 {															/*												*/
 	parstates retval = P_READLINEOUTPUTS;					/*												*/
@@ -642,7 +641,7 @@ CParser::parstates CParser::pfReadLineOutputs(const int tok, smtable::elementlis
 * \param[in,out] String of read output values with current one appended
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEOUTVALS;					/*												*/
@@ -680,7 +679,7 @@ CParser::parstates CParser::pfReadLineOutvals(const int tok, string &outvals)/*	
 * \param[out] String of destination state name
 * \return Next state to enter
 * \note Global variables used: none
-*/
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*								*/
 {															/*												*/
 	parstates retval = P_READLINEDSTATE;					/*												*/
@@ -699,7 +698,17 @@ CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*	
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
-															/*												*/
+															/*----------------------------------------------*/
+/*!
+* \brief Error state
+*
+* Read in destinanion state (or next state) to which the transition should step to.
+*
+* \param[in] tok Current token to check for state
+* \param[out] String of destination state name
+* \return Next state to enter
+* \note Global variables used: none
+*/															/*----------------------------------------------*/
 CParser::parstates CParser::pfError(void)					/*												*/
 {															/*												*/
 	parstates retval = P_ERROR;								/*												*/
