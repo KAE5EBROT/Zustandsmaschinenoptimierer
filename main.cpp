@@ -7,65 +7,68 @@
 
 #pragma warning(disable:4786)
 using namespace std;
-
-int main(int argc, char* argv[])
-{
-	FILE *inf;
-	char fistr[100];
+															/*----------------------------------------------*/
+int main(int argc, char* argv[])							/*												*/
+{															/*												*/
+	FILE *inf;												/*												*/
+	char fistr[100];										/*												*/
 	prioritytype high_priority, mean_priority;				/* map of state combinations to prioritize		*/
 	lowpriotype low_priority;								/* different structure for low priority			*/
 	smtable::elementlist Zustandscodierung;					/* vector of optimized state name sequence		*/
-	if (argc == 1) {
-		printf("Enter .txt filename:\n");
-		scanf("%s", fistr);//gets(fistr);
-		inf = fopen(strcat(fistr, ".txt"), "r");
-	}
-	else {
-		inf = fopen(argv[1], "r");
-	}
-	if(inf==NULL){
-		printf("Cannot open input file %s\n",fistr);
-		return 0;
-	}
-	CParser obj;
-	smtable table;
-	obj.InitParse(inf,stderr,stdout);
-//	obj.pr_tokentable();
-	obj.yyparse(table);
+	int tablestate = 0;										/*												*/
+	if (argc == 1) {										/* if called manually, ask for file				*/
+		printf("Enter .txt filename:\n");					/*												*/
+		scanf("%s", fistr);//gets(fistr);					/*												*/
+		inf = fopen(strcat(fistr, ".txt"), "r");			/*												*/
+	}														/*												*/
+	else {													/* filename should be passed in second argument	*/
+		inf = fopen(argv[1], "r");							/*												*/
+	}														/*												*/
+	if(inf==NULL){											/*												*/
+		printf("Cannot open input file %s\n",fistr);		/*												*/
+		return 0;											/*												*/
+	}														/*												*/
+	CParser obj;											/*												*/
+	smtable table;											/*												*/
+	obj.InitParse(inf,stderr,stdout);						/*												*/
+//	obj.pr_tokentable();									/*												*/
+	tablestate = obj.yyparse(table);						/*												*/
 	table.print();											/* 												*/
-															/* 												*/
+															/*												*/
+	if (!tablestate) {										/* 												*/
 															/* Codierungsoptimierung						*/
-	high_priority = highPriority(table);					/*												*/
-	mean_priority = meanPriority(table);					/*												*/
-	low_priority = lowPriority(table);						/*												*/
+		high_priority = highPriority(table);				/*												*/
+		mean_priority = meanPriority(table);				/*												*/
+		low_priority = lowPriority(table);					/*												*/
 															/*												*/
-															/* lowPriority() creates a list of state combinations, satisfying low priority conditions.				*/
-															/* This list will most likely contain similar entries. removeSunsets() only leaves the biggest			*/
-															/* combinations in that list. These combinations are not compatible with each other.					*/
-	removeSubsets(low_priority);							/*												*/
+		/* lowPriority() creates a list of state combinations, satisfying low priority conditions.			*/
+		/* This list will most likely contain similar entries. removeSunsets() only leaves the biggest		*/
+		/* combinations in that list. These combinations are not compatible with each other.				*/
+		removeSubsets(low_priority);						/*												*/
 															/*												*/
-	Zustandscodierung = optimize(high_priority, mean_priority, low_priority, table);/*						*/
+		Zustandscodierung = optimize(high_priority, mean_priority, low_priority, table);/*					*/
 															/*												*/
 															/* Write output files							*/
-	if (writeOutputFile(table)) {							/*												*/
-		fprintf(stderr, "Ausgabedatei \"ZMnichtoptimiert.tbl\" fehlgeschlagen\n");/*						*/
+		if (writeOutputFile(table)) {						/*												*/
+			fprintf(stderr, "Ausgabedatei \"ZMnichtoptimiert.tbl\" fehlgeschlagen\n");/*					*/
+		}													/*												*/
+		else {												/*												*/
+			cout << "Ausgabedatei \"ZMnichtoptimiert.tbl\" erfolgreich geschrieben\n";/*					*/
+		}													/*												*/
+		if (writeOutputFile(Zustandscodierung, table)) {	/*												*/
+			fprintf(stderr, "Ausgabedatei \"ZMoptimiert.tbl\" fehlgeschlagen\n");/*							*/
+		}													/*												*/
+		else {												/*												*/
+			cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";/*							*/
+		}													/*												*/
 	}														/*												*/
-	else {													/*												*/
-		cout << "Ausgabedatei \"ZMnichtoptimiert.tbl\" erfolgreich geschrieben\n";/*						*/
+															/*												*/
+	if ((argc < 2) || (tablestate)) {						/* pause on manual call or error				*/
+		cin.get();											/*												*/
 	}														/*												*/
-	if (writeOutputFile(Zustandscodierung,table)) {			/*												*/
-		fprintf(stderr, "Ausgabedatei \"ZMoptimiert.tbl\" fehlgeschlagen\n");/*								*/
-	}														/*												*/
-	else {													/*												*/
-		cout << "Ausgabedatei \"ZMoptimiert.tbl\" erfolgreich geschrieben\n";/*								*/
-	}														/*												*/
-
-	if (argc < 2) {
-		char c; cin >> c;
-	}
-	return 0;
-}
-
+	return (tablestate) ? EXIT_FAILURE : EXIT_SUCCESS;		/* map tablestate to main return				*/
+}															/*												*/
+															/*----------------------------------------------*/
 /*!
 * \brief Skip documentation
 *
@@ -75,7 +78,7 @@ int main(int argc, char* argv[])
 * \param[out] none
 * \return prioritytype highPriority
 * \note Global variables used: class smtable table: iwidth, iheight, istates and tabletype table
-*/
+*/															/*----------------------------------------------*/
 prioritytype highPriority(smtable &table)					/* high priority: when at least two states have */
 {															/* the same next state by the same input value	*/
 	prioritytype high_priority;								/* save all high priorities in a map<string,vector<string>>	*/

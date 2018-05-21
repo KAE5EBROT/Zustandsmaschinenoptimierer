@@ -116,8 +116,8 @@ int	CParser::yyparse(smtable &table)						/*												*/
 	printf("\nAnzahl Zustaende: %d", table.istates.size());	/* 												*/
 	printf("\nAnzahl Eingangssignale: %d", table.iinputs.size());/* 										*/
 	printf("\nAnzahl Ausgangssignale: %d \n", table.ioutputs.size());/* 									*/
-	return 0;												/*												*/
 															/*												*/
+	return (state == P_ERROR) ? 1 : 0;						/* map error to return							*/
 }															/*----------------------------------------------*/
 
 //------------------------------------------------------------------------
@@ -711,7 +711,17 @@ CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*	
 */															/*----------------------------------------------*/
 CParser::parstates CParser::pfError(void)					/*												*/
 {															/*												*/
-	parstates retval = P_ERROR;								/*												*/
+	parstates retval = P_ERROR;								/* don't exit error state						*/
+	static bool noerroroccoured = true;						/* variable to remember error					*/
+	if (noerroroccoured) {									/* check if already executed					*/
+		noerroroccoured = false;							/* set remember variable						*/
+		printf("     ______ ______ _    _ _      ______ _____  \n");
+		printf("    |  ____|  ____| |  | | |    |  ____|  __ \\ \n");
+		printf("    | |__  | |__  | |__| | |    | |__  | |__) |\n");
+		printf("    |  __| |  __| |  __  | |    |  __| |  _  / \n");
+		printf("    | |    | |____| |  | | |____| |____| | \\ \\ \n");
+		printf("    |_|    |______|_|  |_|______|______|_|  \\_\\ in Zeile %d\n", IP_LineNumber);
+	}
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/

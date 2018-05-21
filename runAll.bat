@@ -17,13 +17,16 @@ if %inputfc%==4 set inputfc=.\riesige_automatentabelle.txt
 if exist %inputfc% (
 	echo running optimizer for %inputfc%...
 	@REM pass file to optimizer
-	.\Debug\Zustandsmaschinencodierungsoptimierer.exe %inputfc%
-	echo running minilog...
-	@REM start optimizer script
-	cscript runMinilog.vbs
-	echo running gate counter...
-	@REM run gate counter
-	"gatter.exe - Verknuepfung.lnk"
+	.\Debug\Zustandsmaschinencodierungsoptimierer.exe %inputfc% && (
+		@REM this section runs only if exe returns success
+		echo running minilog...
+		@REM start optimizer script
+		cscript runMinilog.vbs
+		echo running gate counter...
+		@REM run gate counter
+		"gatter.exe - Verknuepfung.lnk"
+		set executed=1
+	)
 ) else (
 	echo ERROR: File not found! "%inputfc%"
 )
