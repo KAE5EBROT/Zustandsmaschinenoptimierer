@@ -11,7 +11,7 @@ End Function
 Set minilogn= WshShell.Exec(".\Minilog\Minilog.exe ZMnichtoptimiert.tbl")	'open minilog with parameter and save id
 Set minilogo= WshShell.Exec(".\Minilog\Minilog.exe ZMoptimiert.tbl")		'open minilog with parameter and save id
 
-WScript.Sleep 3000															'Wait long for Minilog to configure first time
+WScript.Sleep 500															'Wait long for Minilog to configure first time
 SendKeysTo minilogn, "{F10}", 100											'enter key only mode
 SendKeysTo minilogn, "{r}", 100												'open Run menu
 SendKeysTo minilogn, "{m}", 100												'start Minimize
