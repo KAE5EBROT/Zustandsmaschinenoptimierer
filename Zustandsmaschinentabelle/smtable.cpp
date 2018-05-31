@@ -124,7 +124,7 @@ smtable::fstate smtable::setOutputs(elementlist outputs) {
 *					   Values can either be '0', '1' or 'x' (don't care). Has to match size of outputs.
 * \param[in] dststate List of input names. Type: vector<string>
 * \param[out] none
-* \return Next state to enter
+* \return execution status
 * \note Global variables used: table
 */															/*----------------------------------------------*/
 smtable::fstate smtable::link(elementlist inputs, string inputval, string srcstate, elementlist outputs, string outputval, string dststate) {
@@ -175,7 +175,7 @@ smtable::fstate smtable::link(elementlist inputs, string inputval, string srcsta
 *
 * \param[in] none
 * \param[out] none
-* \return Next state to enter
+* \return execution status
 * \note Global variables used: table (read only)
 */															/*----------------------------------------------*/
 smtable::fstate smtable::print() {							/*												*/
@@ -258,7 +258,7 @@ string *smtable::int2bit(int val, int width) {				/*												*/
 * \param[in] a Integer to check
 * \param[in] b String to check. May contain '0', '1' and 'x'
 * \param[out] none
-* \return Next state to enter
+* \return boolean answer
 * \note Global variables used: none
 */															/*----------------------------------------------*/
 bool smtable::bitsMatch(int a, const char* b) {				/*												*/
