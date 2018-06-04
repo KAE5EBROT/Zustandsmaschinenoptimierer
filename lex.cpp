@@ -54,7 +54,7 @@ int	CParser::yyparse(smtable &table)						/*												*/
 {															/*												*/
 	int tok = 0;											/* current token								*/
 	parstates state = P_HEADER;								/* state machine variable						*/
-	defScanType defScanned;
+	defScanType defScanned;									/*												*/
 	smtable::elementlist inputs;							/* list of mentioned inputs						*/
 	string invals;											/* string of associated input trigger values	*/
 	string srcstate;										/* source state of transition					*/
@@ -420,14 +420,14 @@ CParser::parstates CParser::pfScanState(const int tok, defScanType &defScanned )
 	parstates retval = P_DEFSTATE;							/*												*/
 	switch (tok) {											/*												*/
 	case IDENTIFIERDEF:										/* valid name									*/
-		defScanned.scannedStates.push_back(string(yylval.s));	/* save											*/
+		defScanned.scannedStates.push_back(string(yylval.s));/* save										*/
 		retval = P_DEFSTATE;								/*												*/
 		break;												/*												*/
 	case ',':												/* skip separator								*/
 		retval = P_DEFSTATE;								/*												*/
 		break;												/*												*/
 	case ';':												/* end of DEFSTATE								*/
-		defScanned.states = true;						/* mark finished scan							*/
+		defScanned.states = true;							/* mark finished scan							*/
 		retval = P_DEFSELECT;								/* return to selection							*/
 		break;												/*												*/
 	default:												/* anything else scanned?						*/
@@ -452,7 +452,7 @@ CParser::parstates CParser::pfScanInputs(const int tok, defScanType &defScanned)
 	parstates retval = P_DEFIN;								/*												*/
 	switch (tok) {											/*												*/
 	case IDENTIFIERDEF:										/* valid name									*/
-		defScanned.scannedInputs.push_back(string(yylval.s));			/* save											*/
+		defScanned.scannedInputs.push_back(string(yylval.s));/* save										*/
 		retval = P_DEFIN;									/*												*/
 		break;												/*												*/
 	case ',':												/* skip separator								*/
@@ -687,7 +687,7 @@ CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*	
 	case '(':												/* start of line								*/
 		break;												/* no operation									*/
 	case IDENTIFIERDEF:										/* name of input detected						*/
-		dststate = string(yylval.s);					/* save for linking until everything is read	*/
+		dststate = string(yylval.s);						/* save for linking until everything is read	*/
 		break;												/*												*/
 	case ')':												/* end of input names							*/
 		retval = P_READLINEINPUTS;							/* read values next								*/
