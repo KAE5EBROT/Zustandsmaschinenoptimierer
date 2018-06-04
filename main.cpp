@@ -7,7 +7,22 @@
 
 #pragma warning(disable:4786)
 using namespace std;
-															/*----------------------------------------------*/
+/*!
+* \brief Main
+*
+* The main function checks argv for a second argument. If set
+* main expects the full name with extension of the input file.
+* If not set the user will be prompted to enter the file name
+* without extension, because .txt is expected.
+* Next main processes this file and writes the nonoptimized 
+* and the optimized table file.
+*
+* \param[in] argc number of input arguments
+* \param[in] argv string array of input arguments
+* \param[out] none
+* \return execution status
+* \note Global variables used: 
+*/															/*----------------------------------------------*/
 int main(int argc, char* argv[])							/*												*/
 {															/*												*/
 	FILE *inf;												/*												*/
@@ -70,7 +85,7 @@ int main(int argc, char* argv[])							/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief High Priority
 *
 * Get the high priorities of the state diagramm and return them
 *
@@ -108,7 +123,7 @@ prioritytype highPriority(smtable &table)					/* high priority: when at least tw
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Mean Priority
 *
 * Get the mean priorities of the state diagramm and return them
 *
@@ -144,7 +159,7 @@ prioritytype meanPriority(smtable &table)					/* mean priority: is when a state 
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Low Priority
 *
 * Get the low priorities of the state diagramm and return them
 *
@@ -177,7 +192,7 @@ lowpriotype lowPriority(smtable &table)	/*lowest priority is given when at least
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Apply given priorities
 *
 * Get the optimize state coding of the state diagramm and return them
 * Set first the high priorities, then the mean priorities, then the low priorities and at last left states in Zustandscodierung
@@ -306,13 +321,16 @@ smtable::elementlist optimize(prioritytype high_priority, prioritytype mean_prio
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Check if base contains cmp
 *
-* Ignores everything until "Begin".
+* Check function for subsets.
+* If every element of cmp is present in base true is returned.
+* Otherwise false is returned.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] base List of names as base set
+* \param[in] cmp List of names to check for presence in base
 * \param[out] none
-* \return Next state to enter
+* \return boolean answer
 * \note Global variables used: none
 */
 bool contains(smtable::elementlist base, smtable::elementlist cmp)/*								*/
@@ -327,16 +345,17 @@ bool contains(smtable::elementlist base, smtable::elementlist cmp)/*								*/
 	return retval;											/* 												*/
 }															/* 												*/
 															/*----------------------------------------------*/
-															/*!
-															* \brief Skip documentation
-															*
-															* Ignores everything until "Begin".
-															*
-															* \param[in] tok Current token to check for "Begin"
-															* \param[out] none
-															* \return Next state to enter
-															* \note Global variables used: none
-															*/
+/*!
+* \brief remove smaller redundant sets
+*
+* Cycles through given list of lists of names and removes 
+* redundant subsets.
+*
+* \param[in] tab list of lists of names. Type: vector< vector< string > >
+* \param[out] none
+* \return none
+* \note Global variables used: none
+*/
 void removeSubsets(lowpriotype &tab) {						/*												*/
 	for (uint i = 0; i < tab.size(); i++) {					/* run through list								*/
 		for (uint j = 0; (j < tab.size()) && (i < tab.size()); j++) {/* run through list again				*/
@@ -350,13 +369,16 @@ void removeSubsets(lowpriotype &tab) {						/*												*/
 }															/* 												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Write nonoptimized output file
 *
-* Ignores everything until "Begin".
+* If only the table object is passed to this function
+* the nonoptimized transition network is written to 
+* "ZMnichtoptimiert.tbl", a format to be minimized 
+* by Minilog.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] table the object of type smtable to be processed
 * \param[out] none
-* \return Next state to enter
+* \return execution status
 * \note Global variables used: none
 */
 funcreturn writeOutputFile(smtable &table)					/* 												*/
@@ -413,20 +435,24 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 		outfile << "end\n";									/* 												*/
 		outfile.close();									/* 												*/
 	}														/* 												*/
-	catch (...) {											/* 												*/
+	catch (...) {											/* catch any exception							*/
 		retval = F_FAIL;									/* 												*/
 	}														/* 												*/
 	return retval;											/* 												*/
 }															/* 												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Write optimized output file
 *
-* Ignores everything until "Begin".
+* If a list of states and the table object is passed to this function
+* the optimized transition network is written to 
+* "ZMoptimiert.tbl", a format to be minimized 
+* by Minilog.
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] statelist the list of the optimized state order
+* \param[in] table the object of type smtable to be processed
 * \param[out] none
-* \return Next state to enter
+* \return execution status
 * \note Global variables used: none
 */
 funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*								*/
@@ -483,23 +509,23 @@ funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*				
 		outfile << "end\n";									/*												*/
 		outfile.close();									/*												*/
 	}														/*												*/
-	catch (...) {											/*												*/
+	catch (...) {											/* catch any exception							*/
 		retval = F_FAIL;									/*												*/
 	}														/*												*/
 	return retval;											/*												*/
 }															/*												*/
 															/*----------------------------------------------*/
 /*!
-* \brief Skip documentation
+* \brief Convert integer to gray integer
 *
-* Ignores everything until "Begin".
+* Returns gray code as integer of input
 *
-* \param[in] tok Current token to check for "Begin"
+* \param[in] input Integer to be converted
 * \param[out] none
-* \return Next state to enter
+* \return gray code of input
 * \note Global variables used: none
 */
-int int2gray(int input)										/* returns integer, which bit structure is gray	*/
-{															/* coded										*/
+int int2gray(int input)										/* returns integer type, which bit structure is	*/
+{															/* gray coded									*/
 	return input ^ (input >> 1);							/*												*/
 }															/*----------------------------------------------*/

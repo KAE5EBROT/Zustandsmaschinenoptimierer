@@ -702,10 +702,10 @@ CParser::parstates CParser::pfReadLineDState(const int tok, string &dststate)/*	
 /*!
 * \brief Error state
 *
-* Read in destinanion state (or next state) to which the transition should step to.
+* Report error and stay in here
 *
-* \param[in] tok Current token to check for state
-* \param[out] String of destination state name
+* \param[in] none
+* \param[out] none
 * \return Next state to enter
 * \note Global variables used: none
 */															/*----------------------------------------------*/
