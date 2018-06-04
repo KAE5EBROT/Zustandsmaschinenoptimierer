@@ -479,12 +479,12 @@ CParser::parstates CParser::pfScanInputs(const int tok, defScanType &defScanned)
 * \return Next state to enter
 * \note Global variables used: CParser::scannedOutputs
 */															/*----------------------------------------------*/
-CParser::parstates CParser::pfScanOutputs(const int tok, defScanType &defScanned)	/* Parser function: Read in output definition	*/
+CParser::parstates CParser::pfScanOutputs(const int tok, defScanType &defScanned)/* Parser function: Read in output definition*/
 {															/*												*/
 	parstates retval = P_DEFOUT;							/*												*/
 	switch (tok) {											/*												*/
 	case IDENTIFIERDEF:										/* valid name									*/
-		defScanned.scannedOutputs.push_back(string(yylval.s));			/* save											*/
+		defScanned.scannedOutputs.push_back(string(yylval.s));/* save										*/
 		retval = P_DEFOUT;									/*												*/
 		break;												/*												*/
 	case ',':												/* skip separator								*/

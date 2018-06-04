@@ -359,9 +359,9 @@ void removeSubsets(lowpriotype &tab) {						/*												*/
 * \return Next state to enter
 * \note Global variables used: none
 */
-funcreturn writeOutputFile(smtable &table)			/* 												*/
+funcreturn writeOutputFile(smtable &table)					/* 												*/
 {															/* 												*/
-	funcreturn retval = F_SUCCESS;					/* preset return								*/
+	funcreturn retval = F_SUCCESS;							/* preset return								*/
 	int stateCodeBitCount = 1;								/* number of bits needed to code states			*/
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);/* calculation				*/
 	ofstream outfile;										/* output file object							*/
