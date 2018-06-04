@@ -173,15 +173,12 @@ lowpriotype lowPriority(smtable &table)	/*lowest priority is given when at least
 	vector < vector<string>> low_priority;					/*save all low priorities in a vector<vector<string>>*/
 	vector<string> candidates;								/* candidates for low priority					*/
 	int candidate_count = 0;								/*												*/
-	bool output_matched = false;							/* candidates for low priority					*/
 	for (int j = 0; j < table.iwidth; j++) {				/* check all input possibilities				*/
 		for (int k = 0; k < (1 << table.ioutputs.size()); k++) {/*check all output possibilities (00 01 10 11 -> 0 1 2 3), (1 << table.ioutputs.size()) is the number of output possibilities*/
 			for (int i = 0; i < table.iheight; i++) {		/*												*/
-				output_matched = table.bitsMatch(k, table.table[table.istates.at(i)].at(j).out_list.c_str());/*checks, if int k matches with output bit pattern and set bool output_matched */
-				if (output_matched == true) {				/*												*/
+				if (table.bitsMatch(k, table.table[table.istates.at(i)].at(j).out_list.c_str())) {/*checks, if int k matches with output bit pattern and set bool output_matched */
 					candidate_count++;						/* count candidates								*/
 					candidates.push_back(table.istates.at(i).c_str());/*push a candidate for low priority into candidates*/
-					output_matched = false;					/* reset bool output_matched					*/
 				}											/*												*/
 			}												/*												*/
 			if (candidate_count >= 2) {						/* condition for low priority					*/
@@ -384,9 +381,9 @@ void removeSubsets(lowpriotype &tab) {						/*												*/
 * \return execution status
 * \note Global variables used: none
 */
-funcreturn writeOutputFile(smtable &table)			/* 												*/
+funcreturn writeOutputFile(smtable &table)					/* 												*/
 {															/* 												*/
-	funcreturn retval = F_SUCCESS;					/* preset return								*/
+	funcreturn retval = F_SUCCESS;							/* preset return								*/
 	int stateCodeBitCount = 1;								/* number of bits needed to code states			*/
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);/* calculation				*/
 	ofstream outfile;										/* output file object							*/

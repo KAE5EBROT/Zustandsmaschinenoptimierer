@@ -128,7 +128,7 @@ smtable::fstate smtable::setOutputs(elementlist outputs) {
 * \note Global variables used: table
 */															/*----------------------------------------------*/
 smtable::fstate smtable::link(elementlist inputs, string inputval, string srcstate, elementlist outputs, string outputval, string dststate) {
-	int numberOfInput = (1 << iinputs.size());				/* number of inpt combinations					*/
+	int numberOfInput = (1 << iinputs.size());				/* number of input combinations					*/
 	bool foundMatch = false;								/* 												*/
 	entry tempentry;										/* temporary cell to be copied to table			*/
 	tempentry.next_state = dststate;						/* next state unambiguous, just copy			*/
