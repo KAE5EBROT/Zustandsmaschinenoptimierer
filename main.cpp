@@ -272,7 +272,7 @@ smtable::elementlist optimize(prioritytype high_priority, prioritytype mean_prio
 			}												/*												*/
 			if (is_set == false) {							/*												*/
 				if (!(find(Zustandscodierung.begin(), Zustandscodierung.end(), t3->first) != Zustandscodierung.end())) {
-					/* ckecks, if a mean priority state isn't set in the Zustandscodierung						*/
+					/* ckecks, if a mean priority state isn't set in the Zustandscodierung					*/
 					Zustandscodierung[set_states] = t3->first;/*set mean priority state in the Zustandscodierung*/
 					set_states++;							/*												*/
 				}											/*												*/
@@ -333,7 +333,7 @@ smtable::elementlist optimize(prioritytype high_priority, prioritytype mean_prio
 * \return boolean answer
 * \note Global variables used: none
 */
-bool contains(smtable::elementlist base, smtable::elementlist cmp)/*								*/
+bool contains(smtable::elementlist base, smtable::elementlist cmp)/*										*/
 {															/* check, if base contains all entries of cmp	*/
 	bool retval = true;										/* preset retval								*/
 	for (uint i = 0; i < cmp.size(); i++) {					/* run through cmp								*/

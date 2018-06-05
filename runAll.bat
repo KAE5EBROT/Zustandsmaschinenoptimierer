@@ -25,7 +25,6 @@ if exist %inputfc% (
 		echo running gate counter...
 		@REM run gate counter
 		"gatter.exe - Verknuepfung.lnk"
-		set executed=1
 	)
 ) else (
 	echo ERROR: File not found! "%inputfc%"
