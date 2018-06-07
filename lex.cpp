@@ -54,14 +54,13 @@ int	CParser::yyparse(smtable &table)						/*												*/
 {															/*												*/
 	int tok = 0;											/* current token								*/
 	parstates state = P_HEADER;								/* state machine variable						*/
-	defScanType defScanned;									/*												*/
+	defScanType defScanned;									/* variable combination to remember read defines*/
 	smtable::elementlist inputs;							/* list of mentioned inputs						*/
 	string invals;											/* string of associated input trigger values	*/
 	string srcstate;										/* source state of transition					*/
 	smtable::elementlist outputs;							/* list of mentioned outputs					*/
 	string outvals;											/* string of associated output values			*/
 	string dststate;										/* destination state of transition				*/
-	if (prflag)fprintf(IP_List, "%5d ", (int)IP_LineNumber);/*												*/
 															/*												*/
 	while ((tok = yylex()) != IP_Token_table["End"]) {		/* Run till End									*/
 		switch (state) {									/*												*/

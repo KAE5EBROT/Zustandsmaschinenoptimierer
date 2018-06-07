@@ -1,0 +1,453 @@
+\hypertarget{class_c_parser}{}\section{C\+Parser Class Reference}
+\label{class_c_parser}\index{C\+Parser@{C\+Parser}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}}
+\item 
+struct \mbox{\hyperlink{struct_c_parser_1_1tyylval}{tyylval}}
+\begin{DoxyCompactList}\small\item\em function returns \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_c_parser_a0f232c75c4c71d5cb66542b821d5ec2b}\label{class_c_parser_a0f232c75c4c71d5cb66542b821d5ec2b}} 
+enum {\bfseries lexstate} \{ \newline
+{\bfseries L\+\_\+\+S\+T\+A\+RT}, 
+{\bfseries L\+\_\+\+I\+NT}, 
+{\bfseries L\+\_\+\+I\+D\+E\+NT}, 
+{\bfseries L\+\_\+\+S\+T\+R\+I\+NG}, 
+\newline
+{\bfseries L\+\_\+\+S\+T\+R\+I\+N\+G2}, 
+{\bfseries L\+\_\+\+C\+O\+M\+M\+E\+NT}, 
+{\bfseries L\+\_\+\+T\+E\+X\+T\+\_\+\+C\+O\+M\+M\+E\+NT}, 
+{\bfseries L\+\_\+\+L\+I\+N\+E\+\_\+\+C\+O\+M\+M\+E\+NT}, 
+\newline
+{\bfseries L\+\_\+\+E\+N\+D\+\_\+\+T\+E\+X\+T\+\_\+\+C\+O\+M\+M\+E\+NT}
+ \}
+\item 
+\mbox{\Hypertarget{class_c_parser_a39e47a64ff983ee093aad6e5b8e73674}\label{class_c_parser_a39e47a64ff983ee093aad6e5b8e73674}} 
+enum {\bfseries parstates} \{ \newline
+{\bfseries P\+\_\+\+H\+E\+A\+D\+ER}, 
+{\bfseries P\+\_\+\+D\+E\+F\+S\+E\+L\+E\+CT}, 
+{\bfseries P\+\_\+\+D\+E\+F\+S\+T\+A\+TE}, 
+{\bfseries P\+\_\+\+D\+E\+F\+IN}, 
+\newline
+{\bfseries P\+\_\+\+D\+E\+F\+O\+UT}, 
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+I\+N\+P\+U\+TS}, 
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+I\+N\+V\+A\+LS}, 
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+S\+S\+T\+A\+TE}, 
+\newline
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+O\+U\+T\+P\+U\+TS}, 
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+O\+U\+T\+V\+A\+LS}, 
+{\bfseries P\+\_\+\+R\+E\+A\+D\+L\+I\+N\+E\+D\+S\+T\+A\+TE}, 
+{\bfseries P\+\_\+\+E\+R\+R\+OR}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_c_parser_a3d3b6419b0418f3957f46df645b451d4}\label{class_c_parser_a3d3b6419b0418f3957f46df645b451d4}} 
+int {\bfseries yylex} ()
+\item 
+\mbox{\Hypertarget{class_c_parser_a69f47a849390197859832118153ef4d5}\label{class_c_parser_a69f47a849390197859832118153ef4d5}} 
+void {\bfseries yyerror} (char $\ast$ers)
+\item 
+\mbox{\Hypertarget{class_c_parser_a779649c2cabcfb9327e5382e1f2da45d}\label{class_c_parser_a779649c2cabcfb9327e5382e1f2da45d}} 
+int {\bfseries I\+P\+\_\+\+Match\+Token} (string \&tok)
+\item 
+\mbox{\Hypertarget{class_c_parser_ace28ad59dee35173b74ad45243a5647e}\label{class_c_parser_ace28ad59dee35173b74ad45243a5647e}} 
+void {\bfseries Init\+Parse} (F\+I\+LE $\ast$inp, F\+I\+LE $\ast$err, F\+I\+LE $\ast$lst)
+\item 
+\mbox{\Hypertarget{class_c_parser_a97cafa394580fc324f86b8b4e6898fc2}\label{class_c_parser_a97cafa394580fc324f86b8b4e6898fc2}} 
+int {\bfseries yyparse} (\mbox{\hyperlink{classsmtable}{smtable}} \&table)
+\item 
+\mbox{\Hypertarget{class_c_parser_a920fa2d0bc40d79e6aaa1e65b7dc8ac7}\label{class_c_parser_a920fa2d0bc40d79e6aaa1e65b7dc8ac7}} 
+void {\bfseries pr\+\_\+tokentable} ()
+\item 
+\mbox{\Hypertarget{class_c_parser_a3984a1b7c01067a0c9003627bd1e7b28}\label{class_c_parser_a3984a1b7c01067a0c9003627bd1e7b28}} 
+void {\bfseries I\+P\+\_\+init\+\_\+token\+\_\+table} ()
+\item 
+\mbox{\Hypertarget{class_c_parser_a113fb940cecab830d72575580d43a35e}\label{class_c_parser_a113fb940cecab830d72575580d43a35e}} 
+void {\bfseries Load\+\_\+tokenentry} (string str, int index)
+\item 
+\mbox{\Hypertarget{class_c_parser_a8658f8e0704065bf830c8b407c625578}\label{class_c_parser_a8658f8e0704065bf830c8b407c625578}} 
+void {\bfseries Push\+String} (char c)
+\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a34572319cc6e7bacdc1e75503e1673e0}{pf\+Skip\+Header}} (const int tok)
+\begin{DoxyCompactList}\small\item\em Skip documentation. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_aa29692dcf4992f1954a5b09800eec094}{pf\+Get\+Def}} (const int tok, \mbox{\hyperlink{classsmtable}{smtable}} \&table, \mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&def\+Scanned)
+\begin{DoxyCompactList}\small\item\em Select next definition. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a6967b92e7fc37a1906f244d5943a47c4}{pf\+Scan\+State}} (const int tok, \mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&def\+Scanned)
+\begin{DoxyCompactList}\small\item\em Scan state definitions. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a95465ac00fca432f665faf76c87126c7}{pf\+Scan\+Inputs}} (const int tok, \mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&def\+Scanned)
+\begin{DoxyCompactList}\small\item\em Scan input definitions. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a03bfaa20fdb1042ed4c53ed01d1f8965}{pf\+Scan\+Outputs}} (const int tok, \mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&def\+Scanned)
+\begin{DoxyCompactList}\small\item\em Scan output definitions. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a420b7e984e9b8ea91108a91d7f1d4e4c}{pf\+Read\+Line\+Inputs}} (const int tok, \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{smtable\+::elementlist}} \&inlist)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: inputs. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_af874200cea410872f02ab466abe165cc}{pf\+Read\+Line\+Invals}} (const int tok, string \&invals)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: input values. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a76394c5f5b9c8b8028c80208d5712973}{pf\+Read\+Line\+S\+State}} (const int tok, string \&srcstate)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: initial state. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a16b1a21e69fdfb4d45e6e22125d8e09b}{pf\+Read\+Line\+Outputs}} (const int tok, \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{smtable\+::elementlist}} \&outlist)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: outputs. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_a045e513433708fabe6251864484f40c9}{pf\+Read\+Line\+Outvals}} (const int tok, string \&outvals)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: output values. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_ad9edeb2bec770d60f64525f3c3471f98}{pf\+Read\+Line\+D\+State}} (const int tok, string \&dststate)
+\begin{DoxyCompactList}\small\item\em Read transition definition\+: destinantion state. \end{DoxyCompactList}\item 
+C\+Parser\+::parstates \mbox{\hyperlink{class_c_parser_ac7a3ad0083e1bfd94b2207bb13792363}{pf\+Error}} (void)
+\begin{DoxyCompactList}\small\item\em Error state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_c_parser_add222634f83e6f98eb0edfeb1b699b1c}\label{class_c_parser_add222634f83e6f98eb0edfeb1b699b1c}} 
+const int {\bfseries S\+T\+R\+I\+N\+G1} = S\+T\+R\+I\+N\+G1\+D\+EF
+\item 
+\mbox{\Hypertarget{class_c_parser_a4240e030456438ce9fa48ca0cdf579db}\label{class_c_parser_a4240e030456438ce9fa48ca0cdf579db}} 
+const int {\bfseries I\+D\+E\+N\+T\+I\+F\+I\+ER} = I\+D\+E\+N\+T\+I\+F\+I\+E\+R\+D\+EF
+\item 
+\mbox{\Hypertarget{class_c_parser_aac3891f36c14b206d0b11b7c64ff8ace}\label{class_c_parser_aac3891f36c14b206d0b11b7c64ff8ace}} 
+const int {\bfseries I\+N\+T\+E\+G\+E\+R1} = I\+N\+T\+E\+G\+E\+R1\+D\+EF
+\item 
+\mbox{\Hypertarget{class_c_parser_ab12f100969854503712578b104fab6e1}\label{class_c_parser_ab12f100969854503712578b104fab6e1}} 
+const int {\bfseries T\+O\+K\+E\+N\+S\+T\+A\+RT} = T\+O\+K\+E\+N\+S\+T\+A\+R\+T\+D\+EF
+\item 
+\mbox{\Hypertarget{class_c_parser_ab684307c3328c44a4b41f4914f167966}\label{class_c_parser_ab684307c3328c44a4b41f4914f167966}} 
+string {\bfseries yytext}
+\item 
+\mbox{\Hypertarget{class_c_parser_a3c6622dea72f180fab640c870eacae5e}\label{class_c_parser_a3c6622dea72f180fab640c870eacae5e}} 
+struct \mbox{\hyperlink{struct_c_parser_1_1tyylval}{C\+Parser\+::tyylval}} {\bfseries yylval}
+\item 
+\mbox{\Hypertarget{class_c_parser_a35edbabe98679968af2cb9b82049b22a}\label{class_c_parser_a35edbabe98679968af2cb9b82049b22a}} 
+F\+I\+LE $\ast$ {\bfseries I\+P\+\_\+\+Input}
+\item 
+\mbox{\Hypertarget{class_c_parser_ab2cb76a37c65a8b9241da4e01f9b352d}\label{class_c_parser_ab2cb76a37c65a8b9241da4e01f9b352d}} 
+F\+I\+LE $\ast$ {\bfseries I\+P\+\_\+\+Error}
+\item 
+\mbox{\Hypertarget{class_c_parser_a7ace8d8e49ab5fab8698250dd3ccc903}\label{class_c_parser_a7ace8d8e49ab5fab8698250dd3ccc903}} 
+F\+I\+LE $\ast$ {\bfseries I\+P\+\_\+\+List}
+\item 
+\mbox{\Hypertarget{class_c_parser_ae53c34abf654eddf39609c83604072bc}\label{class_c_parser_ae53c34abf654eddf39609c83604072bc}} 
+int {\bfseries I\+P\+\_\+\+Line\+Number}
+\item 
+\mbox{\Hypertarget{class_c_parser_a01106baf1bb6389b6c305f04bc3d88cd}\label{class_c_parser_a01106baf1bb6389b6c305f04bc3d88cd}} 
+int {\bfseries ugetflag}
+\item 
+\mbox{\Hypertarget{class_c_parser_a37b4af43412466cacc168743a083b846}\label{class_c_parser_a37b4af43412466cacc168743a083b846}} 
+int {\bfseries prflag}
+\item 
+\mbox{\Hypertarget{class_c_parser_a127e42a04c6ca9f61d45a94078dcc26f}\label{class_c_parser_a127e42a04c6ca9f61d45a94078dcc26f}} 
+map$<$ string, int $>$ {\bfseries I\+P\+\_\+\+Token\+\_\+table}
+\item 
+\mbox{\Hypertarget{class_c_parser_aaceb8ad6efb149c1f56c0045e5858838}\label{class_c_parser_aaceb8ad6efb149c1f56c0045e5858838}} 
+map$<$ int, string $>$ {\bfseries I\+P\+\_\+rev\+Token\+\_\+table}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_parser_ac7a3ad0083e1bfd94b2207bb13792363}\label{class_c_parser_ac7a3ad0083e1bfd94b2207bb13792363}} 
+\index{C\+Parser@{C\+Parser}!pf\+Error@{pf\+Error}}
+\index{pf\+Error@{pf\+Error}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Error()}{pfError()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Error (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Error state. 
+
+Report error and stay in here
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em none} & \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_aa29692dcf4992f1954a5b09800eec094}\label{class_c_parser_aa29692dcf4992f1954a5b09800eec094}} 
+\index{C\+Parser@{C\+Parser}!pf\+Get\+Def@{pf\+Get\+Def}}
+\index{pf\+Get\+Def@{pf\+Get\+Def}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Get\+Def()}{pfGetDef()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Get\+Def (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{classsmtable}{smtable}} \&}]{table,  }\item[{\mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&}]{def\+Scanned }\end{DoxyParamCaption})}
+
+
+
+Select next definition. 
+
+At the beginning of each state machine to read, states, inputs and outputs have to be defined first. To make things more flexible, this sequence is not fixed. This function selects which definition comes next.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for definition key \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_ad9edeb2bec770d60f64525f3c3471f98}\label{class_c_parser_ad9edeb2bec770d60f64525f3c3471f98}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+D\+State@{pf\+Read\+Line\+D\+State}}
+\index{pf\+Read\+Line\+D\+State@{pf\+Read\+Line\+D\+State}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+D\+State()}{pfReadLineDState()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+D\+State (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{string \&}]{dststate }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: destinantion state. 
+
+Read in destinanion state (or next state) to which the transition should step to.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for state \\
+\hline
+\mbox{\tt out}  & {\em String} & of destination state name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a420b7e984e9b8ea91108a91d7f1d4e4c}\label{class_c_parser_a420b7e984e9b8ea91108a91d7f1d4e4c}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+Inputs@{pf\+Read\+Line\+Inputs}}
+\index{pf\+Read\+Line\+Inputs@{pf\+Read\+Line\+Inputs}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+Inputs()}{pfReadLineInputs()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+Inputs (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{smtable\+::elementlist}} \&}]{inlist }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: inputs. 
+
+Read in inputs to be defined for transition to trigger.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for input \\
+\hline
+\mbox{\tt in,out}  & {\em List} & of mentioned inputs with current one appended \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_af874200cea410872f02ab466abe165cc}\label{class_c_parser_af874200cea410872f02ab466abe165cc}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+Invals@{pf\+Read\+Line\+Invals}}
+\index{pf\+Read\+Line\+Invals@{pf\+Read\+Line\+Invals}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+Invals()}{pfReadLineInvals()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+Invals (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{string \&}]{invals }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: input values. 
+
+Read in input values for transition to trigger.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for input values \\
+\hline
+\mbox{\tt in,out}  & {\em String} & of read input values with current one appended \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a16b1a21e69fdfb4d45e6e22125d8e09b}\label{class_c_parser_a16b1a21e69fdfb4d45e6e22125d8e09b}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+Outputs@{pf\+Read\+Line\+Outputs}}
+\index{pf\+Read\+Line\+Outputs@{pf\+Read\+Line\+Outputs}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+Outputs()}{pfReadLineOutputs()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+Outputs (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{smtable\+::elementlist}} \&}]{outlist }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: outputs. 
+
+Read in outputs to be set at the end of the transition.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for output \\
+\hline
+\mbox{\tt in,out}  & {\em List} & of mentioned outputs with current one appended \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a045e513433708fabe6251864484f40c9}\label{class_c_parser_a045e513433708fabe6251864484f40c9}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+Outvals@{pf\+Read\+Line\+Outvals}}
+\index{pf\+Read\+Line\+Outvals@{pf\+Read\+Line\+Outvals}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+Outvals()}{pfReadLineOutvals()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+Outvals (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{string \&}]{outvals }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: output values. 
+
+Read in output values to be set at the end of the transition.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for output values \\
+\hline
+\mbox{\tt in,out}  & {\em String} & of read output values with current one appended \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a76394c5f5b9c8b8028c80208d5712973}\label{class_c_parser_a76394c5f5b9c8b8028c80208d5712973}} 
+\index{C\+Parser@{C\+Parser}!pf\+Read\+Line\+S\+State@{pf\+Read\+Line\+S\+State}}
+\index{pf\+Read\+Line\+S\+State@{pf\+Read\+Line\+S\+State}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Read\+Line\+S\+State()}{pfReadLineSState()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Read\+Line\+S\+State (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{string \&}]{srcstate }\end{DoxyParamCaption})}
+
+
+
+Read transition definition\+: initial state. 
+
+Read in initial state (or source state) from which the transition should trigger.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for state \\
+\hline
+\mbox{\tt out}  & {\em String} & of initial state name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a95465ac00fca432f665faf76c87126c7}\label{class_c_parser_a95465ac00fca432f665faf76c87126c7}} 
+\index{C\+Parser@{C\+Parser}!pf\+Scan\+Inputs@{pf\+Scan\+Inputs}}
+\index{pf\+Scan\+Inputs@{pf\+Scan\+Inputs}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Scan\+Inputs()}{pfScanInputs()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Scan\+Inputs (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&}]{def\+Scanned }\end{DoxyParamCaption})}
+
+
+
+Scan input definitions. 
+
+Read in defined inputs and save in list.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: C\+Parser\+::scanned\+Inputs 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a03bfaa20fdb1042ed4c53ed01d1f8965}\label{class_c_parser_a03bfaa20fdb1042ed4c53ed01d1f8965}} 
+\index{C\+Parser@{C\+Parser}!pf\+Scan\+Outputs@{pf\+Scan\+Outputs}}
+\index{pf\+Scan\+Outputs@{pf\+Scan\+Outputs}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Scan\+Outputs()}{pfScanOutputs()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Scan\+Outputs (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&}]{def\+Scanned }\end{DoxyParamCaption})}
+
+
+
+Scan output definitions. 
+
+Read in defined outputs and save in list.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: C\+Parser\+::scanned\+Outputs 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a6967b92e7fc37a1906f244d5943a47c4}\label{class_c_parser_a6967b92e7fc37a1906f244d5943a47c4}} 
+\index{C\+Parser@{C\+Parser}!pf\+Scan\+State@{pf\+Scan\+State}}
+\index{pf\+Scan\+State@{pf\+Scan\+State}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Scan\+State()}{pfScanState()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Scan\+State (\begin{DoxyParamCaption}\item[{const int}]{tok,  }\item[{\mbox{\hyperlink{struct_c_parser_1_1def_scan_type}{def\+Scan\+Type}} \&}]{def\+Scanned }\end{DoxyParamCaption})}
+
+
+
+Scan state definitions. 
+
+Read in defined states and save in list.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: C\+Parser\+::scanned\+States 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_c_parser_a34572319cc6e7bacdc1e75503e1673e0}\label{class_c_parser_a34572319cc6e7bacdc1e75503e1673e0}} 
+\index{C\+Parser@{C\+Parser}!pf\+Skip\+Header@{pf\+Skip\+Header}}
+\index{pf\+Skip\+Header@{pf\+Skip\+Header}!C\+Parser@{C\+Parser}}
+\subsubsection{\texorpdfstring{pf\+Skip\+Header()}{pfSkipHeader()}}
+{\footnotesize\ttfamily C\+Parser\+::parstates C\+Parser\+::pf\+Skip\+Header (\begin{DoxyParamCaption}\item[{const int}]{tok }\end{DoxyParamCaption})}
+
+
+
+Skip documentation. 
+
+Ignores everything until \char`\"{}\+Begin\char`\"{}.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for \char`\"{}\+Begin\char`\"{} \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next state to enter 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/lex.\+h\item 
+C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/lex.\+cpp\end{DoxyCompactItemize}

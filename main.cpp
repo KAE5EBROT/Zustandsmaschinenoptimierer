@@ -43,15 +43,15 @@ int main(int argc, char* argv[])							/*												*/
 		printf("Cannot open input file %s\n",fistr);		/*												*/
 		return 0;											/*												*/
 	}														/*												*/
-	CParser obj;											/*												*/
-	smtable table;											/*												*/
-	obj.InitParse(inf,stderr,stdout);						/*												*/
+	CParser obj;											/* instance of lexical analyzer					*/
+	smtable table;											/* instance of our table class					*/
+	obj.InitParse(inf,stderr,stdout);						/* 												*/
 //	obj.pr_tokentable();									/*												*/
-	tablestate = obj.yyparse(table);						/*												*/
+	tablestate = obj.yyparse(table);						/* returns success state						*/
 	table.print();											/* 												*/
 															/*												*/
-	if (!tablestate) {										/* 												*/
-															/* Codierungsoptimierung						*/
+	if (!tablestate) {										/* if no fatal error occured					*/
+															/* Codeoptimizing								*/
 		high_priority = highPriority(table);				/*												*/
 		mean_priority = meanPriority(table);				/*												*/
 		low_priority = lowPriority(table);					/*												*/
@@ -87,7 +87,9 @@ int main(int argc, char* argv[])							/*												*/
 /*!
 * \brief High Priority
 *
-* Get the high priorities of the state diagramm and return them
+* Get the high priorities of the state diagramm and return them.
+* If multiple states share the same next state and the same input values, 
+* they should be placed near in the statecoding.
 *
 * \param[in] none
 * \param[out] none
@@ -125,7 +127,9 @@ prioritytype highPriority(smtable &table)					/* high priority: when at least tw
 /*!
 * \brief Mean Priority
 *
-* Get the mean priorities of the state diagramm and return them
+* Get the mean priorities of the state diagramm and return them.
+* If a state has different next states at different input values, 
+* these next states should be placed near in the statecoding.
 *
 * \param[in] none
 * \param[out] none
@@ -161,7 +165,9 @@ prioritytype meanPriority(smtable &table)					/* mean priority: is when a state 
 /*!
 * \brief Low Priority
 *
-* Get the low priorities of the state diagramm and return them
+* Get the low priorities of the state diagramm and return them.
+* If multiple states have the same output behaviour at the same input values, 
+* they should be placed near in the statecoding.
 *
 * \param[in] none
 * \param[out] none
@@ -194,8 +200,9 @@ lowpriotype lowPriority(smtable &table)	/*lowest priority is given when at least
 /*!
 * \brief Apply given priorities
 *
-* Get the optimize state coding of the state diagramm and return them
-* Set first the high priorities, then the mean priorities, then the low priorities and at last left states in Zustandscodierung
+* Get the optimize state coding of the state diagramm and return them.
+* Set first the high priorities, then the mean priorities, then the 
+* low priorities and at last all leftover states in Zustandscodierung.
 *
 * \param[in] prioritytype high_priority, prioritytype mean_priority, lowpriotype low_priority
 * \param[out] none
@@ -362,7 +369,7 @@ void removeSubsets(lowpriotype &tab) {						/*												*/
 			if ((contains(tab.at(i), tab.at(j))) && (i != j)) {/* if j is subset of i and doesnt compar self*/
 				vector<vector<string>>::iterator it = tab.begin() + j;/* declare pointer to subset for erase*/
 				tab.erase(it);								/* erase										*/
-				j--;										/* adjust k, because current element at k is	*/
+				j--;										/* adjust j, because current element at j is	*/
 			}												/*							not checked, yet	*/
 		}													/* 												*/
 	}														/* 												*/
@@ -385,7 +392,7 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 {															/* 												*/
 	funcreturn retval = F_SUCCESS;							/* preset return								*/
 	int stateCodeBitCount = 1;								/* number of bits needed to code states			*/
-	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);/* calculation				*/
+	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++);/* calculate bits needed	*/
 	ofstream outfile;										/* output file object							*/
 	try {													/* safe code block, if write exception occours	*/
 		outfile.open("ZMnichtoptimiert.tbl");				/* 												*/
@@ -408,25 +415,26 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 		}													/* 												*/
 		outfile << "\n\" nonoptimized transitiontable\n";	/* 												*/
 		for (int i = 0; i < (1 << table.iinputs.size()); i++) {/* run through input combinations			*/
-			for (int j = 0; j < (1 << stateCodeBitCount); j++) {/* run through state combinations			*/
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {/* run through state code bits combinations	*/
 				int nextstate = 0;							/* 												*/
-				if (j < table.istates.size()) {				/* 												*/
+				if (j < table.istates.size()) {				/* if there are states left to code				*/
+															/* count nextstate up to next state of cell		*/
 					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
 					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
-					if (nextstate < table.istates.size()) {	/* 												*/
-						outfile << *table.int2bit(nextstate, stateCodeBitCount);/* 							*/
+					if (nextstate < table.istates.size()) {	/* if nextstate inside range (effectively found)*/
+						outfile << *table.int2bit(nextstate, stateCodeBitCount);/* write binary coded state	*/
 					}										/* 												*/
-					else {									/* 												*/
+					else {									/* if nextstate not found (not defined)			*/
 						for (int k = 0; k < stateCodeBitCount; k++) {/* 									*/
-							outfile << "-";					/* 												*/
+							outfile << "-";					/* write don't cares							*/
 						}									/* 												*/
 					}										/* 												*/
 					outfile << "\n";						/* 												*/
 				}											/* 												*/
-				else {										/* 												*/
+				else {										/* if no more states left to code				*/
 					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
 					for (int k = 0; k < stateCodeBitCount; k++) {/* 										*/
-						outfile << "-";						/* 												*/
+						outfile << "-";						/* insert don't cares							*/
 					}										/* 												*/
 					outfile << "\n";						/* 												*/
 				}											/* 												*/
@@ -457,8 +465,8 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 */
 funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*								*/
 {															/*												*/
-	funcreturn retval = F_SUCCESS;							/*												*/
-	int stateCodeBitCount = 1;								/*												*/
+	funcreturn retval = F_SUCCESS;							/* preset return								*/
+	int stateCodeBitCount = 1;								/* number of bits needed to code states			*/
 	for (; (1 << stateCodeBitCount) < table.istates.size(); stateCodeBitCount++); /* calculate bits needed	*/
 	ofstream outfile;										/*												*/
 	try {													/*												*/
@@ -468,7 +476,7 @@ funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*				
 			outfile << table.iinputs.at(i).c_str() << " ";	/*												*/
 		}													/*												*/
 		for (uint i = 0; i < stateCodeBitCount; i++) {		/* print names for current state coding			*/
-			char statetemp[4] = { 'C', '0', '0', '\0' };	/* 2^100 = 10^30 States							*/
+			char statetemp[4] = { 'C', '0', '0', '\0' };	/* 2^100 = 10^30 States, should be enough		*/
 			statetemp[1] = i / 10 + '0';					/*												*/
 			statetemp[2] = i + '0';							/*												*/
 			outfile << statetemp << " ";					/*												*/
@@ -480,9 +488,9 @@ funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*				
 			statetemp[2] = i + '0';							/*												*/
 			outfile << statetemp << " ";					/*												*/
 		}													/*												*/
-		outfile << "\n\" nonoptimized transitiontable\n";	/*												*/
+		outfile << "\n\" optimized transitiontable\n";		/* comment inside file							*/
 		for (int i = 0; i < (1 << table.iinputs.size()); i++) {/* run through input combinations			*/
-			for (int j = 0; j < (1 << stateCodeBitCount); j++) {/* run through state combinations			*/
+			for (int j = 0; j < (1 << stateCodeBitCount); j++) {/* run through state code bits combinations	*/
 				int nextstate = 0;							/*												*/
 				if (statelist.at(j).size() != 0) {			/* if entry not empty get number of next state	*/
 					for (; (nextstate < table.istates.size()) && (statelist.at(nextstate) != table.table[statelist.at(j)].at(i).next_state); nextstate++);

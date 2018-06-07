@@ -1,0 +1,337 @@
+\hypertarget{classsmtable}{}\section{smtable Class Reference}
+\label{classsmtable}\index{smtable@{smtable}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsmtable_1_1entry}{entry}}
+\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsmtable_a56fdf016cc59eb93dfa17f53bd9db19a}\label{classsmtable_a56fdf016cc59eb93dfa17f53bd9db19a}} 
+enum {\bfseries fstate} \{ {\bfseries e\+OK}, 
+{\bfseries e\+F\+A\+IL}
+ \}
+\item 
+\mbox{\Hypertarget{classsmtable_a1e18f61b7a4bb0e643d83df3da0ae22c}\label{classsmtable_a1e18f61b7a4bb0e643d83df3da0ae22c}} 
+typedef map$<$ string, vector$<$ \mbox{\hyperlink{structsmtable_1_1entry}{entry}} $>$ $>$ {\bfseries tabletype}
+\item 
+\mbox{\Hypertarget{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}\label{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}} 
+typedef vector$<$ string $>$ \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}
+\begin{DoxyCompactList}\small\item\em Effectively the number of possible input combinations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+fstate \mbox{\hyperlink{classsmtable_ae475d729d11ec8e097c5750bfe6eafbf}{init}} ()
+\begin{DoxyCompactList}\small\item\em Vector of known outputs. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a762560d078b904bfdcd55262db8f3fe8}{init}} (\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} states, \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} inputs, \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} outputs)
+\begin{DoxyCompactList}\small\item\em Initializes the table. Does setup of states, inputs and outputs, too. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a37b9d34c2bec60d3f23ba53afc9dc0fb}{set\+States}} (\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} inputs)
+\begin{DoxyCompactList}\small\item\em Setup of states. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a594f4033166c44e95e5456682135bfa8}{set\+Inputs}} (\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} inputs)
+\begin{DoxyCompactList}\small\item\em Setup of inputs. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a835fa1dd5ab840ff16741870c6758dc2}{set\+Outputs}} (\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} outputs)
+\begin{DoxyCompactList}\small\item\em Setup of outputs. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a0de3a6992dca6fa12027e14a74d14171}{link}} (\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} inputs, string inputval, string srcstate, \mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} outputs, string outputval, string dststate)
+\begin{DoxyCompactList}\small\item\em Insert transition into table. \end{DoxyCompactList}\item 
+fstate \mbox{\hyperlink{classsmtable_a3a80d868ab18cad523c31fa44bbcd691}{print}} ()
+\begin{DoxyCompactList}\small\item\em Print content of table.\+table in familiar manner. \end{DoxyCompactList}\item 
+string $\ast$ \mbox{\hyperlink{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}{int2bit}} (int val, int width)
+\begin{DoxyCompactList}\small\item\em Convert integer to A\+S\+C\+II binary string. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classsmtable_a9d07557f02b4b69c5f5143fe985e242a}{bits\+Match}} (int a, const char $\ast$b)
+\begin{DoxyCompactList}\small\item\em checks, if int a matches with bit pattern char$\ast$ b. b is expected as string containing either \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsmtable_a9fdbe161f939d8a81cc4929fdc29a5e2}\label{classsmtable_a9fdbe161f939d8a81cc4929fdc29a5e2}} 
+tabletype {\bfseries table}
+\item 
+\mbox{\Hypertarget{classsmtable_abde91f025a8892339b963fa34e39ee91}\label{classsmtable_abde91f025a8892339b963fa34e39ee91}} 
+int {\bfseries iheight}
+\item 
+\mbox{\Hypertarget{classsmtable_a27d8f277344f3893a635e8286d118896}\label{classsmtable_a27d8f277344f3893a635e8286d118896}} 
+int \mbox{\hyperlink{classsmtable_a27d8f277344f3893a635e8286d118896}{iwidth}} = 1
+\begin{DoxyCompactList}\small\item\em Effectively the number of states. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsmtable_af06793819b0e517623b5e7f4acec88df}\label{classsmtable_af06793819b0e517623b5e7f4acec88df}} 
+\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} {\bfseries istates}
+\item 
+\mbox{\Hypertarget{classsmtable_a611e95d6d458938df54c3f36138dd075}\label{classsmtable_a611e95d6d458938df54c3f36138dd075}} 
+\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} \mbox{\hyperlink{classsmtable_a611e95d6d458938df54c3f36138dd075}{iinputs}}
+\begin{DoxyCompactList}\small\item\em Vector of known states. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsmtable_af842bb721a4f45d5a7ee3e79c030a5ca}\label{classsmtable_af842bb721a4f45d5a7ee3e79c030a5ca}} 
+\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}} \mbox{\hyperlink{classsmtable_af842bb721a4f45d5a7ee3e79c030a5ca}{ioutputs}}
+\begin{DoxyCompactList}\small\item\em Vector of known inputs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classsmtable_a9d07557f02b4b69c5f5143fe985e242a}\label{classsmtable_a9d07557f02b4b69c5f5143fe985e242a}} 
+\index{smtable@{smtable}!bits\+Match@{bits\+Match}}
+\index{bits\+Match@{bits\+Match}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{bits\+Match()}{bitsMatch()}}
+{\footnotesize\ttfamily bool smtable\+::bits\+Match (\begin{DoxyParamCaption}\item[{int}]{a,  }\item[{const char $\ast$}]{b }\end{DoxyParamCaption})}
+
+
+
+checks, if int a matches with bit pattern char$\ast$ b. b is expected as string containing either \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{}. 
+
+Check bits with string.
+
+Check, if bits of integer match with ascii coded. Don\textquotesingle{}t cares are possible.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em a} & Integer to check \\
+\hline
+\mbox{\tt in}  & {\em b} & String to check. May contain \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} and \textquotesingle{}x\textquotesingle{} \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean answer 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_ae475d729d11ec8e097c5750bfe6eafbf}\label{classsmtable_ae475d729d11ec8e097c5750bfe6eafbf}} 
+\index{smtable@{smtable}!init@{init}}
+\index{init@{init}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Vector of known outputs. 
+
+Initialize table only.
+
+Initializes the table. Expects the finished setup by the set\+Xx()-\/functions.
+
+Set up table with initial values. The next\+\_\+state of each entry is left blank, but output is preset with don\textquotesingle{}t cares.
+
+\begin{DoxyWarning}{Warning}
+\mbox{\hyperlink{classsmtable_a37b9d34c2bec60d3f23ba53afc9dc0fb}{set\+States()}}, \mbox{\hyperlink{classsmtable_a594f4033166c44e95e5456682135bfa8}{set\+Inputs()}} and \mbox{\hyperlink{classsmtable_a835fa1dd5ab840ff16741870c6758dc2}{set\+Outputs()}} have to be called beforehand
+\end{DoxyWarning}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em none} & \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+operation success 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: table 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a762560d078b904bfdcd55262db8f3fe8}\label{classsmtable_a762560d078b904bfdcd55262db8f3fe8}} 
+\index{smtable@{smtable}!init@{init}}
+\index{init@{init}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{states,  }\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{inputs,  }\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{outputs }\end{DoxyParamCaption})}
+
+
+
+Initializes the table. Does setup of states, inputs and outputs, too. 
+
+Get definitions and initialize table.
+
+Set definitions of class. Set up table with initial values. The next\+\_\+state of each entry is left blank, but output is preset with don\textquotesingle{}t cares.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em none} & \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+operation success 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: table 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}\label{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}} 
+\index{smtable@{smtable}!int2bit@{int2bit}}
+\index{int2bit@{int2bit}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{int2bit()}{int2bit()}}
+{\footnotesize\ttfamily string $\ast$ smtable\+::int2bit (\begin{DoxyParamCaption}\item[{int}]{val,  }\item[{int}]{width }\end{DoxyParamCaption})}
+
+
+
+Convert integer to A\+S\+C\+II binary string. 
+
+Converts val into string representing the value of val in binary using A\+S\+C\+II ones and zeros. The return pointer is allocated dynamically and has to be deleted after processing!
+
+Converts the integer val to a string with length width which values are either \textquotesingle{}0\textquotesingle{} or \textquotesingle{}1\textquotesingle{}.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em val} & The integer value to convert. \\
+\hline
+\mbox{\tt in}  & {\em width} & The number of bits to be converted, starting from right (L\+SB) \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to newly allocated string 
+\end{DoxyReturn}
+\begin{DoxyWarning}{Warning}
+Returned pointer has to be deleted after processing! 
+\end{DoxyWarning}
+\begin{DoxyNote}{Note}
+Global variables used\+: none 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a0de3a6992dca6fa12027e14a74d14171}\label{classsmtable_a0de3a6992dca6fa12027e14a74d14171}} 
+\index{smtable@{smtable}!link@{link}}
+\index{link@{link}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{link()}{link()}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{inputs,  }\item[{string}]{inputval,  }\item[{string}]{srcstate,  }\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{outputs,  }\item[{string}]{outputval,  }\item[{string}]{dststate }\end{DoxyParamCaption})}
+
+
+
+Insert transition into table. 
+
+Link states on specific input patterns and set outputs. inputs is a vector of strings, containing the exact names of inputs which values are specified in inputval. The size of inputs must match the length of inputval. The values can be \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{}. If a pair of input and its value is not mentioned, its treated as \textquotesingle{}x\textquotesingle{}.
+
+This function is the heart of the class smtable. It is used to
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em inputs} & List of input names to be read. Type\+: vector$<$string$>$ \\
+\hline
+\mbox{\tt in}  & {\em inputval} & String with values the corresponding inputs should have for transition to trigger. Values can either be \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{} (don\textquotesingle{}t care). Has to match size of inputs. \\
+\hline
+\mbox{\tt in}  & {\em srcstate} & String with name of initial state. \\
+\hline
+\mbox{\tt in}  & {\em outputs} & List of output names to be set. Type\+: vector$<$string$>$ \\
+\hline
+\mbox{\tt in}  & {\em outputval} & String with values the corresponding outputs should have after transition. Values can either be \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{} (don\textquotesingle{}t care). Has to match size of outputs. \\
+\hline
+\mbox{\tt in}  & {\em dststate} & List of input names. Type\+: vector$<$string$>$ \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+execution status 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: table 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a3a80d868ab18cad523c31fa44bbcd691}\label{classsmtable_a3a80d868ab18cad523c31fa44bbcd691}} 
+\index{smtable@{smtable}!print@{print}}
+\index{print@{print}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Print content of table.\+table in familiar manner. 
+
+print transition table
+
+Prints out the table in readable form.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em none} & \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+execution status 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: table (read only) 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a594f4033166c44e95e5456682135bfa8}\label{classsmtable_a594f4033166c44e95e5456682135bfa8}} 
+\index{smtable@{smtable}!set\+Inputs@{set\+Inputs}}
+\index{set\+Inputs@{set\+Inputs}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{set\+Inputs()}{setInputs()}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::set\+Inputs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{inputs }\end{DoxyParamCaption})}
+
+
+
+Setup of inputs. 
+
+input definitions for calss
+
+Reads list of input names into class.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name of input \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+operation success 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: iinput 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a835fa1dd5ab840ff16741870c6758dc2}\label{classsmtable_a835fa1dd5ab840ff16741870c6758dc2}} 
+\index{smtable@{smtable}!set\+Outputs@{set\+Outputs}}
+\index{set\+Outputs@{set\+Outputs}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{set\+Outputs()}{setOutputs()}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::set\+Outputs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{outputs }\end{DoxyParamCaption})}
+
+
+
+Setup of outputs. 
+
+output definitions for calss
+
+Reads list of output names into class.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name of output \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+operation success 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: ioutput 
+\end{DoxyNote}
+\mbox{\Hypertarget{classsmtable_a37b9d34c2bec60d3f23ba53afc9dc0fb}\label{classsmtable_a37b9d34c2bec60d3f23ba53afc9dc0fb}} 
+\index{smtable@{smtable}!set\+States@{set\+States}}
+\index{set\+States@{set\+States}!smtable@{smtable}}
+\subsubsection{\texorpdfstring{set\+States()}{setStates()}}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::set\+States (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{inputs }\end{DoxyParamCaption})}
+
+
+
+Setup of states. 
+
+Set state definitions for calss.
+
+Reads list of state names into class.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em tok} & Current token to check for name of state \\
+\hline
+\mbox{\tt out}  & {\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+operation success 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Global variables used\+: istates 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/\+Zustandsmaschinentabelle/smtable.\+h\item 
+C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/\+Zustandsmaschinentabelle/smtable.\+cpp\end{DoxyCompactItemize}

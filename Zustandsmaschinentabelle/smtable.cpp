@@ -19,16 +19,16 @@
 * \return operation success
 * \note Global variables used: table
 */															/*----------------------------------------------*/
-smtable::fstate smtable::init() {							/*												*/
-	vector<entry> temp;										/*												*/
-	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;	/*												*/
-	iheight = istates.size();								/*												*/
-	temp.resize(iwidth);									/*												*/
-	for (int i = 0; i < iwidth; i++) {						/*												*/
-		for (uint j = 0; j < ioutputs.size(); j++)			/*												*/
-			temp.at(i).out_list.append("x");				/*												*/
+smtable::fstate smtable::init() {							/* initialization of the table object			*/
+	vector<entry> temp;										/* initial values to append						*/
+	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;	/* number of all input combinations	(width)		*/
+	iheight = istates.size();								/* number of states (height)					*/
+	temp.resize(iwidth);									/* set vector to width							*/
+	for (int i = 0; i < iwidth; i++) {						/* run through vector							*/
+		for (uint j = 0; j < ioutputs.size(); j++)			/* run through outputs							*/
+			temp.at(i).out_list.append("x");				/* preset to don't care							*/
 	}														/*												*/
-	for (uint i = 0; i < istates.size(); i++) {				/*												*/
+	for (uint i = 0; i < istates.size(); i++) {				/* build table line by line						*/
 		table.insert(pair<string, vector<entry>>(istates.at(i), temp));	/*									*/
 	}														/*												*/
 	return eOK;												/*												*/
@@ -47,18 +47,18 @@ smtable::fstate smtable::init() {							/*												*/
 * \note Global variables used: table
 */															/*----------------------------------------------*/
 smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlist outputs) {/*				*/
-	vector<entry> temp;										/*												*/
+	vector<entry> temp;										/* initial values to append						*/
 	istates = states;										/*												*/
 	iinputs = inputs;										/*												*/
 	ioutputs = outputs;										/*												*/
-	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;	/*												*/
-	iheight = istates.size();								/*												*/
-	temp.resize(iwidth);									/*												*/
-	for (int i = 0; i < iwidth; i++) {						/*												*/
-		for (uint j = 0; j < ioutputs.size(); j++)			/*												*/
-			temp.at(i).out_list.append("x");				/*												*/
+	for (uint i = 0; i < iinputs.size(); i++) iwidth *= 2;	/* number of all input combinations	(width)		*/
+	iheight = istates.size();								/* number of states (height)					*/
+	temp.resize(iwidth);									/* set vector to width							*/
+	for (int i = 0; i < iwidth; i++) {						/* run through vector							*/
+		for (uint j = 0; j < ioutputs.size(); j++)			/* run through outputs							*/
+			temp.at(i).out_list.append("x");				/* preset to don't care							*/
 	}														/*												*/
-	for (uint i = 0; i < istates.size(); i++) {				/*												*/
+	for (uint i = 0; i < istates.size(); i++) {				/* build table line by line						*/
 		table.insert(pair<string, vector<entry>>(istates.at(i), temp));/*									*/
 	}														/*												*/
 	return eOK;												/*												*/
@@ -74,8 +74,8 @@ smtable::fstate smtable::init(elementlist states, elementlist inputs, elementlis
 * \return operation success
 * \note Global variables used: istates
 */
-smtable::fstate smtable::setStates(elementlist inputs) {
-	istates = inputs;
+smtable::fstate smtable::setStates(elementlist states) {
+	istates = states;
 	return eOK;
 }
 
@@ -242,9 +242,8 @@ smtable::fstate smtable::print() {							/*												*/
 */															/*----------------------------------------------*/
 string *smtable::int2bit(int val, int width) {				/*												*/
 	string *retval = new string;							/*												*/
-	string::iterator strbegin = retval->begin();			/* set pointer to beginning of string			*/
 	for (int i = 0; i < width; i++) {						/* run for given length							*/
-		retval->insert(strbegin, val % 2 + '0');			/* prepend bit to string						*/
+		retval->insert(retval->begin(), val % 2 + '0');		/* prepend bit to string						*/
 		val /= 2;											/* shift by one to right						*/
 	}														/*												*/
 	return retval;											/*												*/
