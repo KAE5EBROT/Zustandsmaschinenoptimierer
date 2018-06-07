@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
+#include <time.h>
 #include ".\Zustandsmaschinentabelle\smtable.h"
 
 typedef map<string, vector<string>> prioritytype;

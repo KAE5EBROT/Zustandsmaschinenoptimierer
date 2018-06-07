@@ -31,6 +31,7 @@ int main(int argc, char* argv[])							/*												*/
 	lowpriotype low_priority;								/* different structure for low priority			*/
 	smtable::elementlist Zustandscodierung;					/* vector of optimized state name sequence		*/
 	int tablestate = 0;										/*												*/
+	srand(time(0));
 	if (argc == 1) {										/* if called manually, ask for file				*/
 		printf("Enter .txt filename:\n");					/*												*/
 		scanf("%s", fistr);//gets(fistr);					/*												*/
@@ -64,6 +65,7 @@ int main(int argc, char* argv[])							/*												*/
 		Zustandscodierung = optimize(high_priority, mean_priority, low_priority, table);/*					*/
 															/*												*/
 															/* Write output files							*/
+		random_shuffle(table.istates.begin(), table.istates.end());
 		if (writeOutputFile(table)) {						/*												*/
 			fprintf(stderr, "Ausgabedatei \"ZMnichtoptimiert.tbl\" fehlgeschlagen\n");/*					*/
 		}													/*												*/
