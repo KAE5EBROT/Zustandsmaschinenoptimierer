@@ -51,8 +51,7 @@ public:
 	fstate print();
 
 	/// Converts val into string representing the value of val in binary using ASCII ones and zeros.
-	/// The return pointer is allocated dynamically and has to be deleted after processing!
-	string *int2bit(int val, int width);
+	string int2bit(int val, int width);
 
 	/// checks, if int a matches with bit pattern char* b. b is expected as string containing either '0', '1' or 'x'.
 	bool bitsMatch(int a, const char * b);

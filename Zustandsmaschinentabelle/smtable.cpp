@@ -112,7 +112,9 @@ smtable::fstate smtable::setOutputs(elementlist outputs) {
 /*!
 * \brief Insert transition into table
 *
-* This function is the heart of the class smtable. It is used to 
+* This function is the heart of the class smtable. It is used to enter a single transition information
+* into the table. It handles ambiguous description of values.
+* They can either be don't cares ('x') or be unmentioned in transition definition.
 * 
 *
 * \param[in] inputs List of input names to be read. Type: vector<string>
@@ -189,9 +191,8 @@ smtable::fstate smtable::print() {							/*												*/
 															/*												*/
 	/* print all input combinations																			*/
 	for (int i = 0; i < iwidth; i++) { 						/*												*/
-		string *bits = int2bit(i, iinputs.size());			/* convert integer to string					*/
-		cout << bits->c_str() << "\t|";						/* print it										*/
-		delete bits;										/* don't forget to clear heap					*/
+		string bits = int2bit(i, iinputs.size());			/* convert integer to string					*/
+		cout << bits.c_str() << "\t|";						/* print it										*/									/* don't forget to clear heap					*/
 	}														/*												*/
 	cout << "\n|-------";									/* table separator								*/
 	for (int i = 0; i < iwidth; i++) cout << "|-------";	/* table separator								*/
@@ -236,14 +237,13 @@ smtable::fstate smtable::print() {							/*												*/
 * \param[in] val The integer value to convert.
 * \param[in] width The number of bits to be converted, starting from right (LSB)
 * \param[out] none
-* \return Pointer to newly allocated string
-* \warning Returned pointer has to be deleted after processing!
+* \return string of binary val of length width
 * \note Global variables used: none
 */															/*----------------------------------------------*/
-string *smtable::int2bit(int val, int width) {				/*												*/
-	string *retval = new string;							/*												*/
+string smtable::int2bit(int val, int width) {				/*												*/
+	string retval;											/*												*/
 	for (int i = 0; i < width; i++) {						/* run for given length							*/
-		retval->insert(retval->begin(), val % 2 + '0');		/* prepend bit to string						*/
+		retval.insert(retval.begin(), val % 2 + '0');		/* prepend bit to string						*/
 		val /= 2;											/* shift by one to right						*/
 	}														/*												*/
 	return retval;											/*												*/

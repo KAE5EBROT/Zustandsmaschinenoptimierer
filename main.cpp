@@ -420,9 +420,9 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 				if (j < table.istates.size()) {				/* if there are states left to code				*/
 															/* count nextstate up to next state of cell		*/
 					for (; (nextstate < table.istates.size()) && (table.istates.at(nextstate) != table.table[table.istates.at(j)].at(i).next_state); nextstate++);
-					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					outfile << "  " << table.int2bit(i, table.iinputs.size()) << table.int2bit(j, stateCodeBitCount) << " | ";
 					if (nextstate < table.istates.size()) {	/* if nextstate inside range (effectively found)*/
-						outfile << *table.int2bit(nextstate, stateCodeBitCount);/* write binary coded state	*/
+						outfile << table.int2bit(nextstate, stateCodeBitCount);/* write binary coded state	*/
 					}										/* 												*/
 					else {									/* if nextstate not found (not defined)			*/
 						for (int k = 0; k < stateCodeBitCount; k++) {/* 									*/
@@ -432,7 +432,7 @@ funcreturn writeOutputFile(smtable &table)					/* 												*/
 					outfile << "\n";						/* 												*/
 				}											/* 												*/
 				else {										/* if no more states left to code				*/
-					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(j, stateCodeBitCount) << " | ";
+					outfile << "  " << table.int2bit(i, table.iinputs.size()) << table.int2bit(j, stateCodeBitCount) << " | ";
 					for (int k = 0; k < stateCodeBitCount; k++) {/* 										*/
 						outfile << "-";						/* insert don't cares							*/
 					}										/* 												*/
@@ -494,9 +494,9 @@ funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*				
 				int nextstate = 0;							/*												*/
 				if (statelist.at(j).size() != 0) {			/* if entry not empty get number of next state	*/
 					for (; (nextstate < table.istates.size()) && (statelist.at(nextstate) != table.table[statelist.at(j)].at(i).next_state); nextstate++);
-					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
+					outfile << "  " << table.int2bit(i, table.iinputs.size()) << table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
 					if (nextstate < table.istates.size()) {	/* if next_state found print it					*/
-						outfile << *table.int2bit(int2gray(nextstate), stateCodeBitCount);/*				*/
+						outfile << table.int2bit(int2gray(nextstate), stateCodeBitCount);/*				*/
 					}										/*												*/
 					else {									/* if no next_state found						*/
 						for (int k = 0; k < stateCodeBitCount; k++) {/* fill with don't cares				*/
@@ -506,7 +506,7 @@ funcreturn writeOutputFile(smtable::elementlist statelist, smtable &table)/*				
 					outfile << "\n";						/*												*/
 				}											/*												*/
 				else {										/* if entry empty								*/
-					outfile << "  " << *table.int2bit(i, table.iinputs.size()) << *table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
+					outfile << "  " << table.int2bit(i, table.iinputs.size()) << table.int2bit(int2gray(j), stateCodeBitCount) << " | ";
 					for (int k = 0; k < stateCodeBitCount; k++) {	/* fill with don't cares				*/
 						outfile << "-";						/*												*/
 					}										/*												*/

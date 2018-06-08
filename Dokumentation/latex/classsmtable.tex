@@ -36,8 +36,8 @@ fstate \mbox{\hyperlink{classsmtable_a0de3a6992dca6fa12027e14a74d14171}{link}} (
 \begin{DoxyCompactList}\small\item\em Insert transition into table. \end{DoxyCompactList}\item 
 fstate \mbox{\hyperlink{classsmtable_a3a80d868ab18cad523c31fa44bbcd691}{print}} ()
 \begin{DoxyCompactList}\small\item\em Print content of table.\+table in familiar manner. \end{DoxyCompactList}\item 
-string $\ast$ \mbox{\hyperlink{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}{int2bit}} (int val, int width)
-\begin{DoxyCompactList}\small\item\em Convert integer to A\+S\+C\+II binary string. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{classsmtable_a90160a0a01b714c2b70e5da982e0c9fb}{int2bit}} (int val, int width)
+\begin{DoxyCompactList}\small\item\em Converts val into string representing the value of val in binary using A\+S\+C\+II ones and zeros. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classsmtable_a9d07557f02b4b69c5f5143fe985e242a}{bits\+Match}} (int a, const char $\ast$b)
 \begin{DoxyCompactList}\small\item\em checks, if int a matches with bit pattern char$\ast$ b. b is expected as string containing either \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -152,17 +152,17 @@ operation success
 \begin{DoxyNote}{Note}
 Global variables used\+: table 
 \end{DoxyNote}
-\mbox{\Hypertarget{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}\label{classsmtable_a13b354754f6e83752c0b463c4ea7a7ee}} 
+\mbox{\Hypertarget{classsmtable_a90160a0a01b714c2b70e5da982e0c9fb}\label{classsmtable_a90160a0a01b714c2b70e5da982e0c9fb}} 
 \index{smtable@{smtable}!int2bit@{int2bit}}
 \index{int2bit@{int2bit}!smtable@{smtable}}
 \subsubsection{\texorpdfstring{int2bit()}{int2bit()}}
-{\footnotesize\ttfamily string $\ast$ smtable\+::int2bit (\begin{DoxyParamCaption}\item[{int}]{val,  }\item[{int}]{width }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily string smtable\+::int2bit (\begin{DoxyParamCaption}\item[{int}]{val,  }\item[{int}]{width }\end{DoxyParamCaption})}
 
 
 
-Convert integer to A\+S\+C\+II binary string. 
+Converts val into string representing the value of val in binary using A\+S\+C\+II ones and zeros. 
 
-Converts val into string representing the value of val in binary using A\+S\+C\+II ones and zeros. The return pointer is allocated dynamically and has to be deleted after processing!
+Convert integer to A\+S\+C\+II binary string.
 
 Converts the integer val to a string with length width which values are either \textquotesingle{}0\textquotesingle{} or \textquotesingle{}1\textquotesingle{}.
 
@@ -176,11 +176,8 @@ Converts the integer val to a string with length width which values are either \
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Pointer to newly allocated string 
+string of binary val of length width 
 \end{DoxyReturn}
-\begin{DoxyWarning}{Warning}
-Returned pointer has to be deleted after processing! 
-\end{DoxyWarning}
 \begin{DoxyNote}{Note}
 Global variables used\+: none 
 \end{DoxyNote}
@@ -196,7 +193,7 @@ Insert transition into table.
 
 Link states on specific input patterns and set outputs. inputs is a vector of strings, containing the exact names of inputs which values are specified in inputval. The size of inputs must match the length of inputval. The values can be \textquotesingle{}0\textquotesingle{}, \textquotesingle{}1\textquotesingle{} or \textquotesingle{}x\textquotesingle{}. If a pair of input and its value is not mentioned, its treated as \textquotesingle{}x\textquotesingle{}.
 
-This function is the heart of the class smtable. It is used to
+This function is the heart of the class smtable. It is used to enter a single transition information into the table. It handles ambiguous description of values. They can either be don\textquotesingle{}t cares (\textquotesingle{}x\textquotesingle{}) or be unmentioned in transition definition.
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -306,7 +303,7 @@ Global variables used\+: ioutput
 \index{smtable@{smtable}!set\+States@{set\+States}}
 \index{set\+States@{set\+States}!smtable@{smtable}}
 \subsubsection{\texorpdfstring{set\+States()}{setStates()}}
-{\footnotesize\ttfamily smtable\+::fstate smtable\+::set\+States (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{inputs }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily smtable\+::fstate smtable\+::set\+States (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsmtable_a5eb5f5f14b1e52a2bde73255ea71927f}{elementlist}}}]{states }\end{DoxyParamCaption})}
 
 
 
@@ -333,5 +330,5 @@ Global variables used\+: istates
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/\+Zustandsmaschinentabelle/smtable.\+h\item 
-C\+:/\+Users/\+Metzger/source/repos/\+Zustandsmaschinenoptimierer/\+Zustandsmaschinentabelle/smtable.\+cpp\end{DoxyCompactItemize}
+Zustandsmaschinentabelle/smtable.\+h\item 
+Zustandsmaschinentabelle/smtable.\+cpp\end{DoxyCompactItemize}

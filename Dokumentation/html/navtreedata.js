@@ -24,7 +24,7 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "Zustandscodierungsoptimierer", "index.html", [
-    [ "Zustandsmaschinenoptimierer", "md__c_1__users__metzger_source_repos__zustandsmaschinenoptimierer__r_e_a_d_m_e.html", null ],
+    [ "Zustandsmaschinenoptimierer", "md__r_e_a_d_m_e.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],

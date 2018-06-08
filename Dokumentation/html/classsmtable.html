@@ -139,9 +139,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a80d868ab18cad523c31fa44bbcd691"><td class="memItemLeft" align="right" valign="top">fstate&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmtable.html#a3a80d868ab18cad523c31fa44bbcd691">print</a> ()</td></tr>
 <tr class="memdesc:a3a80d868ab18cad523c31fa44bbcd691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print content of table.table in familiar manner.  <a href="#a3a80d868ab18cad523c31fa44bbcd691">More...</a><br /></td></tr>
 <tr class="separator:a3a80d868ab18cad523c31fa44bbcd691"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13b354754f6e83752c0b463c4ea7a7ee"><td class="memItemLeft" align="right" valign="top">string *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmtable.html#a13b354754f6e83752c0b463c4ea7a7ee">int2bit</a> (int val, int width)</td></tr>
-<tr class="memdesc:a13b354754f6e83752c0b463c4ea7a7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert integer to ASCII binary string.  <a href="#a13b354754f6e83752c0b463c4ea7a7ee">More...</a><br /></td></tr>
-<tr class="separator:a13b354754f6e83752c0b463c4ea7a7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90160a0a01b714c2b70e5da982e0c9fb"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmtable.html#a90160a0a01b714c2b70e5da982e0c9fb">int2bit</a> (int val, int width)</td></tr>
+<tr class="memdesc:a90160a0a01b714c2b70e5da982e0c9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts val into string representing the value of val in binary using ASCII ones and zeros.  <a href="#a90160a0a01b714c2b70e5da982e0c9fb">More...</a><br /></td></tr>
+<tr class="separator:a90160a0a01b714c2b70e5da982e0c9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d07557f02b4b69c5f5143fe985e242a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmtable.html#a9d07557f02b4b69c5f5143fe985e242a">bitsMatch</a> (int a, const char *b)</td></tr>
 <tr class="memdesc:a9d07557f02b4b69c5f5143fe985e242a"><td class="mdescLeft">&#160;</td><td class="mdescRight">checks, if int a matches with bit pattern char* b. b is expected as string containing either '0', '1' or 'x'.  <a href="#a9d07557f02b4b69c5f5143fe985e242a">More...</a><br /></td></tr>
 <tr class="separator:a9d07557f02b4b69c5f5143fe985e242a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -292,14 +292,14 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 
 </div>
 </div>
-<a id="a13b354754f6e83752c0b463c4ea7a7ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13b354754f6e83752c0b463c4ea7a7ee">&#9670;&nbsp;</a></span>int2bit()</h2>
+<a id="a90160a0a01b714c2b70e5da982e0c9fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90160a0a01b714c2b70e5da982e0c9fb">&#9670;&nbsp;</a></span>int2bit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string * smtable::int2bit </td>
+          <td class="memname">string smtable::int2bit </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>val</em>, </td>
@@ -318,8 +318,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
       </table>
 </div><div class="memdoc">
 
-<p>Convert integer to ASCII binary string. </p>
-<p>Converts val into string representing the value of val in binary using ASCII ones and zeros. The return pointer is allocated dynamically and has to be deleted after processing!</p>
+<p>Converts val into string representing the value of val in binary using ASCII ones and zeros. </p>
+<p>Convert integer to ASCII binary string.</p>
 <p>Converts the integer val to a string with length width which values are either '0' or '1'.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -329,8 +329,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Pointer to newly allocated string </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>Returned pointer has to be deleted after processing! </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string of binary val of length width </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Global variables used: none </dd></dl>
 
 </div>
@@ -387,7 +386,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 
 <p>Insert transition into table. </p>
 <p>Link states on specific input patterns and set outputs. inputs is a vector of strings, containing the exact names of inputs which values are specified in inputval. The size of inputs must match the length of inputval. The values can be '0', '1' or 'x'. If a pair of input and its value is not mentioned, its treated as 'x'.</p>
-<p>This function is the heart of the class smtable. It is used to</p>
+<p>This function is the heart of the class smtable. It is used to enter a single transition information into the table. It handles ambiguous description of values. They can either be don't cares ('x') or be unmentioned in transition definition.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">inputs</td><td>List of input names to be read. Type: vector&lt;string&gt; </td></tr>
@@ -507,7 +506,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
           <td class="memname">smtable::fstate smtable::setStates </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classsmtable.html#a5eb5f5f14b1e52a2bde73255ea71927f">elementlist</a>&#160;</td>
-          <td class="paramname"><em>inputs</em></td><td>)</td>
+          <td class="paramname"><em>states</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -529,8 +528,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Metzger/source/repos/Zustandsmaschinenoptimierer/Zustandsmaschinentabelle/<a class="el" href="smtable_8h_source.html">smtable.h</a></li>
-<li>C:/Users/Metzger/source/repos/Zustandsmaschinenoptimierer/Zustandsmaschinentabelle/smtable.cpp</li>
+<li>Zustandsmaschinentabelle/<a class="el" href="smtable_8h_source.html">smtable.h</a></li>
+<li>Zustandsmaschinentabelle/smtable.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -10,7 +10,7 @@ var classsmtable =
     [ "bitsMatch", "classsmtable.html#a9d07557f02b4b69c5f5143fe985e242a", null ],
     [ "init", "classsmtable.html#ae475d729d11ec8e097c5750bfe6eafbf", null ],
     [ "init", "classsmtable.html#a762560d078b904bfdcd55262db8f3fe8", null ],
-    [ "int2bit", "classsmtable.html#a13b354754f6e83752c0b463c4ea7a7ee", null ],
+    [ "int2bit", "classsmtable.html#a90160a0a01b714c2b70e5da982e0c9fb", null ],
     [ "link", "classsmtable.html#a0de3a6992dca6fa12027e14a74d14171", null ],
     [ "print", "classsmtable.html#a3a80d868ab18cad523c31fa44bbcd691", null ],
     [ "setInputs", "classsmtable.html#a594f4033166c44e95e5456682135bfa8", null ],
