@@ -293,7 +293,7 @@ Minilog/Library Files
 
 Minilog/Minilog\.exe
 
-gatter\.exe
+gatter/*\.exe
 
 *.min
 

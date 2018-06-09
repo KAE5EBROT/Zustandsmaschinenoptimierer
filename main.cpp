@@ -33,7 +33,7 @@ int main(int argc, char* argv[])							/*												*/
 	int tablestate = 0;										/*												*/
 	if (argc == 1) {										/* if called manually, ask for file				*/
 		printf("Enter .txt filename:\n");					/*												*/
-		scanf("%s", fistr);//gets(fistr);					/*												*/
+		cin >> fistr;// scanf("%s", fistr);//gets(fistr);	/*												*/
 		inf = fopen(strcat(fistr, ".txt"), "r");			/*												*/
 	}														/*												*/
 	else {													/* filename should be passed in second argument	*/
@@ -79,6 +79,7 @@ int main(int argc, char* argv[])							/*												*/
 	}														/*												*/
 															/*												*/
 	if ((argc < 2) || (tablestate)) {						/* pause on manual call or error				*/
+		cin.get();											/* buffer not empty								*/
 		cin.get();											/*												*/
 	}														/*												*/
 	return (tablestate) ? EXIT_FAILURE : EXIT_SUCCESS;		/* map tablestate to main return				*/
