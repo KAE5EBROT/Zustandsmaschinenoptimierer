@@ -1,2 +1,2 @@
-# Zustandsmaschinenoptimierer
-Optimiert Zustandsmaschinen
+# Zustandsmaschinencodierungsoptimierer
+Optimiert Zustandsmaschinencodierungen
